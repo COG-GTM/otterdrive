@@ -1,10 +1,10 @@
 {
   "id": null,
-  "uid": "otterworks-business-metrics",
-  "title": "OtterWorks Business Metrics",
+  "uid": "otterdrive-business-metrics",
+  "title": "OtterDrive Business Metrics",
   "description": "Business KPIs: active users, documents created, files uploaded, collaboration sessions, storage growth.",
   "tags": [
-    "otterworks",
+    "otterdrive",
     "business",
     "kpi"
   ],

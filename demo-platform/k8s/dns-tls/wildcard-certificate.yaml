@@ -9,15 +9,15 @@
 #                   is not implied by the line above and vice versa.
 #
 # Placeholders (filled by scripts/enable-dns-tls.sh via envsubst):
-#   __DOMAIN_ROOT__  registrable domain, e.g. otterworks.app
+#   __DOMAIN_ROOT__  registrable domain, e.g. otterdrive.app
 #   __ISSUER__       letsencrypt-staging | letsencrypt-prod
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: otterworks-wildcard
+  name: otterdrive-wildcard
   namespace: ingress-nginx
 spec:
-  secretName: otterworks-wildcard-tls
+  secretName: otterdrive-wildcard-tls
   privateKey:
     algorithm: ECDSA
     size: 256

@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-// OtterWorks classic-enterprise theme: navy/steel primary, flat square corners,
+// OtterDrive classic-enterprise theme: navy/steel primary, flat square corners,
 // muted amber accent, system sans stack.
 const config: Config = {
   content: [

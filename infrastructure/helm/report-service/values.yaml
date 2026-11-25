@@ -4,7 +4,7 @@ global:
   environment: dev
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks-report-service
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive-report-service
   tag: ""  # Set at deploy time (ECR uses IMMUTABLE tags)
   pullPolicy: IfNotPresent
 
@@ -19,14 +19,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: report-service.otterworks.workshop.example.com
+    - host: report-service.otterdrive.workshop.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: report-service-tls
       hosts:
-        - report-service.otterworks.workshop.example.com
+        - report-service.otterdrive.workshop.example.com
 
 resources:
   limits:
@@ -57,8 +57,8 @@ serviceAccount:
 env:
   DB_HOST: postgres
   DB_PORT: "5432"
-  DB_NAME: otterworks_reports
-  DB_USER: otterworks
+  DB_NAME: otterdrive_reports
+  DB_USER: otterdrive
   ANALYTICS_SERVICE_URL: http://analytics-service:8088
   AUDIT_SERVICE_URL: http://audit-service:8090
   AUTH_SERVICE_URL: http://auth-service:8081

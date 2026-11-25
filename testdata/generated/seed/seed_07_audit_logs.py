@@ -127,7 +127,7 @@ BROWSER_UAS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
 ]
 
-SYSTEM_UA = "OtterWorks-API/1.0"
+SYSTEM_UA = "OtterDrive-API/1.0"
 
 
 def seed(cur, ns: str) -> int:
@@ -173,7 +173,7 @@ def seed(cur, ns: str) -> int:
         else:
             admin_index = rng.randint(0, NUM_ADMIN_USERS - 1)
             actor_id = ADMIN_USER_IDS[admin_index]
-            actor_email = f"admin{admin_index}@otterworks.io"
+            actor_email = f"admin{admin_index}@otterdrive.io"
             resource_type = rng.choices(resource_types, weights=weights, k=1)[0]
             action = rng.choice(RESOURCE_ACTIONS[resource_type])
             user_agent = rng.choice(BROWSER_UAS)

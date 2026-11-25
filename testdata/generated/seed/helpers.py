@@ -1,5 +1,5 @@
 """
-Shared helpers for OtterWorks bulk seed data generation.
+Shared helpers for OtterDrive bulk seed data generation.
 
 Provides deterministic UUID generation, shared constants, and DB connection
 so all 10 data modules produce referentially-consistent data without needing
@@ -79,9 +79,9 @@ def hash_password(plain: str) -> str:
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "port": int(os.getenv("DB_PORT", "5432")),
-    "dbname": os.getenv("DB_NAME", "otterworks"),
-    "user": os.getenv("DB_USER", "otterworks"),
-    "password": os.getenv("DB_PASSWORD", "otterworks_dev"),
+    "dbname": os.getenv("DB_NAME", "otterdrive"),
+    "user": os.getenv("DB_USER", "otterdrive"),
+    "password": os.getenv("DB_PASSWORD", "otterdrive_dev"),
 }
 
 
@@ -90,7 +90,7 @@ def get_connection():
 
 
 def set_search_path(cur, ns: str) -> None:
-    schema = f"otterworks_{ns}"
+    schema = f"otterdrive_{ns}"
     cur.execute(f'SET search_path TO "{schema}"')
 
 

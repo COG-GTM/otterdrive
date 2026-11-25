@@ -1,6 +1,6 @@
 aws_region   = "us-east-1"
 environment  = "dev"
-cluster_name = "otterworks-dev"
+cluster_name = "otterdrive-dev"
 
 # MUST stay within EKS standard support. Extended support costs $0.60/hr against
 # a standard rate of $0.10/hr -- a $360/month penalty that buys nothing, which
@@ -44,4 +44,4 @@ node_desired_size   = 1
 node_min_size       = 1
 node_max_size       = 3
 
-ecr_prefix = "otterworks/"
+ecr_prefix = "otterdrive/"

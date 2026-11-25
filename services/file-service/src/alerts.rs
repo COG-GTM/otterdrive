@@ -53,7 +53,7 @@ pub fn build_upload_failure_payload(
         labels["reporter_email"] = json!(email);
     }
     json!({
-        "receiver": "otterworks-webhook",
+        "receiver": "otterdrive-webhook",
         "status": "firing",
         "alerts": [{
             "status": "firing",
@@ -89,7 +89,7 @@ pub fn build_share_notification_failure_payload(
         labels["reporter_email"] = json!(email);
     }
     json!({
-        "receiver": "otterworks-webhook",
+        "receiver": "otterdrive-webhook",
         "status": "firing",
         "alerts": [{
             "status": "firing",

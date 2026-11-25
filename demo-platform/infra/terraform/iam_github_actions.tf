@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "github_actions_trust" {
 resource "aws_iam_role" "github_actions" {
   count = var.enable_github_actions_role ? 1 : 0
 
-  name               = "otterworks-github-actions"
+  name               = "otterdrive-github-actions"
   description        = "GitHub Actions CD: push service images and drive dashboard redeploys"
   assume_role_policy = data.aws_iam_policy_document.github_actions_trust[0].json
 

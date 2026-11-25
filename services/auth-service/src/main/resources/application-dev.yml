@@ -4,5 +4,5 @@ spring:
 
 logging:
   level:
-    com.otterworks: DEBUG
+    com.otterdrive: DEBUG
     org.springframework.security: INFO

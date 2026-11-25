@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Full Standalone Deploy
+# OtterDrive - Full Standalone Deploy
 # 1. Provisions platform infrastructure (VPC, EKS, ECR) via Terraform
 # 2. Provisions application infrastructure (RDS, DynamoDB, S3, etc.) via Terraform
 # 3. Builds Docker images, pushes to ECR, and deploys via Helm
@@ -15,16 +15,16 @@ set -euo pipefail
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
 AWS_ACCOUNT_ID="${AWS_ACCOUNT_ID:?ERROR: AWS_ACCOUNT_ID must be set}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-NAMESPACE="${NAMESPACE:-otterworks}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+NAMESPACE="${NAMESPACE:-otterdrive}"
 ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-ECR_PREFIX="otterworks/"
+ECR_PREFIX="otterdrive/"
 IMAGE_TAG="${IMAGE_TAG:-$(git -C "$(dirname "$0")/.." rev-parse --short HEAD)-$(date +%s)}"
 DB_PASSWORD="${DB_PASSWORD:-}"
 # Host suffix for the golden app's ingress records. The frontends and the API
 # are published through the SHARED ingress controller (one NLB for the whole
 # cluster) rather than a LoadBalancer Service each -- see build_helm_args.
-GOLDEN_HOST_SUFFIX="${GOLDEN_HOST_SUFFIX:-otterworks.app}"
+GOLDEN_HOST_SUFFIX="${GOLDEN_HOST_SUFFIX:-otterdrive.app}"
 # Shared JWT signing secret. MUST be identical across the gateway and every
 # service that validates tokens. Generated once if not supplied; pass a stable
 # value (JWT_SECRET=...) across redeploys so previously issued tokens stay valid.
@@ -216,7 +216,7 @@ load_infra_outputs() {
   SNS_TOPIC="$(terraform -chdir="$d" output -raw sns_events_topic_arn 2>/dev/null || echo "")"
   SQS_NOTIF="$(terraform -chdir="$d" output -raw sqs_notification_queue_url 2>/dev/null || echo "")"
   IRSA_JSON="$(terraform -chdir="$d" output -json irsa_role_arns 2>/dev/null || echo "{}")"
-  DB_NAME="${DB_NAME:-otterworks}"; DB_USER="${DB_USER:-otterworks_admin}"
+  DB_NAME="${DB_NAME:-otterdrive}"; DB_USER="${DB_USER:-otterdrive_admin}"
   # MeiliSearch runs in-cluster (see deploy_meilisearch); search-service reaches it by Service DNS.
   MEILISEARCH_URL="${MEILISEARCH_URL:-http://meilisearch:7700}"
   if [ -z "${RDS_HOST}" ]; then
@@ -237,12 +237,12 @@ resolve_db_endpoint() {
   DB_SESSION_PORT="${RDS_PORT}"
 
   [ "${DB_VIA_PGBOUNCER:-true}" = "true" ] || return 0
-  kubectl -n "${PGBOUNCER_NAMESPACE:-otterworks-platform}" get svc pgbouncer >/dev/null 2>&1 || {
+  kubectl -n "${PGBOUNCER_NAMESPACE:-otterdrive-platform}" get svc pgbouncer >/dev/null 2>&1 || {
     warn "pgbouncer not found; wiring services straight to RDS (install with demo-platform/scripts/install-pgbouncer.sh)"
     return 0
   }
 
-  DB_ENDPOINT_HOST="pgbouncer.${PGBOUNCER_NAMESPACE:-otterworks-platform}.svc.cluster.local"
+  DB_ENDPOINT_HOST="pgbouncer.${PGBOUNCER_NAMESPACE:-otterdrive-platform}.svc.cluster.local"
   DB_ENDPOINT_PORT=6432
   # Migrations hold session-level advisory locks and cannot go through a
   # transaction pooler; 6433 is the same pooler in session mode.

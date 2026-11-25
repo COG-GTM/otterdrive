@@ -175,7 +175,7 @@ func TestJWTAuth_ValidToken(t *testing.T) {
 
 	claims := JWTClaims{
 		UserID: "user-123",
-		Email:  "test@otterworks.dev",
+		Email:  "test@otterdrive.dev",
 		Roles:  []string{"user"},
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
@@ -200,7 +200,7 @@ func TestJWTAuth_ValidToken(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 	require.NotNil(t, capturedClaims)
 	assert.Equal(t, "user-123", capturedClaims.UserID)
-	assert.Equal(t, "test@otterworks.dev", capturedClaims.Email)
+	assert.Equal(t, "test@otterdrive.dev", capturedClaims.Email)
 }
 
 func TestJWTAuth_ExpiredToken(t *testing.T) {

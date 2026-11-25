@@ -8,9 +8,9 @@ demo-platform
 app.kubernetes.io/name: {{ include "demo-platform.name" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/part-of: otterworks-demo-platform
+app.kubernetes.io/part-of: otterdrive-demo-platform
 platform/environment: {{ .Values.environment }}
-platform/team: otterworks
+platform/team: otterdrive
 {{- end -}}
 
 {{- define "demo-platform.dashboardSelectorLabels" -}}
@@ -34,12 +34,12 @@ Prefer `--set-string awsAccountId=<id>`.
 {{- end -}}
 {{- end -}}
 
-{{/* IRSA role name (defaults to otterworks-demo-ops-dashboard-<environment>). */}}
+{{/* IRSA role name (defaults to otterdrive-demo-ops-dashboard-<environment>). */}}
 {{- define "demo-platform.roleName" -}}
 {{- if .Values.serviceAccount.roleName -}}
 {{- .Values.serviceAccount.roleName -}}
 {{- else -}}
-otterworks-demo-ops-dashboard-{{ .Values.environment }}
+otterdrive-demo-ops-dashboard-{{ .Values.environment }}
 {{- end -}}
 {{- end -}}
 

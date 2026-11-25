@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Per-Tenant Scale-to-Zero (cost control)
+# OtterDrive - Per-Tenant Scale-to-Zero (cost control)
 #
 # Between sessions, scale a tenant's compute to zero while KEEPING the
 # namespace, config/secrets and its RDS database intact — compute cost drops to

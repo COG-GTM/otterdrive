@@ -10,7 +10,7 @@ process. It exists as a realistic **"before" state** for two migration demos:
 - **Monolith decomposition (→ microservices / Lambda)** — its three contexts are cleanly separated
   by package **and by database schema**, so the seams for splitting it into services are obvious.
 
-> This component is part of the OtterWorks **golden app** as a durable before-state. The
+> This component is part of the OtterDrive **golden app** as a durable before-state. The
 > after-state (EC2/ASG IaC, decomposed services) is intentionally **not** included here.
 
 ## Bounded contexts
@@ -21,11 +21,11 @@ and the datasource. That is exactly what makes this a good decomposition candida
 
 | Context | Package | Schema | Routes |
 |---|---|---|---|
-| Announcements | `com.otterworks.legacyportal.announcements` | `announcements` | `GET/POST /api/announcements`, `GET /api/announcements/{id}`, `POST /api/announcements/{id}/publish` |
-| User Preferences | `com.otterworks.legacyportal.userpreferences` | `user_preferences` | `GET /api/preferences/{userId}`, `PUT /api/preferences/{userId}` |
-| Feedback | `com.otterworks.legacyportal.feedback` | `feedback` | `POST /api/feedback`, `GET /api/feedback?userId=`, `GET /api/feedback/average-rating` |
+| Announcements | `com.otterdrive.legacyportal.announcements` | `announcements` | `GET/POST /api/announcements`, `GET /api/announcements/{id}`, `POST /api/announcements/{id}/publish` |
+| User Preferences | `com.otterdrive.legacyportal.userpreferences` | `user_preferences` | `GET /api/preferences/{userId}`, `PUT /api/preferences/{userId}` |
+| Feedback | `com.otterdrive.legacyportal.feedback` | `feedback` | `POST /api/feedback`, `GET /api/feedback?userId=`, `GET /api/feedback/average-rating` |
 
-Shared, non-domain plumbing lives in `com.otterworks.legacyportal.common` (health endpoint,
+Shared, non-domain plumbing lives in `com.otterdrive.legacyportal.common` (health endpoint,
 exception handling).
 
 ### Why it's an obvious decomposition candidate

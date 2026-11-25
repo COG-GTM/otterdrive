@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using OtterWorks.AuditService.Config;
-using OtterWorks.AuditService.Models;
-using OtterWorks.AuditService.Services;
+using OtterDrive.AuditService.Config;
+using OtterDrive.AuditService.Models;
+using OtterDrive.AuditService.Services;
 
 namespace AuditService.Tests;
 
@@ -11,15 +11,15 @@ public class AuditServiceTests
 {
     private readonly Mock<IAuditRepository> _mockRepository;
     private readonly Mock<IAuditArchiver> _mockArchiver;
-    private readonly Mock<ILogger<OtterWorks.AuditService.Services.AuditService>> _mockLogger;
+    private readonly Mock<ILogger<OtterDrive.AuditService.Services.AuditService>> _mockLogger;
     private readonly IOptions<AwsSettings> _options;
-    private readonly OtterWorks.AuditService.Services.AuditService _service;
+    private readonly OtterDrive.AuditService.Services.AuditService _service;
 
     public AuditServiceTests()
     {
         _mockRepository = new Mock<IAuditRepository>();
         _mockArchiver = new Mock<IAuditArchiver>();
-        _mockLogger = new Mock<ILogger<OtterWorks.AuditService.Services.AuditService>>();
+        _mockLogger = new Mock<ILogger<OtterDrive.AuditService.Services.AuditService>>();
         _options = Options.Create(new AwsSettings
         {
             Region = "us-east-1",
@@ -28,7 +28,7 @@ public class AuditServiceTests
             ArchiveAfterDays = 90,
         });
 
-        _service = new OtterWorks.AuditService.Services.AuditService(
+        _service = new OtterDrive.AuditService.Services.AuditService(
             _mockRepository.Object,
             _mockArchiver.Object,
             _options,

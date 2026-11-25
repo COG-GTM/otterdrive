@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Per-Tenant Bug Injection
+# OtterDrive - Per-Tenant Bug Injection
 #
 # Applies a scenario from scripts/bug-catalog.yaml to a SINGLE tenant namespace
 # without touching the golden app or any other tenant. See the catalog for the
@@ -75,7 +75,7 @@ fi
 if [ "${SCENARIO}" = "file-bad-bucket" ]; then
   log "Injecting config bug 'file-bad-bucket' (file-service -> nonexistent S3 bucket)..."
   helm upgrade file-service "${REPO_ROOT}/infrastructure/helm/file-service" -n "${NS}" --reuse-values \
-    --set-string config.S3_BUCKET=otterworks-does-not-exist
+    --set-string config.S3_BUCKET=otterdrive-does-not-exist
   kubectl -n "${NS}" rollout restart deploy/file-service
   log "Applied (rollout restarting). Revert by re-running deploy-tenant.sh ${ATTENDEE_ID}."
   exit 0

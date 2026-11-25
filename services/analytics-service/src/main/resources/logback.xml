@@ -15,7 +15,7 @@
     </encoder>
   </appender>
 
-  <logger name="com.otterworks.analytics" level="DEBUG"/>
+  <logger name="com.otterdrive.analytics" level="DEBUG"/>
   <logger name="akka" level="INFO"/>
   <logger name="slick" level="INFO"/>
 

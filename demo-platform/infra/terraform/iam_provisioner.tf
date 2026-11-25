@@ -23,17 +23,17 @@ resource "aws_kms_key" "dashboard_passcode" {
   enable_key_rotation     = true
   deletion_window_in_days = 7
   tags = {
-    Name = "otterworks-dashboard-passcode-${var.environment}"
+    Name = "otterdrive-dashboard-passcode-${var.environment}"
   }
 }
 
 resource "aws_kms_alias" "dashboard_passcode" {
-  name          = "alias/otterworks-dashboard-passcode-${var.environment}"
+  name          = "alias/otterdrive-dashboard-passcode-${var.environment}"
   target_key_id = aws_kms_key.dashboard_passcode.key_id
 }
 
 resource "aws_secretsmanager_secret" "dashboard_passcode" {
-  name        = "otterworks/${var.environment}/dashboard/passcode"
+  name        = "otterdrive/${var.environment}/dashboard/passcode"
   description = "Passcode for the Demo Ops dashboard (${var.dns_zone_name != "" ? "ops.${var.dns_zone_name}" : "ops dashboard"})"
   kms_key_id  = aws_kms_key.dashboard_passcode.arn
 
@@ -47,10 +47,10 @@ resource "aws_secretsmanager_secret" "dashboard_passcode" {
 # it (`secret.dashboardPasscode`, never on argv). This resource is the container
 # and the grant; the value is pushed alongside the chart install:
 #
-#   kubectl -n otterworks-platform get secret demo-ops-dashboard \
+#   kubectl -n otterdrive-platform get secret demo-ops-dashboard \
 #     -o jsonpath='{.data.DASHBOARD_PASSCODE}' | base64 -d |
 #     aws secretsmanager put-secret-value \
-#       --secret-id otterworks/dev/dashboard/passcode --secret-string file:///dev/stdin
+#       --secret-id otterdrive/dev/dashboard/passcode --secret-string file:///dev/stdin
 #
 # Rotating the passcode is therefore: helm upgrade with a new value, then the
 # command above. Nothing that holds this grant needs to change.

@@ -117,7 +117,7 @@ web::scope("/api/v1/files")
 def test_spring_routes_combine_the_class_and_method_mappings(tmp_path: Path) -> None:
     service = tmp_path / "auth-service"
     write(
-        service / "src/main/java/com/otterworks/auth/controller/AuthController.java",
+        service / "src/main/java/com/otterdrive/auth/controller/AuthController.java",
         """
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -140,7 +140,7 @@ public class AuthController {
 def test_ktor_routes_nest_through_the_routing_dsl(tmp_path: Path) -> None:
     service = tmp_path / "notification-service"
     write(
-        service / "src/main/kotlin/com/otterworks/notification/routes/Routes.kt",
+        service / "src/main/kotlin/com/otterdrive/notification/routes/Routes.kt",
         """
 routing {
     get("/health") { call.respond(HealthResponse()) }

@@ -22,8 +22,8 @@ def app_config() -> AppConfig:
         meilisearch=MeiliSearchConfig(
             url="http://localhost:7700",
             api_key="",
-            documents_index="test-otterworks-documents",
-            files_index="test-otterworks-files",
+            documents_index="test-otterdrive-documents",
+            files_index="test-otterdrive-files",
         ),
         sqs=SQSConfig(enabled=False),
         auth=AuthConfig(service_token="", require_auth=False),

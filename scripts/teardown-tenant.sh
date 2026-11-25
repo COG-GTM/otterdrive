@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Per-Tenant Teardown
+# OtterDrive - Per-Tenant Teardown
 #
 # Deletes an ephemeral tenant created by deploy-tenant.sh:
-#   1. (unless --keep-db) drops the per-tenant RDS database otterworks_<ID>
+#   1. (unless --keep-db) drops the per-tenant RDS database otterdrive_<ID>
 #      via an in-cluster job (the Devin VM has no direct VPC access to RDS)
-#   2. deletes the namespace otterworks-<ID> (all Helm releases, Redis, Meili,
+#   2. deletes the namespace otterdrive-<ID> (all Helm releases, Redis, Meili,
 #      config/secrets, ingress, quota, netpol) in one shot
 #   3. removes the tenant's service-account subs from the shared IRSA role trust
 #      policies (reverse of deploy-tenant's ensure_irsa_trust)
@@ -89,14 +89,14 @@ remove_irsa_trust() {
   [ -n "${oidc_url}" ] || { warn "OIDC URL unavailable; skipping IRSA trust cleanup."; return 0; }
   local svc role sub
   for svc in $(echo "${irsa_json}" | jq -r 'keys[]'); do
-    role="otterworks-${svc}-dev"
+    role="otterdrive-${svc}-dev"
     sub="system:serviceaccount:${NS}:${svc}"
     local doc; doc="$(aws iam get-role --role-name "${role}" --query 'Role.AssumeRolePolicyDocument' --output json 2>/dev/null || echo "")"
     [ -n "${doc}" ] || continue
     # Remove ONLY legacy per-tenant statements that pin this exact sub via
     # StringEquals (added by older deploys). Statements without a
     # StringEquals[:sub] — notably the shared Terraform-managed StringLike
-    # wildcard statement that grants every otterworks-* namespace — MUST be left
+    # wildcard statement that grants every otterdrive-* namespace — MUST be left
     # untouched; stripping it would break AWS access for the golden app and all
     # other tenants. The current deploy relies on that wildcard and adds no
     # per-tenant StringEquals statement, so this is normally a no-op.

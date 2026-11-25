@@ -130,7 +130,7 @@ export default function ReaperPanel() {
           </label>
           <p className="text-xs text-slate-500">
             Finds load balancers, volumes, addresses and security groups that Kubernetes
-            created and no longer owns. Only resources carrying an OtterWorks or cluster
+            created and no longer owns. Only resources carrying an OtterDrive or cluster
             ownership tag are ever considered; anything untagged is reported, never touched.
           </p>
           <label className="flex items-center gap-2 text-sm">

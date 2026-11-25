@@ -69,7 +69,7 @@
   },
   "seed_sha256": "8fdf4fcc58c4b0e23d90cb65e10c372edce4633651cabff071ebdc8c6ac7ee97",
   "subject_sha256": {
-   "services/document-service/app/services/export_archive.py": "7c0c51c23d5a4f349003d484492cb42578652cd2b503161cd0667be4f8bbdae9"
+   "services/document-service/app/services/export_archive.py": "a4ea468ee520ccca015d876d0ceb534b845d38aa49a06c4497161b0965f29b12"
   }
  },
  "harness_version": 2,

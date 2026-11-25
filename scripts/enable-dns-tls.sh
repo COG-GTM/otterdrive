@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # enable-dns-tls.sh — turn on the AWS-native DNS + wildcard-TLS stack for the
-# demo platform. Run ONCE, after otterworks.app is registered in Route53 and
+# demo platform. Run ONCE, after otterdrive.app is registered in Route53 and
 # `terraform apply` has created the DNS automation IRSA role (enable_dns, on by default).
 #
 # It replaces the temporary nip.io IP-based hostnames with real, self-contained
@@ -12,11 +12,11 @@
 # Idempotent: safe to re-run. No secrets are passed on argv.
 #
 # Usage:
-#   DOMAIN_ROOT=otterworks.app ACME_EMAIL=platform@example.com \
+#   DOMAIN_ROOT=otterdrive.app ACME_EMAIL=platform@example.com \
 #     [ISSUER=letsencrypt-staging] scripts/enable-dns-tls.sh
 set -euo pipefail
 
-DOMAIN_ROOT="${DOMAIN_ROOT:-otterworks.app}"
+DOMAIN_ROOT="${DOMAIN_ROOT:-otterdrive.app}"
 DEMO_SUFFIX="${DEMO_SUFFIX:-demo.${DOMAIN_ROOT}}"
 OPS_HOST="${OPS_HOST:-ops.${DOMAIN_ROOT}}"
 # The perpetual tenant answers at the apex (t-main.<root>), not under the
@@ -25,12 +25,12 @@ PERPETUAL_ID="${PERPETUAL_ID:-main}"
 PERPETUAL_WEB_HOST="t-${PERPETUAL_ID}.${DOMAIN_ROOT}"
 PERPETUAL_API_HOST="api-t-${PERPETUAL_ID}.${DOMAIN_ROOT}"
 ISSUER="${ISSUER:-letsencrypt-staging}"   # start on staging, then re-run ISSUER=letsencrypt-prod
-TXT_OWNER="${TXT_OWNER:-otterworks-demo}"
+TXT_OWNER="${TXT_OWNER:-otterdrive-demo}"
 TF_DIR="${TF_DIR:-$(cd "$(dirname "$0")/.." && pwd)/demo-platform/infra/terraform}"
 MANIFEST_DIR="$(cd "$(dirname "$0")/.." && pwd)/demo-platform/k8s/dns-tls"
 INGRESS_NS="${INGRESS_NS:-ingress-nginx}"
 INGRESS_RELEASE="${INGRESS_RELEASE:-ingress-nginx}"
-WILDCARD_SECRET="ingress-nginx/otterworks-wildcard-tls"
+WILDCARD_SECRET="ingress-nginx/otterdrive-wildcard-tls"
 
 if [ -z "${ACME_EMAIL:-}" ]; then
   echo "ACME_EMAIL is required (contact email for the Let's Encrypt account)" >&2
@@ -130,8 +130,8 @@ cat <<DONE
 
 ==> Done. Verify with:
     kubectl -n external-dns logs deploy/external-dns --tail=20
-    kubectl -n ingress-nginx get certificate otterworks-wildcard
-    kubectl -n ingress-nginx describe certificate otterworks-wildcard | tail -20
+    kubectl -n ingress-nginx get certificate otterdrive-wildcard
+    kubectl -n ingress-nginx describe certificate otterdrive-wildcard | tail -20
 
 Once the cert is Ready on staging, re-run with ISSUER=letsencrypt-prod for a
 browser-trusted certificate, then redeploy tenants (they already default to

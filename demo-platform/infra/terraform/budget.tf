@@ -15,7 +15,7 @@
 resource "aws_budgets_budget" "monthly" {
   count = var.budget_alert_emails != null && length(var.budget_alert_emails) > 0 ? 1 : 0
 
-  name         = "otterworks-${var.environment}-monthly"
+  name         = "otterdrive-${var.environment}-monthly"
   budget_type  = "COST"
   limit_amount = tostring(var.monthly_budget_usd)
   limit_unit   = "USD"
@@ -23,7 +23,7 @@ resource "aws_budgets_budget" "monthly" {
 
   cost_filter {
     name   = "TagKeyValue"
-    values = ["user:Project$otterworks"]
+    values = ["user:Project$otterdrive"]
   }
 
   # Actual spend past 80% -- something is running that probably should not be.

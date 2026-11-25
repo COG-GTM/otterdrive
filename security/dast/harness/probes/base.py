@@ -1,4 +1,4 @@
-"""Core types and registry for OtterWorks DAST probes.
+"""Core types and registry for OtterDrive DAST probes.
 
 A probe is a single, targeted attack attempt against the *running* application.
 It is deliberately narrower than a crawler: each probe encodes one concrete

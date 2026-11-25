@@ -16,26 +16,26 @@ awsAccountId: ""
 
 environment: dev
 awsRegion: us-east-1
-eksCluster: otterworks-dev
-platformNamespace: otterworks-platform
-controlTable: otterworks-demo-control
+eksCluster: otterdrive-dev
+platformNamespace: otterdrive-platform
+controlTable: otterdrive-demo-control
 
 # Ingress host suffix for tenant frontends/APIs (t-<id>.<suffix> /
 # api-t-<id>.<suffix>). Defaults to the wildcard domain; override to a nip.io
-# suffix (e.g. <nlb-ip>.nip.io) to run before otterworks.app DNS is live.
-hostSuffix: demo.otterworks.app
+# suffix (e.g. <nlb-ip>.nip.io) to run before otterdrive.app DNS is live.
+hostSuffix: demo.otterdrive.app
 
 # The perpetual tenant: never reaped, never idle-suspended, and the only id the
 # dashboard accepts `persistent: true` for. It answers at the apex
-# (t-main.otterworks.app) rather than under the per-attendee subdomain, so it
+# (t-main.otterdrive.app) rather than under the per-attendee subdomain, so it
 # reads as the shared reference environment rather than one attendee's workshop.
 # Both hosts are covered by the wildcard certificate (k8s/dns-tls).
 perpetualTenantIds: main
-perpetualHostSuffix: otterworks.app
+perpetualHostSuffix: otterdrive.app
 
 # Runner image used by dashboard-launched Jobs AND the reaper CronJob (OP=reap).
-# Placeholder — override at deploy: --set runnerImage=<registry>/otterworks/demo-runner:<tag>
-runnerImage: REGISTRY/otterworks/demo-runner:latest
+# Placeholder — override at deploy: --set runnerImage=<registry>/otterdrive/demo-runner:<tag>
+runnerImage: REGISTRY/otterdrive/demo-runner:latest
 
 # Optional: HTTPS clone URL of this repo. When set (together with a githubToken
 # in the Secret), runner Jobs fetch the participant branch workshop-<id> for
@@ -45,15 +45,15 @@ repoHttpsUrl: ""
 
 serviceAccount:
   name: demo-ops-dashboard
-  # IRSA role name; defaults to otterworks-demo-ops-dashboard-<environment>.
+  # IRSA role name; defaults to otterdrive-demo-ops-dashboard-<environment>.
   roleName: ""
 
 dashboard:
-  # Placeholder — override: --set dashboard.image=<registry>/otterworks/demo-ops-dashboard:<tag>
-  image: REGISTRY/otterworks/demo-ops-dashboard:latest
+  # Placeholder — override: --set dashboard.image=<registry>/otterdrive/demo-ops-dashboard:<tag>
+  image: REGISTRY/otterdrive/demo-ops-dashboard:latest
   imagePullPolicy: IfNotPresent
   replicas: 1
-  host: ops.otterworks.app
+  host: ops.otterdrive.app
   containerPort: 3000
   service:
     port: 80
@@ -78,7 +78,7 @@ reaper:
   enabled: true
   schedule: "*/15 * * * *"
   # Host suffix used when GC-ing tenant Route53 records / building URLs.
-  hostSuffix: demo.otterworks.app
+  hostSuffix: demo.otterdrive.app
   # EXTRA clusters whose orphaned AWS resources the sweep may delete: names this
   # platform previously ran under, whose leftovers should stay reclaimable. The
   # cluster it runs on now is always included and does not belong here. Must

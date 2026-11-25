@@ -4,7 +4,7 @@
 # Lists S3 objects, compares with DynamoDB metadata, quarantines orphans,
 # generates storage savings report
 #
-# Owner: Jake (data-team@otterworks.dev) -- Jake left mid-2020
+# Owner: Jake (data-team@otterdrive.dev) -- Jake left mid-2020
 # TODO ETL-091: Add S3 lifecycle rules instead of manual cleanup (2019-11-20)
 # TODO ETL-156: Parallelize S3 listing for large buckets (deferred Q1 2020)
 # TODO ETL-203: Add dry-run mode for testing (never implemented)
@@ -34,7 +34,7 @@ def main():
 
     files_prefix = "files/"
     quarantine_prefix = "quarantined"
-    dynamodb_table_name = "otterworks-file-metadata"
+    dynamodb_table_name = "otterdrive-file-metadata"
 
     ds = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
 

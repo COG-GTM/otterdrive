@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Bug-Injection Catalog
+# OtterDrive Bug-Injection Catalog
 #
 # Maps a demo scenario -> a per-tenant variant. Every scenario is scoped to ONE
 # tenant namespace and NEVER mutates the golden app (main) or other tenants.
@@ -48,7 +48,7 @@ scenarios:
   file-bad-bucket:
     mechanism: config
     service: file-service
-    set: "config.S3_BUCKET=otterworks-does-not-exist"
+    set: "config.S3_BUCKET=otterdrive-does-not-exist"
     description: >
       Misconfiguration bug: point file-service at a bucket that does not exist
       via a config override (requires a rollout restart to take effect).

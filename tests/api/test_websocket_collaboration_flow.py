@@ -9,7 +9,7 @@ pytestmark = [pytest.mark.api_flow, pytest.mark.websocket]
 
 
 def _collab_url(base_url: str) -> str:
-    return os.getenv("OTTERWORKS_COLLAB_WS_URL", base_url.replace("http://", "ws://").replace("https://", "wss://"))
+    return os.getenv("OTTERDRIVE_COLLAB_WS_URL", base_url.replace("http://", "ws://").replace("https://", "wss://"))
 
 
 def test_socketio_rejects_missing_or_invalid_token(base_url):

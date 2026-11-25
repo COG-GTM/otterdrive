@@ -1,12 +1,12 @@
-# OtterWorks Desktop (Windows)
+# OtterDrive Desktop (Windows)
 
-A native **Windows desktop client** for the OtterWorks platform, built with **C# on .NET
-Framework 4.8** using **WPF** and the **MVVM** pattern. It talks to the OtterWorks REST API
+A native **Windows desktop client** for the OtterDrive platform, built with **C# on .NET
+Framework 4.8** using **WPF** and the **MVVM** pattern. It talks to the OtterDrive REST API
 through the API gateway using `HttpClient`.
 
 > **Why .NET Framework 4.8?** This client is intentionally built on the *legacy* .NET
 > Framework (classic `.csproj` + `packages.config` + `Newtonsoft.Json`) so it can serve as a
-> realistic **framework-upgrade target** (net48 → .NET 8 / WinUI) alongside OtterWorks' other
+> realistic **framework-upgrade target** (net48 → .NET 8 / WinUI) alongside OtterDrive' other
 > upgrade candidates (e.g. the Java 8 `report-service`). It mirrors the core flow of the
 > `frontend/web-app` React client.
 
@@ -27,11 +27,11 @@ encrypted with the Windows Data Protection API (**DPAPI**, per-user scope) — s
 
 ```
 clients/windows-desktop/
-├── OtterWorks.Desktop.sln
+├── OtterDrive.Desktop.sln
 ├── README.md
 ├── docs/screenshots/                 # verification screenshots (embedded below)
-└── OtterWorks.Desktop/
-    ├── OtterWorks.Desktop.csproj      # classic .NET Framework 4.8 WPF project
+└── OtterDrive.Desktop/
+    ├── OtterDrive.Desktop.csproj      # classic .NET Framework 4.8 WPF project
     ├── packages.config                # Newtonsoft.Json 13.0.3
     ├── app.config
     ├── appsettings.json               # configurable backend base URL
@@ -63,7 +63,7 @@ clients/windows-desktop/
 
 ## Configuration
 
-The backend base URL is read from `OtterWorks.Desktop/appsettings.json` (copied next to the
+The backend base URL is read from `OtterDrive.Desktop/appsettings.json` (copied next to the
 executable on build):
 
 ```json
@@ -73,11 +73,11 @@ executable on build):
 }
 ```
 
-- `apiBaseUrl` — the OtterWorks API gateway base. Default `http://localhost:8080/api/v1`
+- `apiBaseUrl` — the OtterDrive API gateway base. Default `http://localhost:8080/api/v1`
   (the app runs on the same host as the Docker Compose backend). Point this at any reachable
   gateway if the backend runs elsewhere.
 - `persistTokens` — when `true`, the session is saved to
-  `%APPDATA%\OtterWorks\session.dat`, DPAPI-encrypted for the current user, and restored on
+  `%APPDATA%\OtterDrive\session.dat`, DPAPI-encrypted for the current user, and restored on
   next launch.
 
 ## Running the backend
@@ -102,11 +102,11 @@ Restore packages and build in Release with MSBuild:
 
 ```powershell
 # From clients/windows-desktop
-nuget restore OtterWorks.Desktop.sln
-msbuild OtterWorks.Desktop.sln /p:Configuration=Release
+nuget restore OtterDrive.Desktop.sln
+msbuild OtterDrive.Desktop.sln /p:Configuration=Release
 ```
 
-Or simply open `OtterWorks.Desktop.sln` in Visual Studio 2022 and build (packages restore
+Or simply open `OtterDrive.Desktop.sln` in Visual Studio 2022 and build (packages restore
 automatically).
 
 > **Note on `dotnet build` / `dotnet format`:** this is a *classic* (non-SDK-style)
@@ -121,7 +121,7 @@ automatically).
 ## Run
 
 ```powershell
-.\OtterWorks.Desktop\bin\Release\OtterWorks.Desktop.exe
+.\OtterDrive.Desktop\bin\Release\OtterDrive.Desktop.exe
 ```
 
 Or press **F5** in Visual Studio.
@@ -136,7 +136,7 @@ Or press **F5** in Visual Studio.
 
 ## Verification screenshots
 
-Captured on Windows against the OtterWorks backend (auth-service, document-service and
+Captured on Windows against the OtterDrive backend (auth-service, document-service and
 api-gateway) running locally, base URL `http://localhost:8080/api/v1`.
 
 ### 1. Register a new user

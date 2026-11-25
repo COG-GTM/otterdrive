@@ -1,13 +1,13 @@
-# OtterWorks — SDLC Tool-Coverage Reference
+# OtterDrive — SDLC Tool-Coverage Reference
 
-> **Purpose.** OtterWorks is a polyglot microservices platform (11 backend services across 8
+> **Purpose.** OtterDrive is a polyglot microservices platform (11 backend services across 8
 > languages + 2 frontends) built to exercise a realistic enterprise SDLC. This document
 > inventories **which software-development-lifecycle capabilities the repo actually demonstrates
 > today** versus **what is missing or stubbed**, so it can be used as a demo reference when
-> mapping OtterWorks to customer stories.
+> mapping OtterDrive to customer stories.
 >
 > Findings are based on the actual repo contents (file paths cited) plus a live end-to-end AWS
-> deployment performed against account `<AWS_ACCOUNT_ID>` / `us-east-1` (EKS `otterworks-dev`, v1.32).
+> deployment performed against account `<AWS_ACCOUNT_ID>` / `us-east-1` (EKS `otterdrive-dev`, v1.32).
 > Status legend: **Present** = works / demonstrable as-is · **Partial** = present but incomplete,
 > stubbed, or config-only · **Missing** = claimed or expected but absent.
 
@@ -76,11 +76,11 @@ excellent **polyglot CI demo**.
 push for all 13 units, then `helm upgrade --install` per service from `infrastructure/helm/<svc>`.
 Charts include deployment, service, ingress, networkpolicy, servicemonitor, serviceaccount.
 
-**Observed reality (live deploy, this session).** EKS `otterworks-dev` was recreated, all 13 images
+**Observed reality (live deploy, this session).** EKS `otterdrive-dev` was recreated, all 13 images
 built and pushed to ECR, and `deploy-dev.sh --skip-terraform` ran `helm upgrade --install` for every
 service. **As shipped, `helm install` failed atomically for all 13 services and zero pods, services,
-or releases were created** (`kubectl get pods -n otterworks` → `No resources found`;
-`helm list -n otterworks` → empty). The application was **not usable over the network** as shipped.
+or releases were created** (`kubectl get pods -n otterdrive` → `No resources found`;
+`helm list -n otterdrive` → empty). The application was **not usable over the network** as shipped.
 Concrete, reproducible reasons, in the order they bite:
 
 1. **The `ServiceMonitor` CRD does not exist on the cluster — this alone blocks every install.**
@@ -100,7 +100,7 @@ Concrete, reproducible reasons, in the order they bite:
    `JWT_SECRET` is unset, and `cmd/server/main.go` calls it at startup — so api-gateway crash-loops.
    Stateful services (auth/admin/audit/etc.) similarly lack DB credentials.
 3. **Ingress assumes uninstalled infrastructure.** `values.yaml` sets `ingress.className: nginx` +
-   `cert-manager.io/cluster-issuer: letsencrypt-prod` + host `otterworks.workshop.example.com`, but
+   `cert-manager.io/cluster-issuer: letsencrypt-prod` + host `otterdrive.workshop.example.com`, but
    `platform/terraform` installs **no ingress-nginx controller and no cert-manager**, and that DNS
    does not resolve. Ingress objects are created but never get an address.
 4. **LoadBalancer is the only real external entrypoint.** Only `api-gateway`'s Service is
@@ -114,8 +114,8 @@ Concrete, reproducible reasons, in the order they bite:
 6. **No GitOps.** There is no ArgoCD/Flux; deployment is imperative via a shell script. No
    environment promotion model (`dev` only; no `staging`/`prod` tfvars beyond a validation enum).
 7. **Image-name drift.** `.github/workflows/docker-build.yml` and Helm `values.yaml` defaults push/
-   reference `.../workshop/otterworks-<svc>`, but the provisioned ECR repos and `deploy-dev.sh`
-   use `.../otterworks/<svc>`. The deploy script overrides the repo at install time so it works,
+   reference `.../workshop/otterdrive-<svc>`, but the provisioned ECR repos and `deploy-dev.sh`
+   use `.../otterdrive/<svc>`. The deploy script overrides the repo at install time so it works,
    but the CI `docker-build` job targets repositories that don't exist.
 
 **Wiring applied in this PR (best-effort, to prove reachability).** To move from "nothing installs"
@@ -168,8 +168,8 @@ the golden all-in-cluster app. `deploy-dev.sh` now deploys a single-replica in-c
 `/search` and `/health/ready` now return `200`.
 
 **file-service advanced tables now created.** folders / versions / shares each need a DynamoDB table
-the IaC never defined; only file-metadata was present. Added `otterworks-folders-*`,
-`otterworks-file-versions-*` (hash `file_id`, range `version`), and `otterworks-file-shares-*` in
+the IaC never defined; only file-metadata was present. Added `otterdrive-folders-*`,
+`otterdrive-file-versions-*` (hash `file_id`, range `version`), and `otterdrive-file-shares-*` in
 `modules/database`, extended the file-service IRSA policy to cover them, and wired the table names
 into the chart. Verified end-to-end: `POST /api/v1/folders` → `201` and `GET /api/v1/folders` lists
 it back; `/api/v1/files`, `/api/v1/files/shared` return `200`.
@@ -191,8 +191,8 @@ it back; `/api/v1/files`, `/api/v1/files/shared` return `200`.
 ## 4. Infrastructure as Code — Present
 
 **Evidence.** Two Terraform root modules with **remote S3 state**
-(`s3://otterworks-terraform-state`, keys `platform/` and `otterworks/`):
-- `platform/terraform` — VPC, EKS (`otterworks-dev`, v1.32), managed node group, core addons
+(`s3://otterdrive-terraform-state`, keys `platform/` and `otterdrive/`):
+- `platform/terraform` — VPC, EKS (`otterdrive-dev`, v1.32), managed node group, core addons
   (vpc-cni/kube-proxy/coredns/ebs-csi), OIDC provider, 13 ECR repos. Modularized under
   `modules/{vpc,eks,ecr}` with `environments/dev.tfvars`.
 - `infrastructure/terraform` — RDS Postgres, ElastiCache Redis, DynamoDB, S3, SNS/SQS, Cognito,
@@ -311,7 +311,7 @@ is a terraform input (`var.db_password`), set/rotated at apply time.
 
 **Gap / what a demo needs.** There is **no delivery mechanism for application secrets into pods** —
 no k8s Secret, no External Secrets Operator, no SSM/Secrets Manager CSI driver. `docker-compose.yml`
-uses hard-coded test credentials (`AWS_ACCESS_KEY_ID: test`, `POSTGRES_PASSWORD: otterworks_dev`,
+uses hard-coded test credentials (`AWS_ACCESS_KEY_ID: test`, `POSTGRES_PASSWORD: otterdrive_dev`,
 a default `JWT_SECRET`), which is fine locally but is exactly what's missing in-cluster. Add
 External Secrets Operator (pulling from Secrets Manager/SSM) for a credible secrets story.
 
@@ -353,7 +353,7 @@ shared-services EKS + Airflow/Spark; actual is standalone `platform/terraform` +
 | **Legacy modernization** | §13, §2 (report-service Java 8) | Cron ETL and the intentionally-legacy `report-service` are ready-made "before" states |
 | **Analytics lakehouse re-architecture** | §13 | Durable PostgreSQL analytics store is the "before" for an S3 + Apache Iceberg (Glue/Athena) migration, with old-vs-new reconciliation as continuous validation |
 
-## Top gaps to fix before OtterWorks is a clean all-around reference
+## Top gaps to fix before OtterDrive is a clean all-around reference
 
 1. **Finish the CD wiring.** This PR made charts installable (CRD-safe ServiceMonitor) and added
    optional ConfigMap/Secret templates, proving api-gateway + auth-service reachable. Still the
@@ -362,6 +362,6 @@ shared-services EKS + Airflow/Spark; actual is standalone `platform/terraform` +
 2. **Deploy the observability stack to EKS** — Prometheus Operator, OTel Collector, Jaeger, Fluent
    Bit / Alertmanager — so metrics/traces/logs/alerts are real in AWS, not just local (§8–§11).
 3. **Install ingress-nginx + cert-manager + real DNS/TLS** (ideally shared-services) to make the
-   ingress path work, and reconcile the `workshop/otterworks-*` vs `otterworks/*` image-name drift (§3).
+   ingress path work, and reconcile the `workshop/otterdrive-*` vs `otterdrive/*` image-name drift (§3).
 4. **Add governance & polish** — `CODEOWNERS`, PR template, ADRs, image scanning/SBOM, DAST, and
    README reconciliation (Airflow/Spark, shared-services claims) (§1, §5, §7, §13, §14).

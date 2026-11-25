@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — infrastructure orphan sweep
+# OtterDrive Demo Platform — infrastructure orphan sweep
 #
 # The tenant sweep in reaper.sh GCs resources that belong to a *tenant* (its
 # namespace, database, S3 prefix, DynamoDB partition). This sweep covers the
@@ -14,7 +14,7 @@
 # the cluster was replaced, and billed for over a month with zero backends.
 #
 # The sweep is deliberately conservative — a resource is only ever deleted when
-# it carries an OtterWorks/Kubernetes ownership tag AND its owner provably no
+# it carries an OtterDrive/Kubernetes ownership tag AND its owner provably no
 # longer exists. Untagged resources are reported, never deleted, because this
 # account is shared with unrelated workloads.
 #
@@ -34,8 +34,8 @@
 set -uo pipefail
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-HOST_SUFFIX="${HOST_SUFFIX:-demo.otterworks.app}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+HOST_SUFFIX="${HOST_SUFFIX:-demo.otterdrive.app}"
 DNS_ZONE_ID="${DNS_ZONE_ID:-}"
 DRY_RUN="${DRY_RUN:-true}"
 

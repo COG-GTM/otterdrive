@@ -6,8 +6,8 @@
   ],
   "pages": [
     {
-      "title": "OtterWorks Overview",
-      "purpose": "High-level introduction to OtterWorks: what it is, its purpose as a polyglot microservices demo platform, the overall architecture diagram, key design principles (Golden App, planted bugs, multi-tenant demos), and links to all major sections.",
+      "title": "OtterDrive Overview",
+      "purpose": "High-level introduction to OtterDrive: what it is, its purpose as a polyglot microservices demo platform, the overall architecture diagram, key design principles (Golden App, planted bugs, multi-tenant demos), and links to all major sections.",
       "page_notes": [
         {
           "content": ""
@@ -17,7 +17,7 @@
     {
       "title": "Getting Started",
       "purpose": "Step-by-step guide for onboarding engineers: prerequisites, cloning the repo, running the full stack locally with Docker Compose and Make, seeding data, and verifying the system is healthy. Covers the Makefile targets, docker-compose files, LocalStack initialization, and the seed script.",
-      "parent": "OtterWorks Overview",
+      "parent": "OtterDrive Overview",
       "page_notes": [
         {
           "content": ""
@@ -27,7 +27,7 @@
     {
       "title": "System Architecture",
       "purpose": "Deep dive into the overall system design: the polyglot service mesh, the API Gateway as the single ingress, data flow diagrams (login, file upload, document edit, search, notifications), event bus topology (SNS/SQS), and the shared data stores (PostgreSQL, Redis, DynamoDB, S3, MeiliSearch).",
-      "parent": "OtterWorks Overview",
+      "parent": "OtterDrive Overview",
       "page_notes": [
         {
           "content": ""
@@ -155,7 +155,7 @@
     },
     {
       "title": "Frontend Applications",
-      "purpose": "Overview of all frontend applications in OtterWorks: the React/Next.js web app, Angular admin dashboard, Electron desktop app, Capacitor mobile apps, and Windows WPF desktop client. Links to child pages for each.",
+      "purpose": "Overview of all frontend applications in OtterDrive: the React/Next.js web app, Angular admin dashboard, Electron desktop app, Capacitor mobile apps, and Windows WPF desktop client. Links to child pages for each.",
       "page_notes": [
         {
           "content": ""
@@ -174,7 +174,7 @@
     },
     {
       "title": "Mobile & Desktop Clients",
-      "purpose": "Documentation of the cross-platform client strategy: Capacitor wrapping the React web app for Android and iOS (network security config, API base URL overrides), the Electron desktop wrapper (electron-builder, launch scripts), and the native Windows WPF desktop client (C#/.NET Framework 4.8, MVVM pattern, DPAPI token persistence, OtterWorksApiClient).",
+      "purpose": "Documentation of the cross-platform client strategy: Capacitor wrapping the React web app for Android and iOS (network security config, API base URL overrides), the Electron desktop wrapper (electron-builder, launch scripts), and the native Windows WPF desktop client (C#/.NET Framework 4.8, MVVM pattern, DPAPI token persistence, OtterDriveApiClient).",
       "parent": "Frontend Applications",
       "page_notes": [
         {
@@ -281,7 +281,7 @@
     },
     {
       "title": "Metrics & Dashboards",
-      "purpose": "Documentation of the Prometheus and Grafana setup: scrape configuration, ServiceMonitor CRDs, the Grafana dashboards (otterworks-overview, service-detail, infrastructure, business-metrics, chaos-scenarios, incident-overview), alert rules (alert-rules.yml), contact points, and notification policies.",
+      "purpose": "Documentation of the Prometheus and Grafana setup: scrape configuration, ServiceMonitor CRDs, the Grafana dashboards (otterdrive-overview, service-detail, infrastructure, business-metrics, chaos-scenarios, incident-overview), alert rules (alert-rules.yml), contact points, and notification policies.",
       "parent": "Observability",
       "page_notes": [
         {
@@ -388,7 +388,7 @@
     },
     {
       "title": "Synthetic Test Data Framework",
-      "purpose": "Documentation of the testdata generation framework: the Devin-driven workflow (GitHub Issue → generate.py → validate.py), namespaced PostgreSQL schemas (otterworks_<ns>), the validation harness (FK integrity, temporal consistency, enum values, business rules, criteria.json), the seed scripts (seed_01 through seed_10), and the Makefile testdata targets.",
+      "purpose": "Documentation of the testdata generation framework: the Devin-driven workflow (GitHub Issue → generate.py → validate.py), namespaced PostgreSQL schemas (otterdrive_<ns>), the validation harness (FK integrity, temporal consistency, enum values, business rules, criteria.json), the seed scripts (seed_01 through seed_10), and the Makefile testdata targets.",
       "parent": "Testing & Data",
       "page_notes": [
         {

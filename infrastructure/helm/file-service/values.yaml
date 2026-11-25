@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks-file-service
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive-file-service
   tag: ""  # Set at deploy time (ECR uses IMMUTABLE tags)
   pullPolicy: IfNotPresent
 
@@ -16,14 +16,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: file-service.otterworks.workshop.example.com
+    - host: file-service.otterdrive.workshop.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: file-service-tls
       hosts:
-        - file-service.otterworks.workshop.example.com
+        - file-service.otterdrive.workshop.example.com
 
 resources:
   limits:
@@ -66,7 +66,7 @@ config:
   # tenant without reverting the branch, set it explicitly (an explicit value
   # beats the image's, until the next redeploy re-renders the chart):
   #   helm upgrade file-service infrastructure/helm/file-service \
-  #     -n otterworks-coggtm --reuse-values \
+  #     -n otterdrive-coggtm --reuse-values \
   #     --set-string config.FILE_UPLOAD_ALWAYS_FAIL=false
   FILE_UPLOAD_ALWAYS_FAIL: "true"
   # Same demo-variant convention as above (values kept in agreement with the

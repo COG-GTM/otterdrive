@@ -1,7 +1,7 @@
 # RBAC for the dashboard SA (also used by dashboard-launched runner Jobs and the
 # reaper CronJob). RBAC cannot restrict rules to namespaces matching a name glob
-# (otterworks-*), so these verbs are cluster-wide by necessity; the intended
-# scope is the otterworks-* tenant namespaces + otterworks-platform. AWS-side
+# (otterdrive-*), so these verbs are cluster-wide by necessity; the intended
+# scope is the otterdrive-* tenant namespaces + otterdrive-platform. AWS-side
 # blast radius is bounded separately by the scoped IRSA role.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "demo-platform.labels" . | nindent 4 }}
 rules:
-  # Manage tenant namespaces (create/delete otterworks-<id>) + read for the
+  # Manage tenant namespaces (create/delete otterdrive-<id>) + read for the
   # dashboard's live join and the reaper's orphan sweep.
   - apiGroups: [""]
     resources: ["namespaces"]
@@ -32,7 +32,7 @@ rules:
   - apiGroups: ["apps"]
     resources: ["deployments/scale"]
     verbs: ["get", "update", "patch"]
-  # Jobs in otterworks-platform (deploy/teardown/inject/reset runner Jobs) and in
+  # Jobs in otterdrive-platform (deploy/teardown/inject/reset runner Jobs) and in
   # tenant/system namespaces (per-tenant DB init/drop Jobs).
   - apiGroups: ["batch"]
     resources: ["jobs", "cronjobs"]

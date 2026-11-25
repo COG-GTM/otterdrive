@@ -1,4 +1,4 @@
-# Fluent Bit Configuration for OtterWorks
+# Fluent Bit Configuration for OtterDrive
 #
 # Collects JSON-formatted logs from all services, enriches them
 # with service metadata, and forwards to CloudWatch Logs.
@@ -113,7 +113,7 @@
     Name          parser
     Match         service.*
     Key_Name      log
-    Parser        otterworks_json
+    Parser        otterdrive_json
     Reserve_Data  On
     Preserve_Key  On
 
@@ -194,7 +194,7 @@
     Name              cloudwatch_logs
     Match             service.*
     region            us-east-1
-    log_group_name    /otterworks/${TAG[1]}
+    log_group_name    /otterdrive/${TAG[1]}
     log_stream_prefix from-fluent-bit-
     auto_create_group On
     endpoint          http://localstack:4566

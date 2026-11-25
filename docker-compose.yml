@@ -4,7 +4,7 @@ services:
     build:
       context: ./services/api-gateway
       dockerfile: Dockerfile
-    container_name: otterworks-api-gateway
+    container_name: otterdrive-api-gateway
     ports:
     - 8080:8080
     environment:
@@ -14,9 +14,9 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
@@ -31,7 +31,7 @@ services:
       ADMIN_SERVICE_URL: http://admin-service:8089
       AUDIT_SERVICE_URL: http://audit-service:8090
       REPORT_SERVICE_URL: http://report-service:8091
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
     - auth-service
     healthcheck:
@@ -50,7 +50,7 @@ services:
     build:
       context: ./services/auth-service
       dockerfile: Dockerfile
-    container_name: otterworks-auth-service
+    container_name: otterdrive-auth-service
     ports:
     - 8081:8081
     environment:
@@ -60,17 +60,17 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: auth-service
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/otterworks
-      SPRING_DATASOURCE_USERNAME: otterworks
-      SPRING_DATASOURCE_PASSWORD: otterworks_dev
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/otterdrive
+      SPRING_DATASOURCE_USERNAME: otterdrive
+      SPRING_DATASOURCE_PASSWORD: otterdrive_dev
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -92,7 +92,7 @@ services:
     build:
       context: ./services/file-service
       dockerfile: Dockerfile
-    container_name: otterworks-file-service
+    container_name: otterdrive-file-service
     ports:
     - 8082:8082
     environment:
@@ -102,16 +102,16 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: file-service
-      S3_BUCKET: otterworks-files
-      DYNAMODB_TABLE: otterworks-file-metadata
-      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterworks-events
+      S3_BUCKET: otterdrive-files
+      DYNAMODB_TABLE: otterdrive-file-metadata
+      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterdrive-events
       SEARCH_SERVICE_URL: http://search-service:8087
       # Failed uploads fire a Grafana-style alert at admin-service's ingest
       # endpoint so each failure opens its own incident + Devin session.
@@ -124,7 +124,7 @@ services:
       FILE_UPLOAD_ALWAYS_FAIL: ${FILE_UPLOAD_ALWAYS_FAIL:-false}
       FILE_SHARE_EVENT_ALWAYS_FAIL: ${FILE_SHARE_EVENT_ALWAYS_FAIL:-false}
       FILE_SEED_DEMO_DOCS: ${FILE_SEED_DEMO_DOCS:-false}
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       localstack:
         condition: service_healthy
@@ -146,7 +146,7 @@ services:
     build:
       context: ./services/document-service
       dockerfile: Dockerfile
-    container_name: otterworks-document-service
+    container_name: otterdrive-document-service
     ports:
     - 8083:8083
     environment:
@@ -156,18 +156,18 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: document-service
-      DOC_SVC_DATABASE_URL: postgresql+asyncpg://otterworks:otterworks_dev@postgres:5432/otterworks
-      DOC_SVC_SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterworks-events
+      DOC_SVC_DATABASE_URL: postgresql+asyncpg://otterdrive:otterdrive_dev@postgres:5432/otterdrive
+      DOC_SVC_SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterdrive-events
       DOC_SVC_AWS_ENDPOINT_URL: http://localstack:4566
       DOC_SVC_SNS_ENABLED: 'true'
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -189,7 +189,7 @@ services:
     build:
       context: ./services/collab-service
       dockerfile: Dockerfile
-    container_name: otterworks-collab-service
+    container_name: otterdrive-collab-service
     ports:
     - 8084:8084
     environment:
@@ -199,15 +199,15 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: collab-service
       HTTP_PORT: 8084
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       redis:
         condition: service_healthy
@@ -229,7 +229,7 @@ services:
     build:
       context: ./services/notification-service
       dockerfile: Dockerfile
-    container_name: otterworks-notification-service
+    container_name: otterdrive-notification-service
     ports:
     - 8086:8086
     environment:
@@ -239,17 +239,17 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: notification-service
-      SQS_QUEUE_URL: http://localstack:4566/000000000000/otterworks-notifications
-      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterworks-events
-      DYNAMODB_TABLE_NOTIFICATIONS: otterworks-notifications
-      DYNAMODB_TABLE_PREFERENCES: otterworks-notification-preferences
+      SQS_QUEUE_URL: http://localstack:4566/000000000000/otterdrive-notifications
+      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:otterdrive-events
+      DYNAMODB_TABLE_NOTIFICATIONS: otterdrive-notifications
+      DYNAMODB_TABLE_PREFERENCES: otterdrive-notification-preferences
       # Consumer failures fire a Grafana-style alert at admin-service's ingest
       # endpoint so a sustained failure opens an incident + Devin session.
       ADMIN_SERVICE_URL: http://admin-service:8089
@@ -260,7 +260,7 @@ services:
       # message traffic, e.g. sharing a file).
       NOTIFICATION_SQS_ALWAYS_FAIL: ${NOTIFICATION_SQS_ALWAYS_FAIL:-false}
       NOTIFICATION_STRICT_SCHEMA: ${NOTIFICATION_STRICT_SCHEMA:-false}
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       localstack:
         condition: service_healthy
@@ -282,7 +282,7 @@ services:
     build:
       context: ./services/search-service
       dockerfile: Dockerfile
-    container_name: otterworks-search-service
+    container_name: otterdrive-search-service
     ports:
     - 8087:8087
     environment:
@@ -292,17 +292,17 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MEILISEARCH_URL: http://meilisearch:7700
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: search-service
       SQS_ENABLED: 'true'
-      SQS_QUEUE_URL: http://localstack:4566/000000000000/otterworks-search-events
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      SQS_QUEUE_URL: http://localstack:4566/000000000000/otterdrive-search-events
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       meilisearch:
         condition: service_healthy
@@ -324,7 +324,7 @@ services:
     build:
       context: ./services/analytics-service
       dockerfile: Dockerfile
-    container_name: otterworks-analytics-service
+    container_name: otterdrive-analytics-service
     ports:
     - 8088:8088
     environment:
@@ -334,15 +334,15 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: analytics-service
-      S3_DATA_LAKE_BUCKET: otterworks-data-lake
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      S3_DATA_LAKE_BUCKET: otterdrive-data-lake
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       localstack:
         condition: service_healthy
@@ -366,7 +366,7 @@ services:
     build:
       context: ./services/admin-service
       dockerfile: Dockerfile
-    container_name: otterworks-admin-service
+    container_name: otterdrive-admin-service
     ports:
     - 8089:8089
     environment:
@@ -376,21 +376,21 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: admin-service
       RAILS_ENV: development
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
-      DATABASE_URL: postgres://otterworks:otterworks_dev@postgres:5432/otterworks
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
+      DATABASE_URL: postgres://otterdrive:otterdrive_dev@postgres:5432/otterdrive
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_USER: otterworks
-      DATABASE_PASSWORD: otterworks_dev
-      SECRET_KEY_BASE: dev-secret-key-base-otterworks-change-in-production
+      DATABASE_USER: otterdrive
+      DATABASE_PASSWORD: otterdrive_dev
+      SECRET_KEY_BASE: dev-secret-key-base-otterdrive-change-in-production
       DEVIN_API_KEY: ${DEVIN_API_KEY:-}
       DEVIN_ORG_ID: ${DEVIN_ORG_ID:-}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
@@ -421,7 +421,7 @@ services:
     build:
       context: ./services/report-service
       dockerfile: Dockerfile
-    container_name: otterworks-report-service
+    container_name: otterdrive-report-service
     ports:
     - 8091:8091
     environment:
@@ -431,19 +431,19 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: report-service
       DB_HOST: postgres
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
       DB_PORT: 5432
-      DB_NAME: otterworks_reports
-      DB_USER: otterworks
-      DB_PASSWORD: otterworks_dev
+      DB_NAME: otterdrive_reports
+      DB_USER: otterdrive
+      DB_PASSWORD: otterdrive_dev
       ANALYTICS_SERVICE_URL: http://analytics-service:8088
       AUDIT_SERVICE_URL: http://audit-service:8090
       AUTH_SERVICE_URL: http://auth-service:8081
@@ -469,7 +469,7 @@ services:
     build:
       context: ./services/audit-service
       dockerfile: Dockerfile
-    container_name: otterworks-audit-service
+    container_name: otterdrive-audit-service
     ports:
     - 8090:8090
     environment:
@@ -479,19 +479,19 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
       REDIS_HOST: redis
       REDIS_PORT: 6379
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: audit-service
-      DYNAMODB_TABLE: otterworks-audit-events
+      DYNAMODB_TABLE: otterdrive-audit-events
       Aws__EndpointUrl: http://localstack:4566
-      Aws__DynamoDbTable: otterworks-audit-events
-      Aws__S3ArchiveBucket: otterworks-audit-archive
+      Aws__DynamoDbTable: otterdrive-audit-events
+      Aws__S3ArchiveBucket: otterdrive-audit-archive
       ASPNETCORE_URLS: http://+:8090
-      JWT_SECRET: ${JWT_SECRET:-otterworks-local-dev-jwt-secret-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-otterdrive-local-dev-jwt-secret-change-me-in-production}
     depends_on:
       localstack:
         condition: service_healthy
@@ -515,7 +515,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_COLLAB_WS_URL: ws://localhost:8084
-    container_name: otterworks-web-app
+    container_name: otterdrive-web-app
     ports:
     - 3000:3000
     environment:
@@ -538,7 +538,7 @@ services:
     build:
       context: ./frontend/admin-dashboard
       dockerfile: Dockerfile
-    container_name: otterworks-admin-dashboard
+    container_name: otterdrive-admin-dashboard
     ports:
     - 4200:4200
     environment:
@@ -552,7 +552,7 @@ services:
     - /tmp
 networks:
   default:
-    name: otterworks-network
+    name: otterdrive-network
 volumes:
   postgres_data: null
   localstack_data: null

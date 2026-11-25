@@ -3,7 +3,7 @@
 # dependencies = ["psycopg2-binary", "bcrypt"]
 # ///
 """
-OtterWorks admin-service seed script.
+OtterDrive admin-service seed script.
 
 Populates the admin-service PostgreSQL database with 10 realistic users,
 storage quotas, audit log entries, feature flags, and announcements so the
@@ -30,9 +30,9 @@ from psycopg2.extras import execute_values, Json
 DB_CONFIG = {
     "host":     os.getenv("DB_HOST",     "localhost"),
     "port":     int(os.getenv("DB_PORT", "5432")),
-    "dbname":   os.getenv("DB_NAME",     "otterworks"),
-    "user":     os.getenv("DB_USER",     "otterworks"),
-    "password": os.getenv("DB_PASSWORD", "otterworks_dev"),
+    "dbname":   os.getenv("DB_NAME",     "otterdrive"),
+    "user":     os.getenv("DB_USER",     "otterdrive"),
+    "password": os.getenv("DB_PASSWORD", "otterdrive_dev"),
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ ADMIN_ID = "a0000000-0000-0000-0000-000000000001"  # pre-existing admin from aut
 USERS = [
     {
         "id":           "5eed0001-0000-4000-a000-000000000001",
-        "email":        "alice.johnson@otterworks.io",
+        "email":        "alice.johnson@otterdrive.io",
         "display_name": "Alice Johnson",
         "role":         "super_admin",
         "status":       "active",
@@ -77,7 +77,7 @@ USERS = [
     },
     {
         "id":           "5eed0002-0000-4000-a000-000000000002",
-        "email":        "bob.martinez@otterworks.io",
+        "email":        "bob.martinez@otterdrive.io",
         "display_name": "Bob Martinez",
         "role":         "editor",
         "status":       "active",
@@ -91,7 +91,7 @@ USERS = [
     },
     {
         "id":           "5eed0003-0000-4000-a000-000000000003",
-        "email":        "carol.chen@otterworks.io",
+        "email":        "carol.chen@otterdrive.io",
         "display_name": "Carol Chen",
         "role":         "editor",
         "status":       "active",
@@ -105,7 +105,7 @@ USERS = [
     },
     {
         "id":           "5eed0004-0000-4000-a000-000000000004",
-        "email":        "david.kim@otterworks.io",
+        "email":        "david.kim@otterdrive.io",
         "display_name": "David Kim",
         "role":         "viewer",
         "status":       "suspended",
@@ -119,7 +119,7 @@ USERS = [
     },
     {
         "id":           "5eed0005-0000-4000-a000-000000000005",
-        "email":        "emily.davis@otterworks.io",
+        "email":        "emily.davis@otterdrive.io",
         "display_name": "Emily Davis",
         "role":         "editor",
         "status":       "active",
@@ -133,7 +133,7 @@ USERS = [
     },
     {
         "id":           "5eed0006-0000-4000-a000-000000000006",
-        "email":        "frank.wilson@otterworks.io",
+        "email":        "frank.wilson@otterdrive.io",
         "display_name": "Frank Wilson",
         "role":         "admin",
         "status":       "active",
@@ -147,7 +147,7 @@ USERS = [
     },
     {
         "id":           "5eed0007-0000-4000-a000-000000000007",
-        "email":        "grace.lee@otterworks.io",
+        "email":        "grace.lee@otterdrive.io",
         "display_name": "Grace Lee",
         "role":         "viewer",
         "status":       "active",
@@ -161,7 +161,7 @@ USERS = [
     },
     {
         "id":           "5eed0008-0000-4000-a000-000000000008",
-        "email":        "henry.thompson@otterworks.io",
+        "email":        "henry.thompson@otterdrive.io",
         "display_name": "Henry Thompson",
         "role":         "editor",
         "status":       "active",
@@ -175,7 +175,7 @@ USERS = [
     },
     {
         "id":           "5eed0009-0000-4000-a000-000000000009",
-        "email":        "irene.garcia@otterworks.io",
+        "email":        "irene.garcia@otterdrive.io",
         "display_name": "Irene Garcia",
         "role":         "viewer",
         "status":       "active",
@@ -189,7 +189,7 @@ USERS = [
     },
     {
         "id":           "5eed0010-0000-4000-a000-000000000010",
-        "email":        "james.park@otterworks.io",
+        "email":        "james.park@otterdrive.io",
         "display_name": "James Park",
         "role":         "editor",
         "status":       "active",
@@ -302,7 +302,7 @@ def seed_users(cur) -> None:
     cur.execute("""
         UPDATE admin_users
         SET suspended_at = %s, suspended_reason = 'Policy violation — account under review'
-        WHERE email = 'david.kim@otterworks.io' AND suspended_at IS NULL
+        WHERE email = 'david.kim@otterdrive.io' AND suspended_at IS NULL
     """, (days_ago(44),))
     log("  Done.")
 
@@ -370,7 +370,7 @@ def seed_audit_logs(cur) -> None:
     log("Inserting ~80 audit_log entries spread over the past 30 days ...")
 
     # Gather valid user IDs that were actually inserted
-    cur.execute("SELECT id, email FROM admin_users WHERE email LIKE '%@otterworks.io'")
+    cur.execute("SELECT id, email FROM admin_users WHERE email LIKE '%@otterdrive.io'")
     db_users = cur.fetchall()
     if not db_users:
         log("  No seeded users found — skipping audit logs.")
@@ -417,7 +417,7 @@ def seed_audit_logs(cur) -> None:
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    print("\nOtterWorks admin-service seed script")
+    print("\nOtterDrive admin-service seed script")
     print(f"  Target: {DB_CONFIG['user']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}\n")
 
     try:

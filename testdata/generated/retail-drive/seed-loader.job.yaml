@@ -1,17 +1,17 @@
-# OtterWorks enterprise-drive seed loader.
+# OtterDrive enterprise-drive seed loader.
 #
 # Runs testdata/generated/retail-drive/generate_drive.py against the in-cluster
-# API gateway so a freshly spun-up (or re-seeded) OtterWorks environment gets the
+# API gateway so a freshly spun-up (or re-seeded) OtterDrive environment gets the
 # full, browsable multimodal drive. Idempotent: safe to re-run.
 #
 #   # 1. create the credentials secret (once)
-#   kubectl -n otterworks create secret generic retail-drive-seed \
+#   kubectl -n otterdrive create secret generic retail-drive-seed \
 #       --from-literal=DRIVE_EMAIL='<drive-account-email>' \
 #       --from-literal=DRIVE_PASSWORD='<pick-a-password>'
 #
 #   # 2. run the loader
-#   kubectl -n otterworks apply -f testdata/generated/retail-drive/seed-loader.job.yaml
-#   kubectl -n otterworks logs -f job/retail-drive-seed-loader
+#   kubectl -n otterdrive apply -f testdata/generated/retail-drive/seed-loader.job.yaml
+#   kubectl -n otterdrive logs -f job/retail-drive-seed-loader
 #
 # An init container clones the repo into a shared volume; the loader container
 # builds a venv in that volume and runs the generator. Both run as a non-root
@@ -20,10 +20,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: retail-drive-seed-loader
-  namespace: otterworks
+  namespace: otterdrive
   labels:
     app.kubernetes.io/name: retail-drive-seed-loader
-    app.kubernetes.io/part-of: otterworks-seed
+    app.kubernetes.io/part-of: otterdrive-seed
 spec:
   backoffLimit: 3
   ttlSecondsAfterFinished: 86400
@@ -48,7 +48,7 @@ spec:
           image: alpine/git:2.45.2
           env:
             - name: REPO_URL
-              value: "https://github.com/Cognition-Partner-Workshops/otterworks.git"
+              value: "https://github.com/COG-GTM/otterdrive.git"
             - name: REPO_REF
               value: "main"
           command: ["/bin/sh", "-c"]
@@ -70,7 +70,7 @@ spec:
             - name: HOME
               value: "/work"
             - name: GATEWAY_URL
-              value: "http://api-gateway.otterworks.svc.cluster.local:8080"
+              value: "http://api-gateway.otterdrive.svc.cluster.local:8080"
             - name: SCALE
               value: "1.0"
             - name: DEPARTMENTS

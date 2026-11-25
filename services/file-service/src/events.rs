@@ -51,7 +51,7 @@ impl EventPublisher {
             Some(match &sns_config.topic_arn {
                 Some(arn) => format!("{arn}-v2"),
                 None => format!(
-                    "arn:aws:sns:{}:000000000000:otterworks-file-events-v2",
+                    "arn:aws:sns:{}:000000000000:otterdrive-file-events-v2",
                     aws_config.region
                 ),
             })

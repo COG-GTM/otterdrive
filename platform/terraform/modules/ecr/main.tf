@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Platform - ECR Module
+# OtterDrive Platform - ECR Module
 # Container registries for all microservices
 # ------------------------------------------------------------------------------
 

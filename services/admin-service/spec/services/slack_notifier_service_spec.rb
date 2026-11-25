@@ -176,7 +176,7 @@ RSpec.describe SlackNotifierService do
     message = blocks[3]['text']['text']
     footer = blocks.last['elements'][0]['text']
 
-    expect(header).to eq(':rotating_light: OtterWorks Alert — file-service — FileUploadFailed: report.pdf')
+    expect(header).to eq(':rotating_light: OtterDrive Alert — file-service — FileUploadFailed: report.pdf')
     expect(fields).to include("*Error:*\nFileUploadFailed: report.pdf")
     expect(fields).to include("*Severity:*\ncritical")
     expect(fields).to include("*Location:*\n`file-service`")

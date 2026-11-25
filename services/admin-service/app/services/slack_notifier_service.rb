@@ -178,13 +178,13 @@ class SlackNotifierService
         # The top-level text is Slack's notification/fallback string; without
         # it, pushes and screen readers for a blocks-only message are blank.
         # It is parsed as mrkdwn, so it must be escaped like any other field.
-        text: truncate("OtterWorks Alert — #{service} — #{title}", HEADER_MAX),
+        text: truncate("OtterDrive Alert — #{service} — #{title}", HEADER_MAX),
         blocks: [
           {
             type: 'header',
             text: {
               type: 'plain_text',
-              text: truncate(":rotating_light: OtterWorks Alert — #{raw_service} — #{incident.title}", HEADER_MAX),
+              text: truncate(":rotating_light: OtterDrive Alert — #{raw_service} — #{incident.title}", HEADER_MAX),
               emoji: true
             }
           },

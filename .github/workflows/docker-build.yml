@@ -122,9 +122,9 @@ jobs:
           context: ${{ matrix.service.context }}
           push: true
           platforms: linux/amd64
-          # otterworks/<service>: the repository layout every deploy script
+          # otterdrive/<service>: the repository layout every deploy script
           # reads (ECR_PREFIX in scripts/lib/tenant-common.sh). Images published
           # anywhere else are simply never deployed.
           tags: |
-            ${{ steps.ecr.outputs.registry }}/otterworks/${{ matrix.service.name }}:${{ inputs.version }}
-            ${{ steps.ecr.outputs.registry }}/otterworks/${{ matrix.service.name }}:${{ github.sha }}
+            ${{ steps.ecr.outputs.registry }}/otterdrive/${{ matrix.service.name }}:${{ inputs.version }}
+            ${{ steps.ecr.outputs.registry }}/otterdrive/${{ matrix.service.name }}:${{ github.sha }}

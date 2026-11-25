@@ -93,7 +93,7 @@ def missing_security_headers(ctx: ScanContext) -> Result:
 )
 def cors_origin_reflection(ctx: ScanContext) -> Result:
     self = cors_origin_reflection.probe
-    evil = "https://otterworks-attacker.example"
+    evil = "https://otterdrive-attacker.example"
     response = ctx.get("/api/v1/documents/", identity=ctx.attacker, headers={"Origin": evil})
     allow_origin = response.headers.get("access-control-allow-origin", "")
     allow_creds = response.headers.get("access-control-allow-credentials", "").lower() == "true"

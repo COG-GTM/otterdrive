@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks-notification-service
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive-notification-service
   tag: ""  # Set at deploy time (ECR uses IMMUTABLE tags)
   pullPolicy: IfNotPresent
 
@@ -16,14 +16,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: notification-service.otterworks.workshop.example.com
+    - host: notification-service.otterdrive.workshop.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: notification-service-tls
       hosts:
-        - notification-service.otterworks.workshop.example.com
+        - notification-service.otterdrive.workshop.example.com
 
 resources:
   limits:
@@ -59,7 +59,7 @@ config:
   # default everywhere (matches the image's Dockerfile default); enable per
   # tenant with scripts/inject-bug.sh <id> notification-queue-fail, or:
   #   helm upgrade notification-service infrastructure/helm/notification-service \
-  #     -n otterworks-<id> --reuse-values \
+  #     -n otterdrive-<id> --reuse-values \
   #     --set-string config.NOTIFICATION_SQS_ALWAYS_FAIL=true
   NOTIFICATION_SQS_ALWAYS_FAIL: "false"
 

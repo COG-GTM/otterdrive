@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
             <Logo size={28} />
-            <span className="font-semibold text-gray-900">OtterWorks, Inc.</span>
+            <span className="font-semibold text-gray-900">OtterDrive, Inc.</span>
           </Link>
         </div>
       </header>
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <div className="bg-white border border-gray-300 rounded p-6 space-y-4 text-sm text-gray-600 leading-relaxed">
           <p>
             <strong className="text-gray-900">1. Information We Collect.</strong>{" "}
-            OtterWorks stores the files and documents you upload, your display
+            OtterDrive stores the files and documents you upload, your display
             name, and your email address. We do not track your swimming routes
             or your favorite fishing spots.
           </p>

@@ -156,7 +156,7 @@ pub async fn upload_file(
         tracing::warn!(
             "FILE_UPLOAD_ALWAYS_FAIL is enabled: redirecting upload to nonexistent bucket"
         );
-        "otterworks-files-chaos-nonexistent".to_string()
+        "otterdrive-files-chaos-nonexistent".to_string()
     } else if chaos_active(
         &mut redis_cm.get_ref().clone(),
         "chaos:file-service:upload_s3_error",
@@ -164,7 +164,7 @@ pub async fn upload_file(
     .await
     {
         tracing::warn!("Chaos flag active: redirecting upload to nonexistent bucket");
-        "otterworks-files-chaos-nonexistent".to_string()
+        "otterdrive-files-chaos-nonexistent".to_string()
     } else {
         s3.bucket.clone()
     };
@@ -550,7 +550,7 @@ pub async fn share_file(
     let file = meta.get_file(&file_id).await?;
 
     // Recipient is either a resolved user id, or an email the client could
-    // not resolve to an OtterWorks account. Unresolved emails are rejected
+    // not resolve to an OtterDrive account. Unresolved emails are rejected
     // unless the share-event failure switch is on, in which case the
     // notification publish is still attempted (and fails) without persisting
     // a share to a nonexistent user — so the failure fires for any email.
@@ -567,7 +567,7 @@ pub async fn share_file(
                 })?;
             if !events.share_publish_forced() {
                 return Err(ServiceError::BadRequest(format!(
-                    "no OtterWorks user found for {email}"
+                    "no OtterDrive user found for {email}"
                 )));
             }
             (

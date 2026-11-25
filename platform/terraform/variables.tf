@@ -18,7 +18,7 @@ variable "environment" {
 variable "cluster_name" {
   description = "Name for the EKS cluster"
   type        = string
-  default     = "otterworks-dev"
+  default     = "otterdrive-dev"
 }
 
 variable "cluster_version" {
@@ -78,5 +78,5 @@ variable "node_max_size" {
 variable "ecr_prefix" {
   description = "Prefix for ECR repository names"
   type        = string
-  default     = "otterworks/"
+  default     = "otterdrive/"
 }

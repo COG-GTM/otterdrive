@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Auth Module
+# OtterDrive Auth Module
 # Cognito user pool for authentication and authorization
 # ------------------------------------------------------------------------------
 

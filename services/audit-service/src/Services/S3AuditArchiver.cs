@@ -3,10 +3,10 @@ using System.Text.Json;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
-using OtterWorks.AuditService.Config;
-using OtterWorks.AuditService.Models;
+using OtterDrive.AuditService.Config;
+using OtterDrive.AuditService.Models;
 
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public class S3AuditArchiver : IAuditArchiver
 {

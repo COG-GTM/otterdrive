@@ -1,9 +1,9 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Options;
-using OtterWorks.AuditService.Config;
+using OtterDrive.AuditService.Config;
 
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public class DynamoDbAuditRepository : IAuditRepository
 {

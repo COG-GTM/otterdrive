@@ -1,4 +1,4 @@
-# OtterWorks Exploratory QA Report
+# OtterDrive Exploratory QA Report
 
 Test date: May 1, 2026  
 Scope: Local app running via `make up`  
@@ -19,7 +19,7 @@ No code fixes were made during this pass. This document captures bugs, UI jank, 
 - **Files:** Upload, list, detail page, sharing, shared-with-me, and trash all worked.
 - **Documents:** Document creation, editor load, typing, autosave/list return all worked.
 - **Search:** Search found the uploaded file and the test document.
-- **Admin dashboard:** Admin login with `admin@otterworks.dev` / `Admin123!` succeeded.
+- **Admin dashboard:** Admin login with `admin@otterdrive.dev` / `Admin123!` succeeded.
 - **Mobile basics:** No horizontal overflow found on dashboard, files, documents, search, or settings.
 
 ### Main concerns
@@ -90,8 +90,8 @@ This returns `404 Not Found`.
 
 These containers are running but unhealthy:
 
-- **`otterworks-fluent-bit`**
-- **`otterworks-otel-collector`**
+- **`otterdrive-fluent-bit`**
+- **`otterdrive-otel-collector`**
 
 The core app services are healthy, but the local setup is not fully healthy from an operations perspective.
 
@@ -223,24 +223,24 @@ Core app services returned healthy responses:
 
 Unhealthy containers:
 
-- **`otterworks-fluent-bit`**
-- **`otterworks-otel-collector`**
+- **`otterdrive-fluent-bit`**
+- **`otterdrive-otel-collector`**
 
 ## Test Artifacts
 
 Throwaway users created during local testing:
 
-- **User A:** `drive-tester-a-1777664932516@otterworks.test`
-- **User B:** `drive-tester-b-1777664932516@otterworks.test`
+- **User A:** `drive-tester-a-1777664932516@otterdrive.test`
+- **User B:** `drive-tester-b-1777664932516@otterdrive.test`
 
 Sample uploaded file:
 
-- **`otterworks-sample-1777664932516.txt`**
+- **`otterdrive-sample-1777664932516.txt`**
 
 Screenshots were saved under `/tmp/` during the exploratory pass, with filenames beginning with:
 
 ```text
-/tmp/otterworks-1777664932516-
+/tmp/otterdrive-1777664932516-
 ```
 
 ## Completion Status

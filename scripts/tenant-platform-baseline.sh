@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Shared Platform Baseline for Multi-Tenant Demos (run ONCE)
+# OtterDrive - Shared Platform Baseline for Multi-Tenant Demos (run ONCE)
 #
 # These are SHARED, cluster-wide pieces consumed by every tenant — conceptually
 # they belong in platform-engineering-shared-services and must NOT be duplicated
 # per tenant (see docs/MULTI-TENANT-DEMO-PLAN.md §2/§8). This script installs:
 #   1. ingress-nginx (one shared controller + one NLB) -> host/path tenant routing
-#   2. the namespace TTL reaper CronJob (+ RBAC) in otterworks-system, which
+#   2. the namespace TTL reaper CronJob (+ RBAC) in otterdrive-system, which
 #      deletes tenant namespaces past their demo/expires-at annotation
 #
 # Idempotent: safe to re-run. Usage:
@@ -38,7 +38,7 @@ if [ "${INSTALL_INGRESS}" = true ]; then
   ensure_ingress_nginx
 fi
 
-# ---------- 2. Namespace TTL reaper (otterworks-system) ----------
+# ---------- 2. Namespace TTL reaper (otterdrive-system) ----------
 log "Deploying namespace TTL reaper CronJob into ${SYSTEM_NAMESPACE}..."
 kubectl create namespace "${SYSTEM_NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f - >/dev/null
 kubectl apply -f - <<YAML
@@ -96,7 +96,7 @@ spec:
                   set -eu
                   now=\$(date -u +%s)
                   echo "[reaper] scanning tenant namespaces at \$(date -u)"
-                  for ns in \$(kubectl get ns -l app.kubernetes.io/managed-by=otterworks-tenant -o jsonpath='{.items[*].metadata.name}'); do
+                  for ns in \$(kubectl get ns -l app.kubernetes.io/managed-by=otterdrive-tenant -o jsonpath='{.items[*].metadata.name}'); do
                     exp_epoch=\$(kubectl get ns "\$ns" -o jsonpath='{.metadata.annotations.demo/expires-at-epoch}' 2>/dev/null || true)
                     if [ -z "\$exp_epoch" ]; then
                       echo "[reaper] \$ns has no demo/expires-at-epoch; skipping"

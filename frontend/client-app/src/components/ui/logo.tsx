@@ -10,7 +10,7 @@ export function Logo({ size = 32, className }: LogoProps) {
   return (
     <img
       src={otterLogo}
-      alt="OtterWorks logo"
+      alt="OtterDrive logo"
       width={size}
       height={size}
       className={cn("shrink-0 select-none", className)}

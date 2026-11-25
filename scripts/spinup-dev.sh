@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Dev Spin-up (companion to teardown-dev.sh)
+# OtterDrive - Dev Spin-up (companion to teardown-dev.sh)
 #
 # Brings the environment back after a teardown:
 #   1. Re-applies the platform layer (VPC/EKS/ECR) -> recreates the EKS cluster
@@ -19,7 +19,7 @@
 #   AWS_ACCOUNT_ID=<id> DB_PASSWORD=<pw> ./scripts/spinup-dev.sh --skip-deploy
 #
 # Env: AWS_ACCOUNT_ID (required), DB_PASSWORD (required unless --skip-infra),
-#      AWS_REGION (default us-east-1), NAMESPACE (default otterworks).
+#      AWS_REGION (default us-east-1), NAMESPACE (default otterdrive).
 # ------------------------------------------------------------------------------
 set -euo pipefail
 
@@ -28,10 +28,10 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
 AWS_ACCOUNT_ID="${AWS_ACCOUNT_ID:?ERROR: AWS_ACCOUNT_ID must be set}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-NAMESPACE="${NAMESPACE:-otterworks}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+NAMESPACE="${NAMESPACE:-otterdrive}"
 ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-ECR_PREFIX="otterworks/"
+ECR_PREFIX="otterdrive/"
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 log()  { echo -e "${GREEN}[spinup]${NC} $*"; }

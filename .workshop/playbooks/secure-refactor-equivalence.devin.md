@@ -193,7 +193,7 @@ except a recorded before-state would have found it, because there is nothing
 wrong with the code you are reading.
 
 Two more examples, both fixture defects the same gate refused to grade around.
-The subject was `DocumentQueryRepository` in an OtterWorks document service,
+The subject was `DocumentQueryRepository` in an OtterDrive document service,
 which built its `WHERE` clause by interpolating caller values, and the
 characterization run looked perfectly healthy: twelve contract cases recorded,
 attack cases firing, suite green.

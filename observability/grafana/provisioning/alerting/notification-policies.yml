@@ -8,4 +8,4 @@ policies:
     group_interval: 30s
     repeat_interval: 4h
     matchers:
-      - team=otterworks
+      - team=otterdrive

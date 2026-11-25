@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: otterworks-limits
+  name: otterdrive-limits
   namespace: decomposition-dev
   labels:
     app.kubernetes.io/managed-by: terraform
     platform/environment: dev
-    platform/team: otterworks
+    platform/team: otterdrive
 spec:
   limits:
     - type: Container

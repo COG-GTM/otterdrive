@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Infrastructure - Application-Specific AWS Resources
+# OtterDrive Infrastructure - Application-Specific AWS Resources
 # Platform (VPC, EKS, ECR) is provisioned by /platform/terraform
 # This layer provisions app-level resources: RDS, DynamoDB, S3, SQS, etc.
 # ------------------------------------------------------------------------------
@@ -23,8 +23,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "otterworks-terraform-state"
-    key    = "otterworks/terraform.tfstate"
+    bucket = "otterdrive-terraform-state"
+    key    = "otterdrive/terraform.tfstate"
     region = "us-east-1"
   }
 }
@@ -34,7 +34,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "otterworks"
+      Project     = "otterdrive"
       Environment = var.environment
       ManagedBy   = "terraform"
       Layer       = "application"
@@ -48,7 +48,7 @@ data "terraform_remote_state" "platform" {
   backend = "s3"
 
   config = {
-    bucket = "otterworks-terraform-state"
+    bucket = "otterdrive-terraform-state"
     key    = "platform/terraform.tfstate"
     region = "us-east-1"
   }
@@ -89,13 +89,13 @@ provider "helm" {
 module "storage" {
   source      = "./modules/storage"
   environment = var.environment
-  project     = "otterworks"
+  project     = "otterdrive"
 }
 
 module "database" {
   source      = "./modules/database"
   environment = var.environment
-  project     = "otterworks"
+  project     = "otterdrive"
   db_password = var.db_password
 
   vpc_id     = local.vpc_id
@@ -106,13 +106,13 @@ module "database" {
 module "messaging" {
   source      = "./modules/messaging"
   environment = var.environment
-  project     = "otterworks"
+  project     = "otterdrive"
 }
 
 module "search" {
   source      = "./modules/search"
   environment = var.environment
-  project     = "otterworks"
+  project     = "otterdrive"
 
   vpc_id                 = local.vpc_id
   vpc_cidr               = local.vpc_cidr
@@ -123,13 +123,13 @@ module "search" {
 module "auth" {
   source      = "./modules/auth"
   environment = var.environment
-  project     = "otterworks"
+  project     = "otterdrive"
 }
 
 module "cache" {
   source              = "./modules/cache"
   environment         = var.environment
-  project             = "otterworks"
+  project             = "otterdrive"
   vpc_id              = local.vpc_id
   subnet_ids          = local.private_subnets
   allowed_cidr_blocks = [local.vpc_cidr]
@@ -138,7 +138,7 @@ module "cache" {
 module "monitoring" {
   source             = "./modules/monitoring"
   environment        = var.environment
-  project            = "otterworks"
+  project            = "otterdrive"
   log_retention_days = var.log_retention_days
 }
 
@@ -147,7 +147,7 @@ module "monitoring" {
 module "irsa" {
   source            = "./modules/irsa"
   environment       = var.environment
-  project           = "otterworks"
+  project           = "otterdrive"
   namespace         = var.namespace
   oidc_provider_arn = local.oidc_provider_arn
   oidc_provider_url = local.oidc_provider_url

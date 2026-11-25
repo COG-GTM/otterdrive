@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — Reaper v2 (schedule-driven, GCs EVERYTHING)
+# OtterDrive Demo Platform — Reaper v2 (schedule-driven, GCs EVERYTHING)
 #
 # SUPERSEDES the basic namespace-only TTL reaper embedded in
 # scripts/tenant-platform-baseline.sh (which deletes tenant namespaces but
@@ -14,14 +14,14 @@
 #      exit.
 #   2. scan TENANT#*/META; for every tenant with expires_at + grace_seconds < now
 #      run a full, idempotent teardown of ALL its resources:
-#        (a) namespace otterworks-<id>          -> via scripts/teardown-tenant.sh
-#        (b) RDS database otterworks_<id>        -> via scripts/teardown-tenant.sh
+#        (a) namespace otterdrive-<id>          -> via scripts/teardown-tenant.sh
+#        (b) RDS database otterdrive_<id>        -> via scripts/teardown-tenant.sh
 #                                                   (reuses drop_tenant_db)
 #        (c) tenant S3 object prefix in shared buckets
 #        (d) tenant DynamoDB items in shared app tables
 #        (e) legacy exact-match IRSA trust       -> via scripts/teardown-tenant.sh
 #                                                   (PRESERVES the shared
-#                                                    StringLike otterworks-* rule)
+#                                                    StringLike otterdrive-* rule)
 #        (f) tenant Route53 records (best effort; external-dns also GCs these)
 #        (g) delete TENANT#<id> + LOCK#<id> control items and append an AUDIT reap
 #   3. if sweep_orphans: independently list live namespaces / DBs / S3 prefixes /
@@ -52,12 +52,12 @@ source "${SCRIPT_DIR}/infra-sweep.sh"
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/idle-suspend.sh"
 
-CONTROL_TABLE="${CONTROL_TABLE:-otterworks-demo-control}"
+CONTROL_TABLE="${CONTROL_TABLE:-otterdrive-demo-control}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-HOST_SUFFIX="${HOST_SUFFIX:-demo.otterworks.app}"
-SHARED_S3_PREFIX="${SHARED_S3_PREFIX:-otterworks-}"
-SHARED_DDB_PREFIX="${SHARED_DDB_PREFIX:-otterworks-}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+HOST_SUFFIX="${HOST_SUFFIX:-demo.otterdrive.app}"
+SHARED_S3_PREFIX="${SHARED_S3_PREFIX:-otterdrive-}"
+SHARED_DDB_PREFIX="${SHARED_DDB_PREFIX:-otterdrive-}"
 # Convention for a tenant's object prefix inside the shared S3 buckets. Only this
 # prefix namespace is swept for orphans, so shared/non-tenant keys are never
 # touched. The per-tenant reap also clears the bare "<id>/" prefix for safety.
@@ -167,7 +167,7 @@ gc_tenant() {
 
   # (a) namespace, (b) RDS DB, (e) legacy IRSA trust — reuse the existing
   # teardown script (it is safe when the namespace is already gone and preserves
-  # the shared otterworks-* StringLike trust).
+  # the shared otterdrive-* StringLike trust).
   "${REPO_ROOT}/scripts/teardown-tenant.sh" "${id}" \
     || warn "  teardown-tenant.sh reported issues for ${id} (continuing GC)"
 
@@ -250,10 +250,10 @@ EOF
 # ------------------------------------------------------------------------------
 sweep_orphan_namespaces() {
   local ns id
-  for ns in $(kubectl get ns -l app.kubernetes.io/managed-by=otterworks-tenant \
+  for ns in $(kubectl get ns -l app.kubernetes.io/managed-by=otterdrive-tenant \
                 -o jsonpath='{.items[*].metadata.name}' 2>/dev/null); do
-    case "${ns}" in otterworks-platform|otterworks-system|otterworks) continue ;; esac
-    id="${ns#otterworks-}"
+    case "${ns}" in otterdrive-platform|otterdrive-system|otterdrive) continue ;; esac
+    id="${ns#otterdrive-}"
     [ -n "${id}" ] || continue
     if ! ctl_tenant_exists "${id}"; then
       warn "orphan namespace ${ns} (no TENANT# item) -> GC"
@@ -262,7 +262,7 @@ sweep_orphan_namespaces() {
   done
 }
 
-# List per-tenant databases (otterworks_<id>) via an in-cluster psql Job, reusing
+# List per-tenant databases (otterdrive_<id>) via an in-cluster psql Job, reusing
 # the shared secret-application helper (password via stdin, never argv).
 list_tenant_dbs() {
   [ -n "${RDS_HOST:-}" ] || return 0
@@ -293,14 +293,14 @@ spec:
           command: ["/bin/sh","-c"]
           args:
             - |
-              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterworks user=${DB_USER} sslmode=prefer connect_timeout=10"
-              psql "\$CONN" -tAc "SELECT datname FROM pg_database WHERE datname LIKE 'otterworks\\_%'"
+              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterdrive user=${DB_USER} sslmode=prefer connect_timeout=10"
+              psql "\$CONN" -tAc "SELECT datname FROM pg_database WHERE datname LIKE 'otterdrive\\_%'"
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { cpu: 200m, memory: 128Mi }
 YAML
   kubectl -n "${ns}" wait --for=condition=complete "job/${job}" --timeout=90s >/dev/null 2>&1 || true
-  kubectl -n "${ns}" logs "job/${job}" 2>/dev/null | grep -E '^otterworks_' || true
+  kubectl -n "${ns}" logs "job/${job}" 2>/dev/null | grep -E '^otterdrive_' || true
   kubectl -n "${ns}" delete secret "${secret}" --ignore-not-found >/dev/null 2>&1 || true
   kubectl -n "${ns}" delete job "${job}" --ignore-not-found >/dev/null 2>&1 || true
 }
@@ -308,7 +308,7 @@ YAML
 sweep_orphan_dbs() {
   local db id ids known
   # tenant_db_name is lossy: every character outside [a-z0-9] becomes '_', so
-  # otterworks_preston_test is what a tenant id of "preston-test" *or*
+  # otterdrive_preston_test is what a tenant id of "preston-test" *or*
   # "preston_test" produces. Stripping the prefix and looking the result up in
   # the control table therefore misses live hyphenated tenants and deletes them
   # minutes after checkout. Compare in the lossy direction instead: a database
@@ -317,7 +317,7 @@ sweep_orphan_dbs() {
     warn "control-table scan failed; skipping orphan-DB sweep (fail-closed)"
     return 0
   fi
-  # An empty control table would make every otterworks_* database look like an
+  # An empty control table would make every otterdrive_* database look like an
   # orphan and wipe them all. That is almost always a transient/misconfigured
   # state (mid-bootstrap, wrong table) rather than a genuine "delete everything"
   # signal, so treat it like a failed scan and skip: the namespace/S3/DDB sweeps
@@ -334,8 +334,8 @@ ${ids}
 EOF
 )"
   for db in $(list_tenant_dbs); do
-    [ "${db}" = "otterworks" ] && continue
-    id="${db#otterworks_}"
+    [ "${db}" = "otterdrive" ] && continue
+    id="${db#otterdrive_}"
     [ -n "${id}" ] || continue
     printf '%s\n' "${known}" | grep -qxF "${db}" && continue
     warn "orphan database ${db} (no TENANT# item) -> GC"

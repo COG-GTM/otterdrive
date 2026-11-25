@@ -12,7 +12,7 @@ import structlog
 
 logger = structlog.get_logger()
 
-DEFAULT_ARCHIVE_DIR = "/var/lib/otterworks/exports"
+DEFAULT_ARCHIVE_DIR = "/var/lib/otterdrive/exports"
 
 
 class ExportArchive:

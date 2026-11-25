@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Platform - Root Module
+# OtterDrive Platform - Root Module
 # Provisions standalone VPC, EKS cluster, and ECR repositories
 # No dependency on platform-engineering shared services
 # ------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "otterworks-terraform-state"
+    bucket = "otterdrive-terraform-state"
     key    = "platform/terraform.tfstate"
     region = "us-east-1"
   }
@@ -30,7 +30,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "otterworks"
+      Project     = "otterdrive"
       Environment = var.environment
       ManagedBy   = "terraform"
       Layer       = "platform"
@@ -43,7 +43,7 @@ provider "aws" {
 module "vpc" {
   source = "./modules/vpc"
 
-  project            = "otterworks"
+  project            = "otterdrive"
   environment        = var.environment
   vpc_cidr           = var.vpc_cidr
   az_count           = var.az_count
@@ -56,7 +56,7 @@ module "vpc" {
 module "eks" {
   source = "./modules/eks"
 
-  project         = "otterworks"
+  project         = "otterdrive"
   environment     = var.environment
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
@@ -78,7 +78,7 @@ module "eks" {
 module "ecr" {
   source = "./modules/ecr"
 
-  project     = "otterworks"
+  project     = "otterdrive"
   environment = var.environment
   ecr_prefix  = var.ecr_prefix
 

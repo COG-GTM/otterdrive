@@ -4,7 +4,7 @@
 # Scans DynamoDB for old events, compresses to JSONL.gz, uploads to Glacier,
 # batch-deletes from DynamoDB, generates compliance report
 #
-# Owner: Jake (data-team@otterworks.dev) -- Jake left mid-2020
+# Owner: Jake (data-team@otterdrive.dev) -- Jake left mid-2020
 # TODO ETL-134: Add incremental archival instead of full scan (deferred Q2 2020)
 # TODO ETL-167: Handle DynamoDB throughput throttling properly (2020-04-10)
 # TODO ETL-199: This script has no tests whatsoever (never prioritized)
@@ -45,7 +45,7 @@ def main():
 
     ds = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
     retention_days = 90
-    dynamodb_table_name = "otterworks-audit-events"
+    dynamodb_table_name = "otterdrive-audit-events"
     dynamodb_batch_size = 25  # DynamoDB batch write limit
     s3_prefix = "audit-archive"
 

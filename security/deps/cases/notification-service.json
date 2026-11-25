@@ -31,7 +31,7 @@
       "id": "footer-base64-and-const",
       "policy": "contract",
       "kind": "configured",
-      "template": "<!-- {{base64Decoder:VGhpcyBpcyBhbiBhdXRvbWF0ZWQgbWVzc2FnZQ==}} | {{const:com.otterworks.notification.template.NotificationTemplates.SIGNATURE}} -->"
+      "template": "<!-- {{base64Decoder:VGhpcyBpcyBhbiBhdXRvbWF0ZWQgbWVzc2FnZQ==}} | {{const:com.otterdrive.notification.template.NotificationTemplates.SIGNATURE}} -->"
     },
     {
       "id": "configured-sys-property",
@@ -64,8 +64,8 @@
       "id": "attack-url-lookup",
       "policy": "attack",
       "kind": "configured",
-      "template": "{{url:UTF-8:http://127.0.0.1:1/otterworks}}",
-      "attack_marker": "{{url:UTF-8:http://127.0.0.1:1/otterworks}}"
+      "template": "{{url:UTF-8:http://127.0.0.1:1/otterdrive}}",
+      "attack_marker": "{{url:UTF-8:http://127.0.0.1:1/otterdrive}}"
     }
   ]
 }

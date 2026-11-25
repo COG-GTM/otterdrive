@@ -2,7 +2,7 @@ groups:
   # -----------------------------------------------------------
   # Request Rate Recording Rules
   # -----------------------------------------------------------
-  - name: otterworks.request_rate
+  - name: otterdrive.request_rate
     interval: 15s
     rules:
       - record: job:http_requests:rate5m
@@ -20,7 +20,7 @@ groups:
   # -----------------------------------------------------------
   # Error Rate Recording Rules
   # -----------------------------------------------------------
-  - name: otterworks.error_rate
+  - name: otterdrive.error_rate
     interval: 15s
     rules:
       - record: job:http_errors:rate5m
@@ -44,7 +44,7 @@ groups:
   # -----------------------------------------------------------
   # Latency Percentile Recording Rules
   # -----------------------------------------------------------
-  - name: otterworks.latency
+  - name: otterdrive.latency
     interval: 15s
     rules:
       - record: job:http_request_duration_seconds:p50
@@ -74,7 +74,7 @@ groups:
   # -----------------------------------------------------------
   # Resource Utilization Recording Rules
   # -----------------------------------------------------------
-  - name: otterworks.resources
+  - name: otterdrive.resources
     interval: 30s
     rules:
       - record: job:process_cpu_usage:rate5m
@@ -90,7 +90,7 @@ groups:
   # -----------------------------------------------------------
   # Service Availability Recording Rules
   # -----------------------------------------------------------
-  - name: otterworks.availability
+  - name: otterdrive.availability
     interval: 30s
     rules:
       - record: job:up:avg5m

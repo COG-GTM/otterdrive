@@ -1,4 +1,4 @@
-# OtterWorks attack surface for dynamic (runtime) security testing.
+# OtterDrive attack surface for dynamic (runtime) security testing.
 #
 # This file is the target spec the DAST harness and the ZAP scan share: what is
 # reachable at the edge, what each route is supposed to require, and what must
@@ -6,7 +6,7 @@
 # `expect` clauses below against the *running* application.
 
 target:
-  # Overridden with --target / OTTERWORKS_DAST_TARGET (a tenant URL, a preview
+  # Overridden with --target / OTTERDRIVE_DAST_TARGET (a tenant URL, a preview
   # environment, or the local docker-compose stack).
   default_base_url: http://localhost:8080
   entrypoint: api-gateway

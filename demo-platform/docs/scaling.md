@@ -1,6 +1,6 @@
 # Scaling the demo platform to high-tens of tenants
 
-Grounded in the live `otterworks-dev` cluster (one SPOT `t3.large` managed node group). Each
+Grounded in the live `otterdrive-dev` cluster (one SPOT `t3.large` managed node group). Each
 full tenant is ~15 pods (11 backends + 2 frontends + Redis + MeiliSearch). This doc lists the
 concrete limits you hit as tenant count climbs and the fix for each — with ready-to-run
 commands. Applied changes are noted; **opt-in** changes are scripted but intentionally NOT
@@ -56,10 +56,10 @@ connections are `pool × SQL-services × tenants` whether or not anyone is using
 on a live full tenant: 16 backends on `db.t3.micro`, idle.** Against that instance's ~112
 connections, the platform runs out of database at **six tenants** — long before it runs out of
 nodes or IPs.
-- **Done:** one shared **PgBouncer** in `otterworks-platform` (`k8s/pgbouncer.yaml`,
+- **Done:** one shared **PgBouncer** in `otterdrive-platform` (`k8s/pgbouncer.yaml`,
   `scripts/install-pgbouncer.sh`); `deploy-dev.sh` and `deploy-tenant.sh` point every
   SQL-backed service at it. Wildcard routing (`* = host=<rds>`) passes the client's database
-  name straight through, so `otterworks_<id>` still selects the tenant's own database and
+  name straight through, so `otterdrive_<id>` still selects the tenant's own database and
   nothing is configured per tenant.
 - **Measured:** the same idle tenant, rewired, holds **1** server connection instead of 16 —
   16 client connections multiplexed onto it. Redeploy with `DB_VIA_PGBOUNCER=false` to compare.
@@ -89,7 +89,7 @@ nodes or IPs.
 
 ## 4. Ingress / DNS — see architecture.md §6
 One ingress-nginx + one NLB handles many Ingress objects fine. Move tenants to **host-based**
-wildcard routing (`*.demo.otterworks.app`) so each tenant is its own origin (no cookie/asset
+wildcard routing (`*.demo.otterdrive.app`) so each tenant is its own origin (no cookie/asset
 collisions, no nip.io fragility). external-dns + a single wildcard TLS cert cover all tenants.
 
 ## 5. Cost + concurrency guardrails

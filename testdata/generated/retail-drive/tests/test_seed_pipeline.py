@@ -87,7 +87,7 @@ def test_no_adhoc_product_or_money_paths():
     assert "_money" not in src
 
 
-# ---- AC-01 / BDD-01: OtterWorks theme, no RetailCo remnants -----------------
+# ---- AC-01 / BDD-01: OtterDrive theme, no RetailCo remnants -----------------
 def test_no_retailco_in_seed_sources():
     pattern = re.compile("retailco", re.IGNORECASE)
     for py in DRIVE_DIR.glob("*.py"):
@@ -95,10 +95,10 @@ def test_no_retailco_in_seed_sources():
     assert not pattern.search((DRIVE_DIR / "README.md").read_text())
 
 
-def test_generated_content_is_otterworks_themed():
+def test_generated_content_is_otterdrive_themed():
     data, _ = filegen.build("md", "Team Charter", 1)
     text = data.decode()
-    assert "OtterWorks" in text
+    assert "OtterDrive" in text
     assert "RetailCo" not in text
 
 

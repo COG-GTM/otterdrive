@@ -104,7 +104,7 @@ The migration is de-risked by a reconciliation check that asserts the
    event log.
 
 The baseline for (2)–(3) already exists as
-`src/test/scala/com/otterworks/analytics/repository/PostgresMetricsRepositorySpec.scala`,
+`src/test/scala/com/otterdrive/analytics/repository/PostgresMetricsRepositorySpec.scala`,
 which proves the durable PostgreSQL store reconciles exactly with the in-memory
 store. The lakehouse "after" is expected to pass the **same** reconciliation
 against this PostgreSQL "before", turning a one-off migration into a

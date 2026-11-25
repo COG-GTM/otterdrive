@@ -7,10 +7,10 @@ lazy val root = project
     version := "0.1.0",
     scalaVersion := scala3Version,
     // The HTTP server is the default entrypoint (`java -jar`). The batch job
-    // (com.otterworks.analytics.batch.UsageRollupJob) is a second main class run
+    // (com.otterdrive.analytics.batch.UsageRollupJob) is a second main class run
     // explicitly via `java -cp app.jar ...` (see the analytics-service CronJob).
-    Compile / mainClass := Some("com.otterworks.analytics.Main"),
-    assembly / mainClass := Some("com.otterworks.analytics.Main"),
+    Compile / mainClass := Some("com.otterdrive.analytics.Main"),
+    assembly / mainClass := Some("com.otterdrive.analytics.Main"),
     libraryDependencies ++= Seq(
       // Akka HTTP
       "com.typesafe.akka" %% "akka-http" % "10.5.3" cross CrossVersion.for3Use2_13,

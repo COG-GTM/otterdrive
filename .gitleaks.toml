@@ -1,4 +1,4 @@
-# Gitleaks configuration for OtterWorks.
+# Gitleaks configuration for OtterDrive.
 #
 # The upstream default ruleset is used as-is; nothing is disabled. The single
 # allowlist below covers the two share-link placeholders inside the equivalence

@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Database Module
+# OtterDrive Database Module
 # RDS PostgreSQL and DynamoDB tables
 # ------------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ resource "aws_db_subnet_group" "main" {
 
 resource "aws_security_group" "rds" {
   name        = "${var.project}-rds-${var.environment}"
-  description = "Security group for OtterWorks RDS PostgreSQL"
+  description = "Security group for OtterDrive RDS PostgreSQL"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -60,8 +60,8 @@ resource "aws_db_instance" "postgres" {
   max_allocated_storage = var.db_max_allocated_storage
   storage_encrypted     = true
 
-  db_name  = "otterworks"
-  username = "otterworks_admin"
+  db_name  = "otterdrive"
+  username = "otterdrive_admin"
   password = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.main.name

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — runner entrypoint
+# OtterDrive Demo Platform — runner entrypoint
 #
 # This image is launched as a Kubernetes Job by the ops dashboard (namespace
-# otterworks-platform). It carries the repo + toolchain (aws/kubectl/helm/
+# otterdrive-platform). It carries the repo + toolchain (aws/kubectl/helm/
 # terraform/jq/psql) and executes ONE mutating operation, then exits.
 #
 # It is deliberately thin glue: the real work is done by the EXISTING tenant
 # tooling in ../scripts (deploy-tenant.sh / teardown-tenant.sh / inject-bug.sh)
 # and the reaper in ../reaper/reaper.sh. This entrypoint only:
-#   1. checks out the requested OtterWorks git branch (TENANT_BRANCH),
+#   1. checks out the requested OtterDrive git branch (TENANT_BRANCH),
 #   2. transitions status in the control table (deploying -> active | error),
 #   3. runs the requested op via the existing scripts,
 #   4. records the resolved coordinates (url/api_url/db_name/namespace/expires)
@@ -22,11 +22,11 @@
 #   TTL           e.g. 8h, 30m, 2d, or `never` for a perpetual tenant (default 8h)
 #   REDEPLOY      true when deploying over a live tenant (CD)   (default unset)
 #   IMAGE_TAG     optional pinned image tag
-#   HOST_SUFFIX   ingress host suffix              (default demo.otterworks.app)
+#   HOST_SUFFIX   ingress host suffix              (default demo.otterdrive.app)
 #   SCENARIO      bug-catalog scenario (for OP=inject)
 #   TENANT_BRANCH git branch to check out (e.g. workshop-<id>)
-#   CONTROL_TABLE DynamoDB control table         (default otterworks-demo-control)
-#   AWS_REGION    (default us-east-1)   EKS_CLUSTER (default otterworks-dev)
+#   CONTROL_TABLE DynamoDB control table         (default otterdrive-demo-control)
+#   AWS_REGION    (default us-east-1)   EKS_CLUSTER (default otterdrive-dev)
 #   REPO_DIR      checked-out repo path                   (default /workspace)
 #   REPO_REMOTE   git remote name                         (default origin)
 #   ACTOR         audit actor label                       (default runner)
@@ -41,10 +41,10 @@ set -euo pipefail
 
 REPO_DIR="${REPO_DIR:-/workspace}"
 REPO_REMOTE="${REPO_REMOTE:-origin}"
-CONTROL_TABLE="${CONTROL_TABLE:-otterworks-demo-control}"
+CONTROL_TABLE="${CONTROL_TABLE:-otterdrive-demo-control}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-HOST_SUFFIX="${HOST_SUFFIX:-demo.otterworks.app}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+HOST_SUFFIX="${HOST_SUFFIX:-demo.otterdrive.app}"
 TIER="${TIER:-A}"
 TTL="${TTL:-8h}"
 OP="${OP:-}"

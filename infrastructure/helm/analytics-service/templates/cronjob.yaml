@@ -13,7 +13,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: batch
     platform/environment: {{ (.Values.global).environment | default "dev" }}
-    platform/team: otterworks
+    platform/team: otterdrive
 spec:
   schedule: {{ .Values.cronjob.schedule | quote }}
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
@@ -40,7 +40,7 @@ spec:
               args:
                 - "-cp"
                 - "app.jar"
-                - "com.otterworks.analytics.batch.UsageRollupJob"
+                - "com.otterdrive.analytics.batch.UsageRollupJob"
               env:
                 - name: ROLLUP_INPUT
                   value: {{ .Values.cronjob.input | quote }}

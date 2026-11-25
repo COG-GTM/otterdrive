@@ -22,7 +22,7 @@ LEAK_SIGNATURES = (
     "goroutine 1 [running]",
     "panic: runtime error",
     "jdbc:postgresql://",
-    "otterworks_dev",
+    "otterdrive_dev",
 )
 
 SQLI_PAYLOADS = ("'", "1' OR '1'='1", "') OR ('a'='a", "'; SELECT pg_sleep(0) --")

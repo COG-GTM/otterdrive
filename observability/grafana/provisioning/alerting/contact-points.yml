@@ -5,7 +5,7 @@ contactPoints:
     name: Default
     isDefault: true
     receivers:
-      - uid: otterworks-webhook-receiver
+      - uid: otterdrive-webhook-receiver
         type: webhook
         settings:
           url: http://admin-service:8089/api/v1/admin/alerts/ingest

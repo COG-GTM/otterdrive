@@ -20,17 +20,17 @@ zero DNS setup, but it is unacceptable for rollout:
 ## Target (everything inside AWS)
 
 ```
-Route53 (registered otterworks.app)
-  └─ hosted zone otterworks.app
-       ├─ external-dns  ──> writes t-<id>.demo.otterworks.app / api-t-<id>.demo…  ->  shared NLB
-       └─ cert-manager (ACME DNS-01 over Route53) ──> ONE wildcard cert *.demo.otterworks.app (+ ops.otterworks.app)
+Route53 (registered otterdrive.app)
+  └─ hosted zone otterdrive.app
+       ├─ external-dns  ──> writes t-<id>.demo.otterdrive.app / api-t-<id>.demo…  ->  shared NLB
+       └─ cert-manager (ACME DNS-01 over Route53) ──> ONE wildcard cert *.demo.otterdrive.app (+ ops.otterdrive.app)
                                                           └─ ingress-nginx --default-ssl-certificate  ->  HTTPS for every tenant
 ```
 
-- **DNS: Route53.** One public hosted zone for `otterworks.app`; `external-dns`
+- **DNS: Route53.** One public hosted zone for `otterdrive.app`; `external-dns`
   reconciles a record per Ingress automatically and deletes it when the namespace
   is removed. Its `--domain-filter` covers both the tenant subdomain
-  (`demo.otterworks.app`) and the dashboard host (`ops.otterworks.app`, a sibling
+  (`demo.otterdrive.app`) and the dashboard host (`ops.otterdrive.app`, a sibling
   of `demo.`), so both resolve with zero per-tenant DNS work and no IPs in any URL.
 - **TLS: one wildcard cert.** `cert-manager` solves an ACME **DNS-01** challenge
   through Route53 (DNS-01 is required for a wildcard) and stores the cert as a
@@ -50,7 +50,7 @@ Route53 (registered otterworks.app)
 ## IAM (already in Terraform, gated)
 
 `infra/terraform/dns.tf` creates the hosted zone and a single IRSA role
-(`otterworks-demo-dns-<env>`) trusted by both the `external-dns` and
+(`otterdrive-demo-dns-<env>`) trusted by both the `external-dns` and
 `cert-manager` ServiceAccounts, scoped to `route53:ChangeResourceRecordSets` on
 that zone. The hosted zone itself is a data lookup, never managed here: it carries the
 registrar's NS delegation and must outlive any rebuild of the platform. `enable_dns`
@@ -68,7 +68,7 @@ the domain exists.
 
    ```bash
    aws route53domains register-domain --region us-east-1 \
-     --domain-name otterworks.app --duration-in-years 1 \
+     --domain-name otterdrive.app --duration-in-years 1 \
      --admin-contact file://contact.json --registrant-contact file://contact.json \
      --tech-contact file://contact.json --privacy-protect-admin-contact \
      --privacy-protect-registrant-contact --privacy-protect-tech-contact
@@ -86,24 +86,24 @@ the domain exists.
 3. **Turn on external-dns + cert-manager + wildcard TLS** (idempotent):
 
    ```bash
-   DOMAIN_ROOT=otterworks.app ACME_EMAIL=<platform-contact-email> \
+   DOMAIN_ROOT=otterdrive.app ACME_EMAIL=<platform-contact-email> \
      ISSUER=letsencrypt-staging scripts/enable-dns-tls.sh
    # once the staging cert is Ready:
-   DOMAIN_ROOT=otterworks.app ACME_EMAIL=<platform-contact-email> \
+   DOMAIN_ROOT=otterdrive.app ACME_EMAIL=<platform-contact-email> \
      ISSUER=letsencrypt-prod scripts/enable-dns-tls.sh
    ```
 
 4. **Done.** Deploy/checkout tenants normally — the scripts, runner, reaper and
-   dashboard already default to `--host-suffix demo.otterworks.app`, so tenants
-   come up at `https://t-<id>.demo.otterworks.app` and the dashboard at
-   `https://ops.otterworks.app`. The reaper's `gc_route53` cleans any stray
+   dashboard already default to `--host-suffix demo.otterdrive.app`, so tenants
+   come up at `https://t-<id>.demo.otterdrive.app` and the dashboard at
+   `https://ops.otterdrive.app`. The reaper's `gc_route53` cleans any stray
    records belonging to expired tenants.
 
 ## Verify
 
 ```bash
 kubectl -n external-dns logs deploy/external-dns --tail=20        # record syncs
-kubectl -n ingress-nginx get certificate otterworks-wildcard      # READY=True
-dig +short t-<id>.demo.otterworks.app                             # -> NLB
-curl -sI https://t-<id>.demo.otterworks.app | head -1            # HTTP/2 200
+kubectl -n ingress-nginx get certificate otterdrive-wildcard      # READY=True
+dig +short t-<id>.demo.otterdrive.app                             # -> NLB
+curl -sI https://t-<id>.demo.otterdrive.app | head -1            # HTTP/2 200
 ```

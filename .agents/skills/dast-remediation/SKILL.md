@@ -2,12 +2,12 @@
 name: dast-remediation
 description: >
   Repo-specific mechanics for running dynamic application security testing
-  against OtterWorks and remediating what it finds. Covers targets, the probe
+  against OtterDrive and remediating what it finds. Covers targets, the probe
   suite, the Makefile targets that drive the verification loop, where each
   control lives in the polyglot services, and how to revert.
 ---
 
-# DAST Remediation — OtterWorks
+# DAST Remediation — OtterDrive
 
 Repo-specific mechanics behind the `!dast-remediation` Playbook. Auto-loaded
 when Devin works in this repository.
@@ -66,8 +66,8 @@ reaches a live shared tenant at `localhost:8080` via `kubectl port-forward`.
 | Target | URL | Use |
 |---|---|---|
 | Local stack | `http://localhost:8080` | after `make up`; the default. Add `DAST_SWEEP_UNSAFE_METHODS=1` once you know the stack is yours, not a port-forward |
-| Your tenant | `https://api-t-<id>.demo.otterworks.app` | after `scripts/deploy-tenant.sh <id>` |
-| Perpetual tenant | `https://api-t-main.otterworks.app` | tracks `main`; never scan it — it is never reaped, so the accounts and documents a scan writes stay forever |
+| Your tenant | `https://api-t-<id>.demo.otterdrive.app` | after `scripts/deploy-tenant.sh <id>` |
+| Perpetual tenant | `https://api-t-main.otterdrive.app` | tracks `main`; never scan it — it is never reaped, so the accounts and documents a scan writes stay forever |
 
 Always scan through the gateway on port 8080 — hitting a backend port directly
 bypasses the controls under test. The exception is
@@ -82,7 +82,7 @@ accounts and writes documents into the target's database.
 `DAST-RATE-LIMIT-BYPASS` also puts real load on the cluster — two bursts of
 1500 requests at 64-way concurrency — and every tenant shares one ingress
 controller and node group. While others are presenting, turn it down with
-`OTTERWORKS_DAST_RATE_LIMIT_BURST=300 OTTERWORKS_DAST_RATE_LIMIT_WORKERS=16`
+`OTTERDRIVE_DAST_RATE_LIMIT_BURST=300 OTTERDRIVE_DAST_RATE_LIMIT_WORKERS=16`
 (the probe reports `inconclusive`, not `secure`, if the smaller burst can no
 longer distinguish a bypass).
 

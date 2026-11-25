@@ -3,7 +3,7 @@
 # dependencies = ["pyyaml", "tabulate"]
 # ///
 """
-OtterWorks dependency remediation harness.
+OtterDrive dependency remediation harness.
 
 Three gates, one advisory (security/deps/advisory.yaml):
 

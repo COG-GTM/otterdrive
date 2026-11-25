@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 # enable-tenant-irsa-wildcard.sh — make per-tenant IRSA scale to high tens.
 #
-# The shared per-service IAM roles (otterworks-<svc>-<env>) trust each namespace
+# The shared per-service IAM roles (otterdrive-<svc>-<env>) trust each namespace
 # service account via an EXACT-match (StringEquals) statement. deploy-tenant.sh
 # adds one per tenant, so at high-tens the trust document hits IAM's ~4KB cap and
 # deploys start failing. This script adds ONE StringLike wildcard statement per
-# role — system:serviceaccount:otterworks-*:<svc> — that covers every current and
+# role — system:serviceaccount:otterdrive-*:<svc> — that covers every current and
 # future tenant namespace. deploy-tenant.sh already detects this wildcard and
 # then skips per-tenant trust edits entirely (no IAM churn, no bloat).
 #
-# The golden app's own namespace is `otterworks` (no hyphen), which the
-# `otterworks-*` glob does NOT match, so its existing exact statement is left in
+# The golden app's own namespace is `otterdrive` (no hyphen), which the
+# `otterdrive-*` glob does NOT match, so its existing exact statement is left in
 # place. Idempotent: re-running makes no change once the wildcard is present.
 #
 # Usage: ENV=dev ./enable-tenant-irsa-wildcard.sh
 # Requires: aws, jq, and IAM perms iam:GetRole + iam:UpdateAssumeRolePolicy on
-# the otterworks-* roles (the dashboard IRSA role has these).
+# the otterdrive-* roles (the dashboard IRSA role has these).
 set -euo pipefail
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
 ENVIRONMENT="${ENV:-dev}"
-CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
+CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
 
 # Service roles that back the app (must match the irsa module role names).
 # web-app/admin-dashboard are frontends with no IRSA role, so they're omitted.
@@ -37,10 +37,10 @@ oidc_url="$(aws eks describe-cluster --name "${CLUSTER}" --region "${AWS_REGION}
 oidc_url="${oidc_url#https://}"
 [ -n "${oidc_url}" ] || { echo "could not resolve OIDC issuer for ${CLUSTER}" >&2; exit 1; }
 
-pattern_prefix="system:serviceaccount:otterworks-*"
+pattern_prefix="system:serviceaccount:otterdrive-*"
 
 for svc in "${SERVICES[@]}"; do
-  role="otterworks-${svc}-${ENVIRONMENT}"
+  role="otterdrive-${svc}-${ENVIRONMENT}"
   sub="${pattern_prefix}:${svc}"
   doc="$(aws iam get-role --role-name "${role}" \
     --query 'Role.AssumeRolePolicyDocument' --output json 2>/dev/null || echo "")"

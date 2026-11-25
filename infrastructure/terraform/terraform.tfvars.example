@@ -1,4 +1,4 @@
-# OtterWorks Infrastructure - Example Variable Values
+# OtterDrive Infrastructure - Example Variable Values
 # Copy this file to terraform.tfvars and customize for your environment.
 #
 # Prerequisites: Platform layer must be applied first (platform/terraform)
@@ -11,8 +11,8 @@ aws_region = "us-east-1"
 # Environment name (dev, staging, prod)
 environment = "dev"
 
-# Kubernetes namespace for OtterWorks services
-namespace = "otterworks"
+# Kubernetes namespace for OtterDrive services
+namespace = "otterdrive"
 
 # REQUIRED: RDS PostgreSQL master password (no default — must be set)
 db_password = "your-secure-password-here"

@@ -1,4 +1,4 @@
-module github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway
+module github.com/COG-GTM/otterdrive/services/api-gateway
 
 go 1.22
 

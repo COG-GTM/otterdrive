@@ -5,7 +5,7 @@
 # OPT-IN: existing nodes keep their old limit; only NEW nodes pick this up, so
 # drain/recycle nodes during a quiet window after applying. See docs/scaling.md §2.
 set -euo pipefail
-CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
+CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
 REGION="${AWS_REGION:-us-east-1}"
 
 echo "[prefix-delegation] setting aws-node env on cluster ${CLUSTER}"

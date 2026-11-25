@@ -1,8 +1,8 @@
-# OtterWorks CI Strategy
+# OtterDrive CI Strategy
 
 ## Current CI Architecture
 
-OtterWorks uses **3 GitHub Actions workflows** that run on every push to `main` and on all PRs targeting `main`:
+OtterDrive uses **3 GitHub Actions workflows** that run on every push to `main` and on all PRs targeting `main`:
 
 ### 1. `ci.yml` — Service Build & Test Pipeline
 
@@ -41,7 +41,7 @@ Uses `dorny/paths-filter` for **change detection** — only services with modifi
 
 **Trigger:** Push to `main`, version tags (`v*`)
 
-Builds all 12 service Docker images in a matrix and pushes to ECR (`<AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks-<service>`). Requires `AWS_ROLE_ARN` secret for OIDC-based ECR authentication.
+Builds all 12 service Docker images in a matrix and pushes to ECR (`<AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive-<service>`). Requires `AWS_ROLE_ARN` secret for OIDC-based ECR authentication.
 
 ## Current State (Post-Fix)
 

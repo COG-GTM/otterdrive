@@ -1,4 +1,4 @@
-# OtterWorks Industry Solutions — Insurance (Commission Pay)
+# OtterDrive Industry Solutions — Insurance (Commission Pay)
 
 The legacy **Commission Pay** application fixture: an insurance commission
 system whose business logic lives entirely in **Oracle stored procedures**
@@ -81,7 +81,7 @@ Connect ad hoc (port = `51521 + crc32(NS) % 1000`, printed by
 `make help`-style inspection or `docker ps`):
 
 ```bash
-docker exec -it otterworks-insurance-dev-insurance-oracle-1 \
+docker exec -it otterdrive-insurance-dev-insurance-oracle-1 \
   sqlplus commission_pay/commission_pay@localhost:1521/FREEPDB1
 ```
 

@@ -16,7 +16,7 @@
 
 1. Check notification-service consumer logs for deserialization errors:
    ```
-   kubectl logs -l app=notification-service --tail=100 -n otterworks | grep -i "deseriali\|timestamp\|schema"
+   kubectl logs -l app=notification-service --tail=100 -n otterdrive | grep -i "deseriali\|timestamp\|schema"
    ```
 2. Check whether the chaos flag `chaos:notification-service:consumer_strict_schema` is set in Redis:
    ```

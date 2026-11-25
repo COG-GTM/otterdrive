@@ -4,14 +4,14 @@ using Amazon.SimpleNotificationService;
 using Amazon.SQS;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OtterWorks.AuditService.Config;
-using OtterWorks.AuditService.Controllers;
-using OtterWorks.AuditService.Middleware;
-using OtterWorks.AuditService.Services;
+using OtterDrive.AuditService.Config;
+using OtterDrive.AuditService.Controllers;
+using OtterDrive.AuditService.Middleware;
+using OtterDrive.AuditService.Services;
 using Prometheus;
 using Serilog;
 using Serilog.Formatting.Compact;
-using IAuditService = OtterWorks.AuditService.Services.IAuditService;
+using IAuditService = OtterDrive.AuditService.Services.IAuditService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +68,7 @@ builder.Services.AddSingleton<IAmazonSimpleNotificationService>(_ =>
 // Services (Clean Architecture: Controllers -> Services -> Repositories)
 builder.Services.AddSingleton<IAuditRepository, DynamoDbAuditRepository>();
 builder.Services.AddSingleton<IAuditArchiver, S3AuditArchiver>();
-builder.Services.AddSingleton<IAuditService, OtterWorks.AuditService.Services.AuditService>();
+builder.Services.AddSingleton<IAuditService, OtterDrive.AuditService.Services.AuditService>();
 
 // SNS/SQS Consumer background service
 builder.Services.AddHostedService<SnsConsumer>();

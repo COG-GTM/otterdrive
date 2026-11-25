@@ -15,7 +15,7 @@ const DEMO_DOCS: &[(&str, &str, &str)] = &[
     (
         "Q3 Financial Report.txt",
         "text/plain",
-        "OtterWorks Inc.\nQ3 Financial Report\n\nRevenue: $4.2M (+18% QoQ)\nGross margin: 62%\nNet burn: $310K/month\n\nHighlights:\n- Enterprise tier launched in July\n- 14 new logos closed\n- Churn down to 1.1%\n",
+        "OtterDrive Inc.\nQ3 Financial Report\n\nRevenue: $4.2M (+18% QoQ)\nGross margin: 62%\nNet burn: $310K/month\n\nHighlights:\n- Enterprise tier launched in July\n- 14 new logos closed\n- Churn down to 1.1%\n",
     ),
     (
         "Annual Planning 2027.txt",

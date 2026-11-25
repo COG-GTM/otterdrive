@@ -1,4 +1,4 @@
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public class AuditEvent
 {

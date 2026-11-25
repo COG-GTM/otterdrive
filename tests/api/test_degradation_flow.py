@@ -7,8 +7,8 @@ pytestmark = [pytest.mark.api_flow, pytest.mark.degradation]
 
 
 def _require_degradation_enabled():
-    if os.getenv("OTTERWORKS_RUN_DEGRADATION_TESTS") != "1":
-        pytest.skip("Set OTTERWORKS_RUN_DEGRADATION_TESTS=1 after intentionally degrading dependencies")
+    if os.getenv("OTTERDRIVE_RUN_DEGRADATION_TESTS") != "1":
+        pytest.skip("Set OTTERDRIVE_RUN_DEGRADATION_TESTS=1 after intentionally degrading dependencies")
 
 
 def test_search_dependency_degradation_returns_clean_error(api_client):

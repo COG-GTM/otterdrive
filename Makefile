@@ -5,7 +5,7 @@ SHELL := /bin/bash
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-PROCS_COMPOSE = docker compose -f docker-compose.procs.yml -p otterworks-procs-$(NS)
+PROCS_COMPOSE = docker compose -f docker-compose.procs.yml -p otterdrive-procs-$(NS)
 PROCS_UV = uv run --with psycopg[binary]==3.2.9 --with pyyaml==6.0.2
 PROCS_PORT_OFFSET = $(shell if command -v python3 >/dev/null 2>&1 && test -n "$(NS)"; then python3 -c "import zlib; print(zlib.crc32('$(NS)'.encode()) % 1000)"; fi)
 PROCS_DB_PORT = $(shell test -n "$(PROCS_PORT_OFFSET)" && python3 -c "print(55432 + $(PROCS_PORT_OFFSET))")
@@ -40,10 +40,10 @@ procs-rules-gate: ## Validate the approved HITL rule ledger (MODULE=<module> or 
 
 # --- Industry Solutions: insurance Commission Pay (Oracle) ---
 
-INSURANCE_COMPOSE = docker compose -f docker-compose.insurance.yml -p otterworks-insurance-$(NS)
+INSURANCE_COMPOSE = docker compose -f docker-compose.insurance.yml -p otterdrive-insurance-$(NS)
 INSURANCE_DB_PORT = $(shell test -n "$(PROCS_PORT_OFFSET)" && python3 -c "print(51521 + $(PROCS_PORT_OFFSET))")
 INSURANCE_ENV = NS=$(NS) INSURANCE_DB_PORT=$(INSURANCE_DB_PORT)
-INSURANCE_SQLPLUS = docker exec -i otterworks-insurance-$(NS)-insurance-oracle-1 sqlplus -s
+INSURANCE_SQLPLUS = docker exec -i otterdrive-insurance-$(NS)-insurance-oracle-1 sqlplus -s
 
 insurance-up: procs-validate ## Start the Oracle insurance Commission Pay fixture (NS=<namespace>)
 	$(INSURANCE_ENV) $(INSURANCE_COMPOSE) up -d --wait --wait-timeout 900
@@ -81,7 +81,7 @@ seed: ## Seed development data (services must be running)
 wait-for-db: ## Wait for Postgres to accept connections
 	@echo "Waiting for Postgres to be healthy..."
 	@for i in $$(seq 1 30); do \
-		docker exec otterworks-postgres pg_isready -q 2>/dev/null && exit 0; \
+		docker exec otterdrive-postgres pg_isready -q 2>/dev/null && exit 0; \
 		sleep 1; \
 	done; echo "Timed out waiting for Postgres" && exit 1
 
@@ -219,11 +219,11 @@ ifndef NS
 	$(error NS is required, e.g. make testdata-clean NS=dev)
 endif
 	$(call validate_ns)
-	@echo "Dropping schema otterworks_$(NS)..."
-	PGPASSWORD=$${DB_PASSWORD:-otterworks_dev} psql \
+	@echo "Dropping schema otterdrive_$(NS)..."
+	PGPASSWORD=$${DB_PASSWORD:-otterdrive_dev} psql \
 		-h $${DB_HOST:-localhost} -p $${DB_PORT:-5432} \
-		-U $${DB_USER:-otterworks} -d $${DB_NAME:-otterworks} \
-		-c "DROP SCHEMA IF EXISTS otterworks_$(NS) CASCADE;"
+		-U $${DB_USER:-otterdrive} -d $${DB_NAME:-otterdrive} \
+		-c "DROP SCHEMA IF EXISTS otterdrive_$(NS) CASCADE;"
 	@echo "Done."
 
 testdata-setup-schema: ## Create a namespaced schema (NS=<namespace>)
@@ -231,10 +231,10 @@ ifndef NS
 	$(error NS is required, e.g. make testdata-setup-schema NS=dev)
 endif
 	$(call validate_ns)
-	@echo "Creating schema otterworks_$(NS)..."
-	PGPASSWORD=$${DB_PASSWORD:-otterworks_dev} psql \
+	@echo "Creating schema otterdrive_$(NS)..."
+	PGPASSWORD=$${DB_PASSWORD:-otterdrive_dev} psql \
 		-h $${DB_HOST:-localhost} -p $${DB_PORT:-5432} \
-		-U $${DB_USER:-otterworks} -d $${DB_NAME:-otterworks} \
+		-U $${DB_USER:-otterdrive} -d $${DB_NAME:-otterdrive} \
 		-f testdata/harness/create_schema.sql \
 		-v ns=$(NS)
 	@echo "Done."

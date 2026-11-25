@@ -16,20 +16,20 @@ kubectl)*.
 ```bash
 export AWS_REGION=us-east-1
 JAR=$(mktemp)
-PASS=$(aws secretsmanager get-secret-value --secret-id otterworks/dev/dashboard/passcode \
+PASS=$(aws secretsmanager get-secret-value --secret-id otterdrive/dev/dashboard/passcode \
   --query SecretString --output text)
 PASSCODE="$PASS" jq -nc '{passcode: env.PASSCODE}' | curl -s -c "$JAR" \
-  -X POST https://ops.otterworks.app/api/auth/login \
+  -X POST https://ops.otterdrive.app/api/auth/login \
   -H 'content-type: application/json' --data-binary @-
-curl -s -b "$JAR" https://ops.otterworks.app/api/tenants/<id> | jq '{
+curl -s -b "$JAR" https://ops.otterdrive.app/api/tenants/<id> | jq '{
   status, live, pods: [.pods[] | {name, phase, ready, restarts}]}'
 ```
 
 The record's `.logs` field is the latest runner Job's deploy log — it shows which image
 tag each service resolved (`Deploying admin-service (tag ...)`) and a `kubectl get pods`
 snapshot. Pod **logs/events are not exposed**; for those, ask a human to run
-`kubectl -n otterworks-<id> logs <pod> --previous --tail=40` and
-`kubectl -n otterworks-<id> describe pod <pod> | tail -25`.
+`kubectl -n otterdrive-<id> logs <pod> --previous --tail=40` and
+`kubectl -n otterdrive-<id> describe pod <pod> | tail -25`.
 
 Two pods for one service = a stuck rollout: old ReplicaSet pod + new one that never went
 ready. Rising `restarts` with `phase: Running` = crash loop or probe kills.
@@ -45,7 +45,7 @@ break in this chain. Check each link:
    immutable and cannot be overwritten"), **the unique tag is still usable** — the
    failure is only the moving pointer tag (known CD bug, see PR #87).
 2. **ECR tag points where you think** *(ask a human)*:
-   `aws ecr describe-images --repository-name otterworks/<service> --region us-east-1`.
+   `aws ecr describe-images --repository-name otterdrive/<service> --region us-east-1`.
 3. **The node runs that digest** *(ask a human)*:
    `kubectl get pod <pod> -o jsonpath='{.status.containerStatuses[0].imageID}'`.
    Buildx pushes an OCI **index**, so the pod's imageID is the child manifest digest, not
@@ -57,8 +57,8 @@ break in this chain. Check each link:
 immutable tag directly *(ask a human)*:
 
 ```bash
-kubectl -n otterworks-<id> set image deployment/<service> \
-  <service>=<registry>/otterworks/<service>:demo-<branch>-<sha>
+kubectl -n otterdrive-<id> set image deployment/<service> \
+  <service>=<registry>/otterdrive/<service>:demo-<branch>-<sha>
 ```
 
 A unique tag is never cached on the node, so it always forces a genuine pull.
@@ -80,7 +80,7 @@ The dashboard runner Job cannot check out tenant branches (`GITHUB_TOKEN` /
 | Signature | Cause | Fix |
 |---|---|---|
 | Puma log: `Invalid HTTP format ... SSL connection to a non-SSL Puma?` at probe cadence; events: `server gave HTTP response to HTTPS client` | Rails `config.force_ssl = true` 301-redirects `/health` to https; kubelet follows the redirect and TLS-handshakes Puma's plain port; liveness kills the pod (exit 137, reason `Error`, not OOM) | `config.force_ssl = false` in the image (TLS terminates at the shared ingress) |
-| `/health` returns 503, `db: 0.0` in request logs; `db:migrate` aborts at boot | Deploy wires `DATABASE_HOST/PORT/USER/PASSWORD` but **no database name**; Rails' `database.yml` hardcodes `admin_service_production`, which doesn't exist — the tenant DB is `otterworks_<id>` | `database: <%= ENV.fetch("DATABASE_NAME", "otterworks_<id>") %>` in `database.yml`, baked into the image |
+| `/health` returns 503, `db: 0.0` in request logs; `db:migrate` aborts at boot | Deploy wires `DATABASE_HOST/PORT/USER/PASSWORD` but **no database name**; Rails' `database.yml` hardcodes `admin_service_production`, which doesn't exist — the tenant DB is `otterdrive_<id>` | `database: <%= ENV.fetch("DATABASE_NAME", "otterdrive_<id>") %>` in `database.yml`, baked into the image |
 | `bin/rails aborted! NoMethodError ... TaggedLogging.logger` | The upstream planted bug (`production.rb`); fixed on this fork, intentional upstream | Ensure the pod runs a fork-built image, not `:main` |
 | Build job fails: `The image tag 'tenant-<id>' already exists ... immutable` | CD re-pushes the moving `tenant-<id>` pointer to an immutable registry on every rebuild | Use the immutable `demo-<branch>-<sha>` tag it already pushed (see §2); durable fix tracked in PR #87 |
 | Pod `Pending` forever during rollout | Old crash-looping pod holds quota/capacity; surge pod can't schedule | Resolve why the old pod is unhealthy first; the rollout completes once the new pod goes ready |
@@ -94,7 +94,7 @@ The dashboard runner Job cannot check out tenant branches (`GITHUB_TOKEN` /
    deploy the **unique** tag via `set image` (the deploy job is skipped whenever any
    service build fails on the immutable pointer tag, so don't wait for it).
 4. Re-check via the dashboard until `ready: true`, then verify externally:
-   `curl -s -o /dev/null -w '%{http_code}' https://api-t-<id>.demo.otterworks.app/<path>`
+   `curl -s -o /dev/null -w '%{http_code}' https://api-t-<id>.demo.otterdrive.app/<path>`
    (401 from an authed endpoint proves the service is up and routed).
 5. Remember every `kubectl` patch/`set image` is temporary — record what must be
    re-applied after the next dashboard sync, or bake it into the image.

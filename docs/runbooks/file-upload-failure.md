@@ -16,7 +16,7 @@
 
 1. Confirm the error in file-service logs:
    ```
-   kubectl logs -l app=file-service --tail=100 -n otterworks | grep -i "NoSuchBucket\|S3\|500"
+   kubectl logs -l app=file-service --tail=100 -n otterdrive | grep -i "NoSuchBucket\|S3\|500"
    ```
 2. Check whether the chaos flag `chaos:file-service:upload_s3_error` is set in Redis:
    ```

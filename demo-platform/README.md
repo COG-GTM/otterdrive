@@ -1,11 +1,11 @@
-# OtterWorks Demo Platform (control plane)
+# OtterDrive Demo Platform (control plane)
 
-A self-contained control plane for running **many ephemeral OtterWorks demo tenants** on the
-shared `otterworks-dev` EKS cluster, designed to scale to **high tens of tenants**. It adds a
+A self-contained control plane for running **many ephemeral OtterDrive demo tenants** on the
+shared `otterdrive-dev` EKS cluster, designed to scale to **high tens of tenants**. It adds a
 platform plane (dashboard + durable state + reaper + DNS/TLS) on top of the existing per-tenant
 tooling in `../scripts/` (`deploy-tenant.sh`, `teardown-tenant.sh`, `inject-bug.sh`, …).
 
-> Scoped to OtterWorks only (per decision), kept in this monorepo rather than
+> Scoped to OtterDrive only (per decision), kept in this monorepo rather than
 > `platform-engineering-shared-services`.
 
 ## Two planes
@@ -14,9 +14,9 @@ See `docs/architecture.md` and the diagram `docs/platform-vs-multitenant.png`.
 - **Platform plane (shared, always-on, one of each):** ingress-nginx + 1 NLB, cert-manager
   (wildcard TLS), external-dns (Route53), 1 RDS instance, shared S3/DynamoDB (tenant-prefixed),
   the **Demo Ops Dashboard**, a durable **DynamoDB control table**, and the **reaper**.
-- **Multi-tenant plane (ephemeral, per checkout):** namespace `otterworks-<id>` (all services +
-  in-cluster Redis/Meili), its DB `otterworks_<id>`, its prefix in the shared S3/Dynamo, an
-  ingress host `t-<id>.demo.otterworks.app`, mapped to git branch `workshop-<id>`.
+- **Multi-tenant plane (ephemeral, per checkout):** namespace `otterdrive-<id>` (all services +
+  in-cluster Redis/Meili), its DB `otterdrive_<id>`, its prefix in the shared S3/Dynamo, an
+  ingress host `t-<id>.demo.otterdrive.app`, mapped to git branch `workshop-<id>`.
 
 ## Layout
 ```
@@ -26,13 +26,13 @@ demo-platform/
   dashboard/     Next.js ops dashboard (passcode auth, checkout/check-in, reaper panel)
   runner/        image that runs deploy/teardown/inject Jobs (carries repo + toolchain)
   reaper/        reaper v2 CronJob + orphan sweeper (schedule from control table)
-  helm/          charts to deploy the dashboard + reaper into otterworks-platform
+  helm/          charts to deploy the dashboard + reaper into otterdrive-platform
   scripts/       platform installers (Karpenter, PgBouncer) + tenant.sh (dashboard CLI)
 ```
 
 ## Checkout / check-in model
 A **checkout** reserves a tenant id (atomic lock in the control table), maps it to an
-OtterWorks git **branch** (`workshop-<id>`), and deploys that branch into `otterworks-<id>`.
+OtterDrive git **branch** (`workshop-<id>`), and deploys that branch into `otterdrive-<id>`.
 A **check-in** tears the tenant down and frees the id. All state lives in the control table, so
 it is **independent of the ephemeral infra** — it survives teardown, node churn, and pod
 restarts. The reaper reconciles desired (table) vs actual (cluster/AWS) and GCs everything,
@@ -40,7 +40,7 @@ including **orphans** with no matching tenant record.
 
 ## Two kinds of environment
 
-**One perpetual tenant, `main`** — `https://t-main.otterworks.app`, tracking the `main` branch.
+**One perpetual tenant, `main`** — `https://t-main.otterdrive.app`, tracking the `main` branch.
 It carries `persistent: true` in the control table, which makes it the one tenant the reaper
 skips, the idle scan skips, and the dashboard refuses to check in or inject bugs into. It is
 the reference environment: whatever is on `main` is what it shows, planted bugs included. It
@@ -83,7 +83,7 @@ A fork ships to the same registry and the same control plane, so it needs three 
 3. A `TENANT_PREFIX` repository **variable**, e.g. `gtm`. Without it, a `demo-derek` branch in
    either repo means tenant `derek` — the same namespace, database and hostname, redeployed
    out from under whoever is using it, with no branch mismatch for the dashboard to catch.
-   With it, the fork's `demo-derek` is tenant `gtm-derek` at `t-gtm-derek.demo.otterworks.app`,
+   With it, the fork's `demo-derek` is tenant `gtm-derek` at `t-gtm-derek.demo.otterdrive.app`,
    and its images are tagged `tenant-gtm-derek` rather than colliding on `tenant-derek`.
 
 What a fork changes is service **images**. The runner deploys from the tree in its own image
@@ -106,7 +106,7 @@ tenant.sh persist main false          # return the perpetual tenant to the TTL r
 It needs only `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` for the `de-demo-provisioner`
 IAM user (`infra/terraform/iam_provisioner.tf`) — no kubeconfig, no passcode handling. That
 user can perform exactly one AWS action: read the dashboard passcode from Secrets Manager
-(`otterworks/<env>/dashboard/passcode`). The deploy itself runs as a runner Job under the
+(`otterdrive/<env>/dashboard/passcode`). The deploy itself runs as a runner Job under the
 control plane's IRSA role, so the authority to create namespaces, databases, DNS records and
 IRSA trust stays in the cluster and never sits on a long-lived key. A leaked provisioner key
 can create and destroy demo tenants; it cannot reach the account.
