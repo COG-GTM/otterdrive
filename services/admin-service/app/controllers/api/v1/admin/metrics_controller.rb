@@ -4,7 +4,10 @@ module Api
       class MetricsController < ApplicationController
         # GET /api/v1/admin/metrics/summary
         def summary
-          UserDirectorySync.call if ADMIN_ROLES.include?(current_user_role)
+          if ADMIN_ROLES.include?(current_user_role)
+            UserDirectorySync.call
+            StorageUsageSync.call
+          end
           render json: MetricsAggregator.summary
         end
       end

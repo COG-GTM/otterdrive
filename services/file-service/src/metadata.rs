@@ -301,6 +301,25 @@ impl MetadataClient {
         Ok(files)
     }
 
+    /// Stored bytes per owner. Trashed files count: they still occupy S3.
+    pub async fn storage_usage(
+        &self,
+    ) -> Result<std::collections::HashMap<Uuid, u64>, ServiceError> {
+        let mut paginator = self
+            .client
+            .scan()
+            .table_name(&self.files_table)
+            .projection_expression("owner_id, size_bytes")
+            .into_paginator()
+            .send();
+        let mut usage = std::collections::HashMap::new();
+        while let Some(page) = paginator.next().await {
+            let page = page.map_err(|e| ServiceError::DynamoError(e.to_string()))?;
+            accumulate_usage(&mut usage, page.items())?;
+        }
+        Ok(usage)
+    }
+
     // -- Folder --
 
     pub async fn put_folder(&self, folder: &Folder) -> Result<(), ServiceError> {
@@ -699,6 +718,17 @@ fn parse_datetime(s: &str) -> Result<chrono::DateTime<chrono::Utc>, ServiceError
         .map_err(|e| ServiceError::DynamoError(format!("invalid datetime: {e}")))
 }
 
+fn accumulate_usage(
+    usage: &mut std::collections::HashMap<Uuid, u64>,
+    items: &[std::collections::HashMap<String, AttributeValue>],
+) -> Result<(), ServiceError> {
+    for item in items {
+        let owner = parse_uuid(&get_s(item, "owner_id")?)?;
+        *usage.entry(owner).or_insert(0) += get_n_u64(item, "size_bytes")?;
+    }
+    Ok(())
+}
+
 fn parse_file_metadata(
     item: &std::collections::HashMap<String, AttributeValue>,
 ) -> Result<FileMetadata, ServiceError> {
@@ -788,6 +818,25 @@ mod tests {
         item.insert("created_at".into(), AttributeValue::S(now.to_rfc3339()));
         item.insert("updated_at".into(), AttributeValue::S(now.to_rfc3339()));
         item
+    }
+
+    #[test]
+    fn test_accumulate_usage_sums_per_owner() {
+        let a = make_file_item();
+        let mut b = make_file_item();
+        b.insert("owner_id".into(), a["owner_id"].clone());
+        b.insert("size_bytes".into(), AttributeValue::N("500".into()));
+        let c = make_file_item();
+
+        let mut usage = HashMap::new();
+        accumulate_usage(&mut usage, &[a.clone(), b, c.clone()]).unwrap();
+
+        let owner = |item: &HashMap<String, AttributeValue>| {
+            parse_uuid(&get_s(item, "owner_id").unwrap()).unwrap()
+        };
+        assert_eq!(usage.len(), 2);
+        assert_eq!(usage[&owner(&a)], 1524);
+        assert_eq!(usage[&owner(&c)], 1024);
     }
 
     #[test]

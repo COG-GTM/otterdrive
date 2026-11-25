@@ -41,6 +41,18 @@ pub async fn metrics() -> HttpResponse {
         .body(middleware::render_metrics())
 }
 
+/// Internal (not routed by api-gateway): bytes stored per owner, read by
+/// admin-service to fill storage_quotas.used_bytes.
+pub async fn storage_usage(meta: web::Data<MetadataClient>) -> Result<HttpResponse, ServiceError> {
+    let users: Vec<serde_json::Value> = meta
+        .storage_usage()
+        .await?
+        .into_iter()
+        .map(|(owner_id, used_bytes)| serde_json::json!({ "owner_id": owner_id, "used_bytes": used_bytes }))
+        .collect();
+    Ok(HttpResponse::Ok().json(serde_json::json!({ "users": users })))
+}
+
 // -- File Handlers --
 
 pub async fn upload_file(
