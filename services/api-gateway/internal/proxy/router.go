@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/middleware"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/middleware"
 )
 
 // Route defines a mapping from a URL prefix to a backend service.

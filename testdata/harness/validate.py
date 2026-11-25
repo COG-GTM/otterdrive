@@ -3,7 +3,7 @@
 # dependencies = ["psycopg2-binary", "tabulate"]
 # ///
 """
-OtterWorks test-data validation harness.
+OtterDrive test-data validation harness.
 
 Validates that generated synthetic data satisfies:
   1. Schema conformance (FK, NOT NULL, types, unique constraints)
@@ -39,9 +39,9 @@ from tabulate import tabulate
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "port": int(os.getenv("DB_PORT", "5432")),
-    "dbname": os.getenv("DB_NAME", "otterworks"),
-    "user": os.getenv("DB_USER", "otterworks"),
-    "password": os.getenv("DB_PASSWORD", "otterworks_dev"),
+    "dbname": os.getenv("DB_NAME", "otterdrive"),
+    "user": os.getenv("DB_USER", "otterdrive"),
+    "password": os.getenv("DB_PASSWORD", "otterdrive_dev"),
 }
 
 # ── Data Classes ──────────────────────────────────────────────────────────────
@@ -296,10 +296,10 @@ def validate_criteria(cur, schema: str, criteria_file: Path) -> list[CheckResult
 
 def run_standard_checks(cur, schema: str) -> list[CheckResult]:
     """
-    Run the standard OtterWorks test-data validation suite.
+    Run the standard OtterDrive test-data validation suite.
 
     These checks apply to any generated dataset regardless of the specific
-    user story — they enforce the invariants of the OtterWorks schema.
+    user story — they enforce the invariants of the OtterDrive schema.
     """
     results = []
 
@@ -408,11 +408,11 @@ def run_standard_checks(cur, schema: str) -> list[CheckResult]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Validate OtterWorks synthetic test data"
+        description="Validate OtterDrive synthetic test data"
     )
     parser.add_argument(
         "--ns", required=True,
-        help="Namespace (schema prefix) to validate, e.g. 'dev' -> schema 'otterworks_dev'",
+        help="Namespace (schema prefix) to validate, e.g. 'dev' -> schema 'otterdrive_dev'",
     )
     parser.add_argument(
         "--criteria", type=Path, default=None,
@@ -420,11 +420,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--schema-override", default=None,
-        help="Override the schema name (default: otterworks_<ns>)",
+        help="Override the schema name (default: otterdrive_<ns>)",
     )
     args = parser.parse_args()
 
-    schema = args.schema_override or f"otterworks_{args.ns}"
+    schema = args.schema_override or f"otterdrive_{args.ns}"
 
     try:
         conn = psycopg2.connect(**DB_CONFIG)
@@ -464,7 +464,7 @@ def main() -> int:
 
     # Output report
     print(f"\n{'=' * 60}")
-    print(f"  OtterWorks Test-Data Validation Report")
+    print(f"  OtterDrive Test-Data Validation Report")
     print(f"  Namespace: {args.ns}  |  Schema: {schema}")
     print(f"  Ran at: {report.started_at.isoformat()}")
     print(f"{'=' * 60}\n")

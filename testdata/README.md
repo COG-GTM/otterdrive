@@ -1,15 +1,15 @@
 # Synthetic Test-Data Generation Framework
 
-Generate and validate synthetic data for OtterWorks lower environments (dev, QA,
+Generate and validate synthetic data for OtterDrive lower environments (dev, QA,
 staging, load-test) driven by **GitHub Issue acceptance criteria**.
 
 ## How It Works
 
 1. A GitHub Issue describes a user story with acceptance criteria (row counts,
    distributions, relationships, activity patterns).
-2. Devin reads the issue, introspects the OtterWorks schema, and generates
+2. Devin reads the issue, introspects the OtterDrive schema, and generates
    Python scripts in `testdata/generated/<namespace>/`.
-3. The scripts create a namespaced Postgres schema (`otterworks_<ns>`), generate
+3. The scripts create a namespaced Postgres schema (`otterdrive_<ns>`), generate
    data, and load it.
 4. The validation harness (`make testdata-validate NS=<ns>`) programmatically
    proves the data satisfies the schema invariants **and** the issue's criteria.
@@ -17,8 +17,8 @@ staging, load-test) driven by **GitHub Issue acceptance criteria**.
 ## Quick Start
 
 ```bash
-# Prerequisites: running Postgres (make infra-up) with OtterWorks schemas
-export DB_HOST=localhost DB_PORT=5432 DB_NAME=otterworks DB_USER=otterworks DB_PASSWORD=otterworks_dev
+# Prerequisites: running Postgres (make infra-up) with OtterDrive schemas
+export DB_HOST=localhost DB_PORT=5432 DB_NAME=otterdrive DB_USER=otterdrive DB_PASSWORD=otterdrive_dev
 
 # Generate data for a namespace (produced by Devin from a GH Issue)
 python testdata/generated/dev/generate.py --ns dev
@@ -56,7 +56,7 @@ The harness runs two layers of checks:
 
 | Category | What it checks |
 |----------|----------------|
-| Table existence | All core OtterWorks tables present in the namespace |
+| Table existence | All core OtterDrive tables present in the namespace |
 | FK integrity | `user_roles`, `user_settings`, `refresh_tokens`, `storage_quotas` reference valid parents |
 | Temporal consistency | Audit logs do not reference resources created after the log timestamp |
 | Enum values | Roles, statuses, severities, tiers contain only valid values |
@@ -91,7 +91,7 @@ A `criteria.json` file maps tables to constraints from the acceptance criteria:
 
 ## Namespacing
 
-Every run writes to an isolated Postgres schema (`otterworks_<ns>`) so:
+Every run writes to an isolated Postgres schema (`otterdrive_<ns>`) so:
 - Concurrent runs never collide (each Devin session gets its own namespace)
 - The durable seed data in the default `public` schema is never touched
 - Cleanup is a single `DROP SCHEMA ... CASCADE`
@@ -110,7 +110,7 @@ Every run writes to an isolated Postgres schema (`otterworks_<ns>`) so:
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Scripts load data into otterworks_<ns> schema          │
+│  Scripts load data into otterdrive_<ns> schema          │
 └──────────────────────────┬──────────────────────────────┘
                            │
                            ▼

@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Monitoring Module
+# OtterDrive Monitoring Module
 # CloudWatch log groups for each service
 # ------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ locals {
 resource "aws_cloudwatch_log_group" "services" {
   for_each = toset(local.services)
 
-  name              = "/otterworks/${var.environment}/${each.value}"
+  name              = "/otterdrive/${var.environment}/${each.value}"
   retention_in_days = var.log_retention_days
   kms_key_id        = var.kms_key_arn
 

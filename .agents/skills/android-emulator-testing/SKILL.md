@@ -1,9 +1,9 @@
 ---
 name: android-emulator-testing
-description: How to drive and verify the OtterWorks Capacitor Android app on the `otter` emulator - signing in, uploading files, reading Android notifications, recording usable video, and working around emulator quirks. Use when testing any client-app change that must be validated on Android rather than the web build.
+description: How to drive and verify the OtterDrive Capacitor Android app on the `otter` emulator - signing in, uploading files, reading Android notifications, recording usable video, and working around emulator quirks. Use when testing any client-app change that must be validated on Android rather than the web build.
 ---
 
-# Testing the OtterWorks Android app on the `otter` emulator
+# Testing the OtterDrive Android app on the `otter` emulator
 
 `.devin/blueprint.yaml` already installs the SDK, creates the `otter` AVD (720x1600, density 320),
 warms a `clean` snapshot, and seeds the RetailCo drive. This skill covers the *runtime* mechanics the
@@ -59,8 +59,8 @@ after a `down -v`, a fresh box, etc.) the seeded drive account is gone and every
 API — returns `Invalid credentials`, which looks like a typing/IME bug but is not:
 
 ```bash
-docker exec otterworks-postgres psql -U otterworks -d otterworks -c 'select email from users;'
-# only admin@otterworks.dev  ->  re-seed before testing
+docker exec otterdrive-postgres psql -U otterdrive -d otterdrive -c 'select email from users;'
+# only admin@otterdrive.dev  ->  re-seed before testing
 python3 -m venv /tmp/retail-seed-venv
 /tmp/retail-seed-venv/bin/pip install -q -r testdata/generated/retail-drive/requirements.txt
 /tmp/retail-seed-venv/bin/python testdata/generated/retail-drive/generate_drive.py \
@@ -85,7 +85,7 @@ adb shell input tap 359 1037         # "Sign in"
 Gotchas:
 - **Do not** use `keyevent 111` (ESC) to dismiss the keyboard — it can insert a character into the
   focused field. Use `keyevent 4` (Back).
-- `am force-stop com.otterworks.app` + relaunch **loses the session** and returns you to the landing
+- `am force-stop com.otterdrive.app` + relaunch **loses the session** and returns you to the landing
   page. Avoid restarting the app just to refresh data; navigate away and back instead.
 - The hardware **Back key exits the activity** from a folder view (it does not navigate up within the
   SPA), and relaunching also lands on the signed-out landing page. Budget for a re-login, or navigate
@@ -141,8 +141,8 @@ The in-app success state ("Upload complete — closing shortly" + green check) *
 ```bash
 adb shell cmd notification list                      # one row per posted notification
 adb shell dumpsys notification --noredact \
-  | grep -E "pkg=com.otterworks.app|android.title=|android.text="
-adb shell dumpsys package com.otterworks.app | grep POST_NOTIFICATIONS:   # granted=true/false
+  | grep -E "pkg=com.otterdrive.app|android.title=|android.text="
+adb shell dumpsys package com.otterdrive.app | grep POST_NOTIFICATIONS:   # granted=true/false
 ```
 
 For pixel evidence (required — dumpsys is not proof a user saw it) pull the shade with a real
@@ -159,11 +159,11 @@ longer, slower `360 2 360 1200 600` gesture is reliable.
 
 To make an "no notification was posted" assertion unambiguous, clear the shade first (open it and tap
 **Clear all**, ~`adb shell input tap 568 1132`) and re-check `cmd notification list` shows no
-`com.otterworks.app` row before performing the action.
+`com.otterdrive.app` row before performing the action.
 
 Runtime permission prompts are one-shot per install: check `POST_NOTIFICATIONS: granted=false`
 *before* you start recording, otherwise you will never capture the prompt. Reset with
-`adb shell pm revoke com.otterworks.app android.permission.POST_NOTIFICATIONS`.
+`adb shell pm revoke com.otterdrive.app android.permission.POST_NOTIFICATIONS`.
 
 ## Forcing a failed network request
 
@@ -226,7 +226,7 @@ adb logcat -d | grep -E "LocalNotifications, methodName: schedule|No Channel fou
 
 - `V Capacitor: ... pluginId: LocalNotifications, methodName: schedule, methodData: {...}` — proves
   the web layer asked for the notification and shows the exact payload (including `channelId`).
-- `E NotificationService: No Channel found for pkg=com.otterworks.app, channelId=<id>, ...` — Android
+- `E NotificationService: No Channel found for pkg=com.otterdrive.app, channelId=<id>, ...` — Android
   discarded it because that channel was never created.
 
 Any `channelId` passed to `LocalNotifications.schedule` **must** first be created with
@@ -239,14 +239,14 @@ never do" is a strong hint of a missing channel rather than a permission problem
 ## Cross-checking against the backend
 
 ```bash
-docker logs --tail=200 otterworks-file-service 2>&1 | grep "File uploaded"
-docker exec otterworks-localstack awslocal dynamodb scan \
-  --table-name otterworks-file-metadata --filter-expression "contains(#n, :v)" \
+docker logs --tail=200 otterdrive-file-service 2>&1 | grep "File uploaded"
+docker exec otterdrive-localstack awslocal dynamodb scan \
+  --table-name otterdrive-file-metadata --filter-expression "contains(#n, :v)" \
   --expression-attribute-names '{"#n":"name"}' --expression-attribute-values '{":v":{"S":"report"}}'
 ```
 
-File metadata lives in **LocalStack DynamoDB** (`otterworks-file-metadata`, `otterworks-folders`),
-not Postgres — `psql ... -c "select * from files"` will fail. The Postgres role is `otterworks`, not
+File metadata lives in **LocalStack DynamoDB** (`otterdrive-file-metadata`, `otterdrive-folders`),
+not Postgres — `psql ... -c "select * from files"` will fail. The Postgres role is `otterdrive`, not
 `postgres`.
 
 For a quick API cross-check, log in through the gateway (the token field is `accessToken`):

@@ -1,6 +1,6 @@
-# OtterWorks Multi-Tenant / Ephemeral Demo Environments — Scoping & Plan
+# OtterDrive Multi-Tenant / Ephemeral Demo Environments — Scoping & Plan
 
-**Goal.** Run many concurrent OtterWorks demos on the **same shared AWS/EKS infrastructure**
+**Goal.** Run many concurrent OtterDrive demos on the **same shared AWS/EKS infrastructure**
 without demos stepping on each other, so facilitators/attendees can:
 
 - spin up an **isolated** copy of the app on demand,
@@ -21,7 +21,7 @@ The unit of isolation is a **tenant** = one attendee or one demo run, identified
 
 - **One shared EKS cluster + one shared SPOT node group.** Do **not** give each tenant its own
   cluster or node group (control plane is ~$73/mo each; node groups take ~15 min to create).
-- **Namespace-per-tenant** (`otterworks-<ATTENDEE_ID>`) is the isolation boundary: one Helm
+- **Namespace-per-tenant** (`otterdrive-<ATTENDEE_ID>`) is the isolation boundary: one Helm
   release set + one ConfigMap/Secret + one MeiliSearch per namespace, guarded by a
   `ResourceQuota`, `LimitRange`, and `NetworkPolicy`.
 - **Share the stateful backends physically, isolate them logically** via the per-tenant naming
@@ -49,10 +49,10 @@ The unit of isolation is a **tenant** = one attendee or one demo run, identified
 | Helm releases (13 backends + 2 FE) | **Per tenant** | Independent versions, config, and redeploys. |
 | ConfigMap / Secret | **Per tenant** | Points each tenant at its logical data slice. |
 | MeiliSearch | **Per tenant (small) or shared w/ index prefix** | 256Mi pod; cheap to run one per namespace for full isolation. |
-| RDS Postgres (instance) | **Shared instance, per-tenant database/schema** | `otterworks_<ATTENDEE_ID>` DB or schema; one `db.t3.micro` serves many. |
+| RDS Postgres (instance) | **Shared instance, per-tenant database/schema** | `otterdrive_<ATTENDEE_ID>` DB or schema; one `db.t3.micro` serves many. |
 | ElastiCache Redis | **Shared, per-tenant key prefix or logical DB** | Namespacing via key prefix; collab/session isolation. |
 | DynamoDB tables | **Shared account, per-tenant table name prefix** | Table names are already env-configurable (see §4). |
-| S3 buckets | **Shared bucket, per-tenant key prefix** | `s3://otterworks-files-dev/<ATTENDEE_ID>/...`. |
+| S3 buckets | **Shared bucket, per-tenant key prefix** | `s3://otterdrive-files-dev/<ATTENDEE_ID>/...`. |
 | SNS/SQS | **Shared topic, per-tenant queue or filter** | Per-tenant SQS queue subscribed with a filter policy. |
 | IRSA roles | **Shared per-service role** (dev) → **per-tenant role** (strict) | Dev can reuse; strict isolation scopes policies to the tenant's resource prefixes. |
 
@@ -97,7 +97,7 @@ The golden app's config is already tenant-parameterizable — no code changes ne
 | Object storage | `S3_BUCKET` (+ app key prefixes) | shared bucket, `<ATTENDEE_ID>/` key prefix |
 | Search | `MEILISEARCH_URL`, `MEILISEARCH_DOCUMENTS_INDEX`, `MEILISEARCH_FILES_INDEX` | per-tenant MeiliSearch Service **or** shared server + `<ATTENDEE_ID>-documents` index |
 | Cache / sessions / collab | `REDIS_HOST`, `REDIS_PORT` | shared Redis + per-tenant key prefix (app-level) |
-| Relational | `SPRING_DATASOURCE_URL`, `DOC_SVC_DATABASE_URL`, `DATABASE_*`, `DB_*` | shared instance, `otterworks_<ATTENDEE_ID>` database/schema |
+| Relational | `SPRING_DATASOURCE_URL`, `DOC_SVC_DATABASE_URL`, `DATABASE_*`, `DB_*` | shared instance, `otterdrive_<ATTENDEE_ID>` database/schema |
 | Eventing | `SNS_TOPIC_ARN`, `SQS_QUEUE_URL` | shared topic, per-tenant queue |
 | Routing | `API_GATEWAY_URL` (frontends) | `http://api-gateway.<namespace>:8080` |
 
@@ -106,13 +106,13 @@ The golden app's config is already tenant-parameterizable — no code changes ne
 ## 5. Routing & access
 
 - **Shared ingress-nginx** with host- or path-based routing:
-  - Host: `t-<ATTENDEE_ID>.otterworks.<domain>` → that tenant's `web-app` Service.
+  - Host: `t-<ATTENDEE_ID>.otterdrive.<domain>` → that tenant's `web-app` Service.
   - Or path: `/<ATTENDEE_ID>/` if a wildcard host isn't available.
 - One ALB/NLB (via AWS Load Balancer Controller) fronts ingress-nginx; **avoid** per-tenant
   `type: LoadBalancer` Services (ELB cost + account limits). The golden dev deploy uses
   `LoadBalancer` for simplicity; the multi-tenant overlay switches frontends to `ClusterIP` +
   ingress.
-- TLS via cert-manager wildcard cert (`*.otterworks.<domain>`).
+- TLS via cert-manager wildcard cert (`*.otterdrive.<domain>`).
 
 ---
 
@@ -124,7 +124,7 @@ Three layers, from lightest to heaviest — none touch other tenants:
    (e.g. `upload_s3_error`). Set a tenant-scoped flag to fault a specific operation live — ideal
    for "find and fix the incident" demos. Clears instantly.
 2. **Config/variant flags (seconds).** `helm upgrade` the tenant's release with a changed value
-   (feature flag, bad env value, resource starvation) — scoped to `otterworks-<ATTENDEE_ID>`.
+   (feature flag, bad env value, resource starvation) — scoped to `otterdrive-<ATTENDEE_ID>`.
 3. **Code bug (image swap).** Build a variant image (planted bug on a variant branch/patch off the
    golden app) and `helm upgrade --set image.tag=<variant>` for just that tenant. Immediate
    rollback = re-point to the golden tag.
@@ -157,7 +157,7 @@ charts don't checksum the ConfigMap, config-only changes need a `rollout restart
 
 1. **Parameterize the deploy on `ATTENDEE_ID`.** Add `scripts/deploy-tenant.sh <ATTENDEE_ID>
    [--tier A|B] [--image-tag TAG]` that wraps the existing wiring in `deploy-dev.sh`:
-   namespace = `otterworks-<ID>`, per-tenant ConfigMap/Secret values from §4, frontends on
+   namespace = `otterdrive-<ID>`, per-tenant ConfigMap/Secret values from §4, frontends on
    ingress not LoadBalancer, apply `ResourceQuota`/`LimitRange`/`NetworkPolicy`, deploy a
    per-tenant (or shared) MeiliSearch. Companion `teardown-tenant.sh <ATTENDEE_ID>`.
 2. **Shared platform baseline.** Ensure ingress-nginx + cert-manager + AWS LB Controller +

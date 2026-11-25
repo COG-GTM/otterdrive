@@ -1,10 +1,10 @@
 {
   "id": null,
-  "uid": "otterworks-service-detail",
-  "title": "OtterWorks Service Detail",
+  "uid": "otterdrive-service-detail",
+  "title": "OtterDrive Service Detail",
   "description": "Per-service deep dive: request rate by endpoint, latency percentiles, error breakdown, and resource usage.",
   "tags": [
-    "otterworks",
+    "otterdrive",
     "service",
     "detail"
   ],

@@ -37,7 +37,7 @@ export const POST = withSession(async (req: NextRequest, { actor }) => {
   if (ttlSeconds === null) return error(400, "invalid ttl");
 
   // The perpetual tenant is the environment everyone shares, so it answers on
-  // the short host (t-main.otterworks.app) rather than under the per-attendee
+  // the short host (t-main.otterdrive.app) rather than under the per-attendee
   // subdomain. The runner must be told the same suffix the record advertises,
   // or the URL in the dashboard points at an Ingress that was never created.
   const hostSuffix = persistent ? env.perpetualHostSuffix : env.hostSuffix;

@@ -1,4 +1,4 @@
-# OtterWorks
+# OtterDrive
 
 A collaborative file storage and document editing platform — functionally equivalent to Google Drive + Google Docs. Built as a polyglot microservices system to demonstrate a realistic enterprise technology stack.
 
@@ -112,7 +112,7 @@ All observability services run locally via `docker-compose.infra.yml`.
 
 | Tool | URL | Purpose |
 |------|-----|---------|
-| Grafana | http://localhost:3001 | Dashboards and metrics visualization (admin / otterworks) |
+| Grafana | http://localhost:3001 | Dashboards and metrics visualization (admin / otterdrive) |
 | Prometheus | http://localhost:9090 | Metrics collection and alerting rules |
 | Jaeger | http://localhost:16686 | Distributed tracing UI |
 | MeiliSearch | http://localhost:7700 | Search engine dashboard |
@@ -158,7 +158,7 @@ Per-service build targets are also available (e.g., `make build-gateway`, `make 
 ## Project Structure
 
 ```
-otterworks/
+otterdrive/
 ├── services/              # Backend microservices (11 services, 8 languages)
 │   ├── api-gateway/       #   Go / Chi
 │   ├── auth-service/      #   Java / Spring Boot
@@ -232,4 +232,4 @@ otterworks/
 
 ## License
 
-Proprietary - OtterWorks Inc.
+Proprietary - OtterDrive Inc.

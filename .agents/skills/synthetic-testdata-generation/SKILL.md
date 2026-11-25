@@ -2,11 +2,11 @@
 name: synthetic-testdata-generation
 description: >
   Repo-specific mechanics for generating and validating synthetic test data in
-  OtterWorks. Covers schema layout, namespacing, validation commands, and the
+  OtterDrive. Covers schema layout, namespacing, validation commands, and the
   exact Makefile targets needed to run the verification loop.
 ---
 
-# Synthetic Test-Data Generation — OtterWorks
+# Synthetic Test-Data Generation — OtterDrive
 
 This skill provides the repo-specific mechanics that the
 `!generate-testdata` Playbook relies on. It is auto-loaded when Devin works
@@ -20,7 +20,7 @@ in this repository.
   - `admin_users`, `storage_quotas`, `audit_logs`, `feature_flags`,
     `announcements`, `incidents`, `system_configs`
 - **Namespaced DDL**: `testdata/harness/create_schema.sql`
-  (creates all tables under `otterworks_<ns>`)
+  (creates all tables under `otterdrive_<ns>`)
 
 ## Valid Enum Values
 
@@ -55,9 +55,9 @@ admin_users.id  <──  audit_logs.actor_id  (nullable)
 
 ## Namespacing Convention
 
-Every run writes to schema `otterworks_<NS>` where NS is provided by the user.
-Examples: `otterworks_dev`, `otterworks_qa1`, `otterworks_loadtest`,
-`otterworks_session1`.
+Every run writes to schema `otterdrive_<NS>` where NS is provided by the user.
+Examples: `otterdrive_dev`, `otterdrive_qa1`, `otterdrive_loadtest`,
+`otterdrive_session1`.
 
 Namespaces isolate concurrent runs — multiple Devin sessions (or child sessions)
 can generate data in parallel without collision.
@@ -95,9 +95,9 @@ testdata/generated/<ns>/
 |----------|---------|
 | `DB_HOST` | `localhost` |
 | `DB_PORT` | `5432` |
-| `DB_NAME` | `otterworks` |
-| `DB_USER` | `otterworks` |
-| `DB_PASSWORD` | `otterworks_dev` |
+| `DB_NAME` | `otterdrive` |
+| `DB_USER` | `otterdrive` |
+| `DB_PASSWORD` | `otterdrive_dev` |
 
 On EKS/RDS, set these to the cluster values. The validation harness and scripts
 all read from environment variables.
@@ -123,8 +123,8 @@ make seed-legacy-validate NS=<ns>      # re-derives counts/checksums vs testdata
 - Manifests are gitignored runtime artifacts; reruns are byte-identical per (ns, scale).
 - NS must fullmatch `[A-Za-z0-9_]+`; DynamoDB rows use plain-UUID `id` + `ns` attribute
   (clears are ns-scoped scans, safe for the shared table).
-- Cleanup: drop schema `otterworks_<ns>`, delete dynamo items where ns=<ns>,
-  delete `s3://otterworks-data-lake/events/<ns>/`, remove the manifest.
+- Cleanup: drop schema `otterdrive_<ns>`, delete dynamo items where ns=<ns>,
+  delete `s3://otterdrive-data-lake/events/<ns>/`, remove the manifest.
 - Gotcha: `uv run - <<EOF` stdin scripts don't read inline-deps headers — pass
   `--with psycopg2-binary --with boto3` when importing legacy_common ad hoc.
 - Gotcha: `$(printf 'x\n')` strips the trailing newline — use `$'x\n'` when

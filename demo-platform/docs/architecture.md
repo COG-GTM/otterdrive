@@ -1,4 +1,4 @@
-# OtterWorks Demo Platform — Design (Multi-Tenant Ops Dashboard)
+# OtterDrive Demo Platform — Design (Multi-Tenant Ops Dashboard)
 
 Status: DRAFT for review. Grounded in the **actual** deployed infrastructure discovered on
 2026-07-16 (not the idealized platform template). Decisions needed from you are in §11.
@@ -9,41 +9,41 @@ Status: DRAFT for review. Grounded in the **actual** deployed infrastructure dis
 
 | Thing | Reality today |
 |---|---|
-| EKS cluster | **`otterworks-dev`** only — created by `otterworks/infrastructure/terraform`, **not** by `platform-engineering-shared-services` (that repo's CDK targets a `workshop-dev` cluster for a *different* app — .NET decomposition — and is not deployed). |
+| EKS cluster | **`otterdrive-dev`** only — created by `otterdrive/infrastructure/terraform`, **not** by `platform-engineering-shared-services` (that repo's CDK targets a `workshop-dev` cluster for a *different* app — .NET decomposition — and is not deployed). |
 | Ingress | 1 shared `ingress-nginx` + 1 NLB. |
-| cert-manager / external-dns / ArgoCD | **Not installed** on `otterworks-dev`. |
+| cert-manager / external-dns / ArgoCD | **Not installed** on `otterdrive-dev`. |
 | Route53 | **No hosted zones.** (nip.io is a stopgap.) |
-| RDS | 1 shared instance; **database-per-tenant** (`otterworks_<id>`). Good — already single-instance. |
-| S3 | **Multiple** buckets: `otterworks-files-dev`, `-audit-archive-dev`, `-data-lake-dev`, `-analytics-dev-*`. Shared across tenants (Tier-A prefixing), **not** one bucket. |
-| DynamoDB | **Multiple** tables: `otterworks-file-metadata-dev`, `-file-shares-dev`, `-file-versions-dev`, `-folders-dev`, `-notifications-dev`, `-audit-events-dev`. Shared across tenants, **not** one table. |
-| Tenants | `otterworks` (golden) + ephemeral `otterworks-<id>` (per-tenant ns + DB + in-cluster Redis/Meili). Deployed by `otterworks/scripts/deploy-tenant.sh`. |
+| RDS | 1 shared instance; **database-per-tenant** (`otterdrive_<id>`). Good — already single-instance. |
+| S3 | **Multiple** buckets: `otterdrive-files-dev`, `-audit-archive-dev`, `-data-lake-dev`, `-analytics-dev-*`. Shared across tenants (Tier-A prefixing), **not** one bucket. |
+| DynamoDB | **Multiple** tables: `otterdrive-file-metadata-dev`, `-file-shares-dev`, `-file-versions-dev`, `-folders-dev`, `-notifications-dev`, `-audit-events-dev`. Shared across tenants, **not** one table. |
+| Tenants | `otterdrive` (golden) + ephemeral `otterdrive-<id>` (per-tenant ns + DB + in-cluster Redis/Meili). Deployed by `otterdrive/scripts/deploy-tenant.sh`. |
 | Tenant→branch | Not tracked anywhere. `workshop-<id>` branches exist by convention only. |
 | State/registry | None. No record of which tenants exist, who owns them, TTLs, or branch mapping. |
 
 **Implication:** to "roll out," we add a **control plane** (dashboard + durable state + reaper)
-and **DNS/TLS** to the *existing* `otterworks-dev` cluster. We are not adopting the template repo's cluster.
+and **DNS/TLS** to the *existing* `otterdrive-dev` cluster. We are not adopting the template repo's cluster.
 
 ---
 
 ## 2. Target architecture: two planes
 
 ### Platform plane — shared, always-on, ONE of each (control plane + shared data plane)
-- EKS `otterworks-dev` + **autoscaled** node group(s)
+- EKS `otterdrive-dev` + **autoscaled** node group(s)
 - `ingress-nginx` + 1 NLB (shared L7 entry)
 - **cert-manager** (wildcard TLS) + **external-dns** (auto Route53 records)  ← *to install*
-- Route53 hosted zone for **`otterworks.app`** + wildcard `*.demo.otterworks.app`  ← *to create*
+- Route53 hosted zone for **`otterdrive.app`** + wildcard `*.demo.otterdrive.app`  ← *to create*
 - **1 RDS instance** (database-per-tenant) — already so
 - Shared S3 buckets + DynamoDB tables (namespaced *inside* by tenant key/prefix) — see §8
-- **Demo Ops Dashboard** (new) — platform namespace `otterworks-platform`
-- **Control-plane state store** (new) — 1 DynamoDB table `otterworks-demo-control` (durable, tenant-independent)
+- **Demo Ops Dashboard** (new) — platform namespace `otterdrive-platform`
+- **Control-plane state store** (new) — 1 DynamoDB table `otterdrive-demo-control` (durable, tenant-independent)
 - **Reaper** (new, replaces the basic TTL reaper) — schedule owned by the dashboard
 
 ### Multi-tenant plane — ephemeral, one slice per checkout
-- Namespace `otterworks-<id>` (11 services + 2 frontends, replicas=1)
+- Namespace `otterdrive-<id>` (11 services + 2 frontends, replicas=1)
 - Per-tenant in-cluster **Redis** + **MeiliSearch**
-- Its **database** `otterworks_<id>` on the shared RDS
+- Its **database** `otterdrive_<id>` on the shared RDS
 - Its **prefix/owner partition** in the shared S3 buckets + DynamoDB tables
-- Ingress host `t-<id>.demo.otterworks.app` / `api-t-<id>.demo.otterworks.app` (wildcard TLS)
+- Ingress host `t-<id>.demo.otterdrive.app` / `api-t-<id>.demo.otterdrive.app` (wildcard TLS)
 - Mapped to git branch `workshop-<id>` (recorded in the control-plane state store)
 
 See the rendered diagram: `platform-vs-multitenant.png`.
@@ -52,8 +52,8 @@ See the rendered diagram: `platform-vs-multitenant.png`.
 
 ## 3. Demo Ops Dashboard
 
-A small **platform service** (not per-tenant) in namespace `otterworks-platform`, exposed at
-`https://ops.otterworks.app` (its own host, wildcard TLS).
+A small **platform service** (not per-tenant) in namespace `otterdrive-platform`, exposed at
+`https://ops.otterdrive.app` (its own host, wildcard TLS).
 
 **Backend API** (stateless; all state in the control table):
 - `GET  /api/tenants` — list all tenants + live resources (ns status, pod ready counts, DB present, URL, owner, branch, tier, created/expires, node/cost estimate). Live data = control table joined with a live `kubectl`/AWS read.
@@ -75,7 +75,7 @@ A small **platform service** (not per-tenant) in namespace `otterworks-platform`
 
 ## 4. State management — independent of ephemeral infra
 
-A single DynamoDB table **`otterworks-demo-control`** (on-demand billing, PITR on) is the source
+A single DynamoDB table **`otterdrive-demo-control`** (on-demand billing, PITR on) is the source
 of truth. It **survives** any tenant teardown, cluster node churn, or reaper run.
 
 ```
@@ -100,8 +100,8 @@ Replaces the current TTL reaper (which deletes namespaces but **leaves orphan DB
 
 - Runs on the schedule stored in `CONFIG#reaper` (editable from the dashboard).
 - For each expired/checked-in tenant, performs **idempotent, retry-safe** teardown of **all** its resources:
-  1. namespace `otterworks-<id>` (pods/Redis/Meili/ingress)
-  2. RDS database `otterworks_<id>`
+  1. namespace `otterdrive-<id>` (pods/Redis/Meili/ingress)
+  2. RDS database `otterdrive_<id>`
   3. S3 objects under the tenant prefix in every shared bucket
   4. DynamoDB items with the tenant partition key in every shared table
   5. IAM/IRSA trust entries (only legacy exact-match; keep the shared wildcard)
@@ -114,10 +114,10 @@ Replaces the current TTL reaper (which deletes namespaces but **leaves orphan DB
 
 ## 6. DNS + TLS (the scale answer)
 
-- Register **`otterworks.app`** (Route53) → hosted zone.
-- **external-dns** watches Ingress objects and writes `t-<id>.demo.otterworks.app` records automatically — **zero per-tenant DNS work**.
-- **cert-manager** issues a single wildcard cert `*.demo.otterworks.app` (Let's Encrypt **DNS-01** via Route53) → HTTPS for every tenant + the dashboard.
-- `deploy-tenant.sh` defaults to `--host-suffix demo.otterworks.app` + TLS annotations.
+- Register **`otterdrive.app`** (Route53) → hosted zone.
+- **external-dns** watches Ingress objects and writes `t-<id>.demo.otterdrive.app` records automatically — **zero per-tenant DNS work**.
+- **cert-manager** issues a single wildcard cert `*.demo.otterdrive.app` (Let's Encrypt **DNS-01** via Route53) → HTTPS for every tenant + the dashboard.
+- `deploy-tenant.sh` defaults to `--host-suffix demo.otterdrive.app` + TLS annotations.
 - Manifests + one-shot enablement: [`dns-tls.md`](./dns-tls.md) (`demo-platform/k8s/dns-tls/` + `scripts/enable-dns-tls.sh`). This is the AWS-native replacement for the temporary nip.io hostnames.
 
 ---
@@ -151,7 +151,7 @@ I recommend (A) now and (B) only if you specifically want the consolidation. **N
 ## 9. Security & correctness
 
 - Passcode: server-side, constant-time, rate-limited, session cookie (§3). No secret in argv/URL/logs.
-- Dashboard runs with a **scoped IRSA role** (only: manage `otterworks-*` ns, the control table, tenant DBs, tenant S3 prefixes) — not cluster-admin, not the tenant wildcard.
+- Dashboard runs with a **scoped IRSA role** (only: manage `otterdrive-*` ns, the control table, tenant DBs, tenant S3 prefixes) — not cluster-admin, not the tenant wildcard.
 - **Audit log** of every checkout/checkin/teardown/extend (who, when, what).
 - **Concurrency locking** on checkout (conditional writes, §4).
 - Control table **PITR/backups** so state survives mistakes.
@@ -160,26 +160,26 @@ I recommend (A) now and (B) only if you specifically want the consolidation. **N
 
 ## 10. Rollout plan (phased; child agents in parallel where marked ⑂)
 
-1. **DNS/TLS foundation:** register `otterworks.app`, hosted zone, install external-dns + cert-manager, wildcard cert. Move any existing tenants onto real hostnames.
-2. **Control table** (`otterworks-demo-control`) + Terraform/CDK for it.
+1. **DNS/TLS foundation:** register `otterdrive.app`, hosted zone, install external-dns + cert-manager, wildcard cert. Move any existing tenants onto real hostnames.
+2. **Control table** (`otterdrive-demo-control`) + Terraform/CDK for it.
 3. ⑂ **Dashboard backend** (API + passcode auth + state store client).
 4. ⑂ **Dashboard frontend** (table UI + reaper panel + audit).
 5. **deploy/teardown refactor** to read/write the control table + emit audit + host-based ingress by default.
 6. **Reaper v2** + orphan sweeper (schedule from control table).
 7. **Autoscaling + PgBouncer** (done) **+ prefix delegation** (scale hardening).
-8. Deploy dashboard to `otterworks-platform`, wire `ops.otterworks.app`, end-to-end test, PR(s).
+8. Deploy dashboard to `otterdrive-platform`, wire `ops.otterdrive.app`, end-to-end test, PR(s).
 
 ---
 
 ## 11. Decisions I need from you
 
 1. **Repo home** for the dashboard + control plane:
-   - (a) **`otterworks`** — co-located with the live cluster infra + tenant scripts (fastest).
+   - (a) **`otterdrive`** — co-located with the live cluster infra + tenant scripts (fastest).
    - (b) **`platform-engineering-shared-services`** — matches your "platform standard" knowledge, but that repo is currently a template for a *different* app / non-existent cluster; more reconciliation.
    - (c) a **new generalized repo** (e.g. `demo-tenant-operations`) if you want this reusable across demo apps.
    My lean: (a) now for speed, or (c) if reuse matters. 
 2. **Single-instance scope:** §8 option **(A)** (enforce shared + namespacing) or **(B)** (true collapse)?
-3. **Domain:** confirm **`otterworks.app` ($19/yr)**, approve the spend, and give the **registrant contact** (name, org, email, phone, postal) for Route53/ICANN.
+3. **Domain:** confirm **`otterdrive.app` ($19/yr)**, approve the spend, and give the **registrant contact** (name, org, email, phone, postal) for Route53/ICANN.
 4. **Passcode:** shall I generate one (stored as a Secret) or do you have a specific value?
 5. **Child agents:** OK to spin up child sessions for the dashboard backend/frontend in parallel (steps 3⑂/4⑂)?
 

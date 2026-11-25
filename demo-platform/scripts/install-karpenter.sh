@@ -15,7 +15,7 @@
 #
 # Usage:
 #   demo-platform/scripts/install-karpenter.sh
-#   KARPENTER_VERSION=1.13.0 EKS_CLUSTER=otterworks-dev ... install-karpenter.sh
+#   KARPENTER_VERSION=1.13.0 EKS_CLUSTER=otterdrive-dev ... install-karpenter.sh
 # ------------------------------------------------------------------------------
 set -euo pipefail
 
@@ -23,7 +23,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${HERE}/../.." && pwd)"
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
 KARPENTER_NAMESPACE="${KARPENTER_NAMESPACE:-kube-system}"
 # Pinned rather than floating: an unattended jump to a new minor version of the
 # component that creates and deletes nodes is not something a workshop cluster

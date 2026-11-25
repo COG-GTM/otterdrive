@@ -1,6 +1,6 @@
-# OtterWorks Architecture
+# OtterDrive Architecture
 
-OtterWorks is a collaborative file storage and document editing platform (functionally equivalent to Google Drive + Google Docs). It is built as a polyglot microservices system to demonstrate a realistic enterprise technology stack with intentional variety across languages, frameworks, and infrastructure patterns.
+OtterDrive is a collaborative file storage and document editing platform (functionally equivalent to Google Drive + Google Docs). It is built as a polyglot microservices system to demonstrate a realistic enterprise technology stack with intentional variety across languages, frameworks, and infrastructure patterns.
 
 ## System Overview
 
@@ -261,7 +261,7 @@ Each service has a Helm chart in `infrastructure/helm/<service-name>/`:
 ## Monorepo Structure
 
 ```
-otterworks/
+otterdrive/
 ├── ARCHITECTURE.md                    # This file
 ├── README.md                          # Project overview and quick start
 ├── docker-compose.yml                 # Local development orchestration

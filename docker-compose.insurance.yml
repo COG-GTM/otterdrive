@@ -1,4 +1,4 @@
-# OtterWorks Industry Solutions — insurance Commission Pay fixture.
+# OtterDrive Industry Solutions — insurance Commission Pay fixture.
 # Oracle Database Free (23ai+) running the OLTP schema (COMMISSION_PAY,
 # tables + PL/SQL business logic) and the OLAP schema (COMMISSION_DW, star
 # schema + ETL + materialized view) in FREEPDB1. Standalone and local-only,

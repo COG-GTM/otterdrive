@@ -10,7 +10,7 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
             <Logo size={28} />
-            <span className="font-semibold text-gray-900">OtterWorks, Inc.</span>
+            <span className="font-semibold text-gray-900">OtterDrive, Inc.</span>
           </Link>
         </div>
       </header>
@@ -22,7 +22,7 @@ export default function TermsPage() {
         <div className="bg-white border border-gray-300 rounded p-6 space-y-4 text-sm text-gray-600 leading-relaxed">
           <p>
             <strong className="text-gray-900">1. Acceptance of Terms.</strong>{" "}
-            By accessing OtterWorks, you agree to conduct all clam-related and
+            By accessing OtterDrive, you agree to conduct all clam-related and
             document-related commerce in accordance with the customs of the
             waterways. These terms are entirely fictional and carry no legal
             force anywhere, wet or dry.
@@ -40,7 +40,7 @@ export default function TermsPage() {
           </p>
           <p>
             <strong className="text-gray-900">4. Termination.</strong>{" "}
-            OtterWorks, Inc. may suspend accounts that disturb the ecosystem.
+            OtterDrive, Inc. may suspend accounts that disturb the ecosystem.
             Suspended otters retain the right to appeal to the River Council.
           </p>
           <p>

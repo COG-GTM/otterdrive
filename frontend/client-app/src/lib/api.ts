@@ -252,7 +252,7 @@ export const filesApi = {
     await apiClient.delete(`/folders/${id}`);
   },
   share: async (id: string, email: string, permission: "view" | "edit"): Promise<void> => {
-    // An email that doesn't resolve to an OtterWorks user is still sent to
+    // An email that doesn't resolve to an OtterDrive user is still sent to
     // file-service (as shared_with_email), which decides whether to reject it.
     let userId: string | null = null;
     try {

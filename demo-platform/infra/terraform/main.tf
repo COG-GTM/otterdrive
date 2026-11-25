@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — control-plane infrastructure
+# OtterDrive Demo Platform — control-plane infrastructure
 #
 # Durable, tenant-independent resources for the demo ops platform:
 #   - DynamoDB control table (state store: registry, locks, reaper config, audit)
@@ -20,7 +20,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "otterworks-terraform-state"
+    bucket = "otterdrive-terraform-state"
     key    = "demo-platform/terraform.tfstate"
     region = "us-east-1"
   }
@@ -31,7 +31,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project   = "otterworks"
+      Project   = "otterdrive"
       Component = "demo-platform"
       ManagedBy = "terraform"
       Layer     = "control-plane"

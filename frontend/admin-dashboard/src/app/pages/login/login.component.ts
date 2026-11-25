@@ -22,8 +22,8 @@ import { AuthService } from '../../core/services/auth.service';
       <mat-card class="login-card">
         <mat-card-header>
           <div class="login-header">
-            <img class="login-logo" src="assets/otter-logo.png" alt="OtterWorks logo" width="64" height="64" />
-            <h1>OtterWorks Admin</h1>
+            <img class="login-logo" src="assets/otter-logo.png" alt="OtterDrive logo" width="64" height="64" />
+            <h1>OtterDrive Admin</h1>
             <p>Sign in to the admin dashboard</p>
           </div>
         </mat-card-header>
@@ -31,7 +31,7 @@ import { AuthService } from '../../core/services/auth.service';
           <form (ngSubmit)="onLogin()" class="login-form">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Email</mat-label>
-              <input matInput type="email" [(ngModel)]="email" name="email" required placeholder="admin@otterworks.io" (input)="clearError()">
+              <input matInput type="email" [(ngModel)]="email" name="email" required placeholder="admin@otterdrive.io" (input)="clearError()">
               <mat-icon matSuffix>email</mat-icon>
             </mat-form-field>
 

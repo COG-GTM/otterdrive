@@ -1,6 +1,6 @@
 ---
 name: designing-demo-failure-points
-description: Design pattern for adding a new intentional AWS/service failure point to OtterWorks for demos - picking the failure, building the switch, making it click-triggered and tenant-scoped, surfacing it in the UI, wiring the alert/Slack path, keeping the app demoable, and the test matrix. Use when asked to add a new intentional error, chaos scenario, or demo failure mode. For the deploy/Devin-trigger mechanics, also use purposeful-failure-devin-trigger.
+description: Design pattern for adding a new intentional AWS/service failure point to OtterDrive for demos - picking the failure, building the switch, making it click-triggered and tenant-scoped, surfacing it in the UI, wiring the alert/Slack path, keeping the app demoable, and the test matrix. Use when asked to add a new intentional error, chaos scenario, or demo failure mode. For the deploy/Devin-trigger mechanics, also use purposeful-failure-devin-trigger.
 ---
 
 # Designing a new intentional failure point for demos

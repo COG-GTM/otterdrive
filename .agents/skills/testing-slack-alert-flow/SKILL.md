@@ -1,6 +1,6 @@
 ---
 name: testing-slack-alert-flow
-description: How to test OtterWorks' failed-upload → admin-service → Slack alert pipeline on a local docker-compose stack, including inducing upload failures, wiring the Slack bot token, and reading the resulting alert/incident.
+description: How to test OtterDrive' failed-upload → admin-service → Slack alert pipeline on a local docker-compose stack, including inducing upload failures, wiring the Slack bot token, and reading the resulting alert/incident.
 ---
 
 # Testing the Slack upload-failure alert flow locally
@@ -11,10 +11,10 @@ description: How to test OtterWorks' failed-upload → admin-service → Slack a
   shell that runs `docker compose ... up` — docker-compose.yml passes
   `SLACK_BOT_TOKEN/SLACK_WEBHOOK_URL/SLACK_USER_MAP/SLACK_ONCALL_MEMBER` through to admin-service.
   Leave `SLACK_USER_MAP` unset to exercise the dynamic `users.lookupByEmail` path.
-- Verify inside the container: `docker exec otterworks-admin-service sh -c 'test -n "$SLACK_BOT_TOKEN" && echo TOKEN_SET'`.
+- Verify inside the container: `docker exec otterdrive-admin-service sh -c 'test -n "$SLACK_BOT_TOKEN" && echo TOKEN_SET'`.
 
 ## Inducing an upload failure
-- Redis chaos flag (no rebuild, instant): `docker exec otterworks-redis redis-cli SET chaos:file-service:upload_s3_error 1`
+- Redis chaos flag (no rebuild, instant): `docker exec otterdrive-redis redis-cli SET chaos:file-service:upload_s3_error 1`
   (DEL to clear). file-service then targets a nonexistent S3 bucket → 500 storage_error.
 - Same flag is what the admin dashboard's "Break File Uploads" demo control sets (with a 10-min TTL).
 - Alternative: `FILE_UPLOAD_ALWAYS_FAIL=true` compose env.
@@ -26,7 +26,7 @@ description: How to test OtterWorks' failed-upload → admin-service → Slack a
 - Web app registration is open at http://localhost:3000/register (min 8-char password).
   The JWT `email` claim of the logged-in user is what reaches the alert as `labels.reporter_email`
   (api-gateway injects `X-User-Email` from the JWT and strips any client-supplied value).
-- Admin dashboard (localhost:4200) login: `admin@otterworks.dev` / `Admin123!`
+- Admin dashboard (localhost:4200) login: `admin@otterdrive.dev` / `Admin123!`
   (seeded by auth-service migration V1). Incidents page: /incidents.
 
 ## Verifying the Slack side
@@ -36,7 +36,7 @@ description: How to test OtterWorks' failed-upload → admin-service → Slack a
   token (bot scopes are only chat:write, users:read, users:read.email).
 - A resolved reporter renders as `<@MEMBERID>` in the second *On-Call* field; unresolvable emails
   render as the plain email and admin-service logs
-  `Slack users.lookupByEmail failed: users_not_found` (visible via `docker logs otterworks-admin-service`).
+  `Slack users.lookupByEmail failed: users_not_found` (visible via `docker logs otterdrive-admin-service`).
 - Example (as of 2026-08): preston.pressoir@cognition.ai resolves to Slack member U0B6ZD08Q3W.
 
 ## Devin session link in alerts

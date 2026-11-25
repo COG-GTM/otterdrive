@@ -5,4 +5,4 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: terraform
     platform/environment: dev
-    platform/team: otterworks
+    platform/team: otterdrive

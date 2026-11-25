@@ -1,15 +1,15 @@
-# OtterWorks Enterprise Drive — synthetic app-data seed
+# OtterDrive Enterprise Drive — synthetic app-data seed
 
-Populates the **OtterWorks company drive** (an enterprise retailer of products
+Populates the **OtterDrive company drive** (an enterprise retailer of products
 for otters — SalmonSnax, shrimp treats, fish-oil supplements, kelp snacks,
-otter apparel and grooming textiles) into a live OtterWorks deployment so the
+otter apparel and grooming textiles) into a live OtterDrive deployment so the
 web UI shows a deep, realistic, browsable, multimodal drive: ~15 departments as
 top-level folders, a nested subfolder tree (3–4 levels), a multi-format corpus
 (xlsx/docx/pptx/pdf/csv/txt/md/json/png/jpg/svg + committed mp4 clips), and
 rich-text documents.
 
 Unlike the schema-based harness in `testdata/generated/seed` / `.../golden`
-(which writes relational rows into an `otterworks_<ns>` **schema**), this seed
+(which writes relational rows into an `otterdrive_<ns>` **schema**), this seed
 creates **real application data through the public API gateway**:
 
 | Resource | Service | Backing store |

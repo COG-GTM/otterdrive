@@ -1,16 +1,16 @@
 # demo-platform Helm chart
 
-Deploys the OtterWorks **Demo Platform control plane** into the
-`otterworks-platform` namespace on the shared `otterworks-dev` EKS cluster:
+Deploys the OtterDrive **Demo Platform control plane** into the
+`otterdrive-platform` namespace on the shared `otterdrive-dev` EKS cluster:
 
-- the `otterworks-platform` **namespace**;
+- the `otterdrive-platform` **namespace**;
 - the `demo-ops-dashboard` **ServiceAccount**, annotated with the scoped IRSA
-  role `arn:aws:iam::<awsAccountId>:role/otterworks-demo-ops-dashboard-<env>`
+  role `arn:aws:iam::<awsAccountId>:role/otterdrive-demo-ops-dashboard-<env>`
   (the role itself is provisioned by `demo-platform/infra/terraform`);
 - a **ClusterRole + ClusterRoleBinding** letting that SA manage tenant
-  (`otterworks-*`) namespaces and the workloads inside them, plus create runner
-  Jobs in `otterworks-platform`;
-- the **Ops Dashboard** Deployment + Service + Ingress (`ops.otterworks.app`,
+  (`otterdrive-*`) namespaces and the workloads inside them, plus create runner
+  Jobs in `otterdrive-platform`;
+- the **Ops Dashboard** Deployment + Service + Ingress (`ops.otterdrive.app`,
   ingress class `nginx`);
 - a templated **Secret** `demo-ops-dashboard` holding `DASHBOARD_PASSCODE` +
   `SESSION_SECRET` (and optionally `DB_PASSWORD` / `JWT_SECRET` /
@@ -29,8 +29,8 @@ Deploys the OtterWorks **Demo Platform control plane** into the
 | Value | Notes |
 |---|---|
 | `awsAccountId` | 12-digit account id that owns the IRSA role. **Never committed** — templates `fail` if unset. |
-| `runnerImage` | `<registry>/otterworks/demo-runner:<tag>` |
-| `dashboard.image` | `<registry>/otterworks/demo-ops-dashboard:<tag>` |
+| `runnerImage` | `<registry>/otterdrive/demo-runner:<tag>` |
+| `dashboard.image` | `<registry>/otterdrive/demo-ops-dashboard:<tag>` |
 | `secret.dashboardPasscode` | required (see below) |
 | `secret.sessionSecret` | required (see below) |
 
@@ -59,7 +59,7 @@ umask 077
 #   openssl rand -hex 32   # session secret
 
 helm upgrade --install demo-platform demo-platform/helm/demo-platform \
-  --namespace otterworks-platform --create-namespace \
+  --namespace otterdrive-platform --create-namespace \
   --set-string awsAccountId="$AWS_ACCOUNT_ID" \
   --set runnerImage="$RUNNER_IMAGE" \
   --set dashboard.image="$DASHBOARD_IMAGE" \
@@ -75,7 +75,7 @@ printf '%s' "$PASSCODE"       > /tmp/passcode  && chmod 600 /tmp/passcode
 printf '%s' "$SESSION_SECRET" > /tmp/session   && chmod 600 /tmp/session
 
 helm upgrade --install demo-platform demo-platform/helm/demo-platform \
-  --namespace otterworks-platform --create-namespace \
+  --namespace otterdrive-platform --create-namespace \
   --set-string awsAccountId="$AWS_ACCOUNT_ID" \
   --set runnerImage="$RUNNER_IMAGE" \
   --set dashboard.image="$DASHBOARD_IMAGE" \
@@ -106,7 +106,7 @@ helm template demo-platform demo-platform/helm/demo-platform \
 ## Uninstall
 
 ```bash
-helm uninstall demo-platform -n otterworks-platform
+helm uninstall demo-platform -n otterdrive-platform
 ```
 
 The DynamoDB control table + IRSA role are managed by Terraform, not this chart,

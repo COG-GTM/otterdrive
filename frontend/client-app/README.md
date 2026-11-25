@@ -1,4 +1,4 @@
-# OtterWorks Web App
+# OtterDrive Web App
 
 React 18 single-page application built with Vite, served by nginx in production,
 wrapped by Capacitor to produce the native Android and iOS apps, and by Electron
@@ -32,8 +32,8 @@ defaults below), `VITE_API_BASE_URL` (native builds only, see below).
 ## Docker
 
 ```bash
-docker build -t otterworks-web-app .
-docker run -p 3000:3000 -e API_GATEWAY_URL=http://api-gateway:8080 otterworks-web-app
+docker build -t otterdrive-web-app .
+docker run -p 3000:3000 -e API_GATEWAY_URL=http://api-gateway:8080 otterdrive-web-app
 ```
 
 The image is nginx (unprivileged, uid 101) serving `dist/` on port 3000 with an

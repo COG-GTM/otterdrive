@@ -1,6 +1,6 @@
-# OTD-13 — OtterWorks Corporate Rebrand: BDD Requirements
+# OTD-13 — OtterDrive Corporate Rebrand: BDD Requirements
 
-Story: OTD-13 "OtterWorks corporate rebrand: classic enterprise UI, otter logo & company identity"
+Story: OTD-13 "OtterDrive corporate rebrand: classic enterprise UI, otter logo & company identity"
 
 Display-layer rebrand only. Interview resolutions honored: Playwright e2e specs updated to new
 landing copy; optimized PNG `<img>` Logo component + favicons; footer on marketing pages AND app
@@ -11,7 +11,7 @@ groups WORKSPACE / COLLABORATION / SYSTEM.
 **Traces to:** AC-01   **Category:** UI
 **Given** I am on the landing page (`/`)
 **When** the hero renders
-**Then** the otter logo image (`img[alt="OtterWorks logo"]`) is visible and no "OW" text block exists
+**Then** the otter logo image (`img[alt="OtterDrive logo"]`) is visible and no "OW" text block exists
 ### Testing Flow
 1. Navigate to http://localhost:3000/
 2. Verify otter logo `<img>` in the hero/top bar; verify no "OW" tile
@@ -52,7 +52,7 @@ groups WORKSPACE / COLLABORATION / SYSTEM.
 **Traces to:** AC-02c   **Category:** UI
 **Given** the landing page and any logged-in app page
 **When** each renders
-**Then** a footer shows "© OtterWorks, Inc. · v0.1.0 · Terms · Privacy" with working links
+**Then** a footer shows "© OtterDrive, Inc. · v0.1.0 · Terms · Privacy" with working links
 ### Testing Flow
 1. Verify footer on /; 2. Log in and verify footer in the app shell; 3. Click Terms → /terms; 4. Click Privacy → /privacy (both fictional static pages)
 
@@ -84,7 +84,7 @@ groups WORKSPACE / COLLABORATION / SYSTEM.
 **Traces to:** AC-06a, AC-06b   **Category:** ERR
 **Given** the rebrand branch
 **When** `make lint` and `make test` run (plus client-app unit/BDD/e2e suites)
-**Then** they pass; the diff is confined to frontend (+ docs/tests); no planted bug is touched; admin "OtterWorks" spec assertions remain intact; landing e2e/BDD specs are intentionally updated to the new copy
+**Then** they pass; the diff is confined to frontend (+ docs/tests); no planted bug is touched; admin "OtterDrive" spec assertions remain intact; landing e2e/BDD specs are intentionally updated to the new copy
 ### Testing Flow
 1. Run make lint, make test; 2. Run client-app `npm test`, `npm run test:bdd`, `npm run test:e2e`; 3. `git diff --stat main` confined to frontend/docs
 
@@ -95,12 +95,12 @@ groups WORKSPACE / COLLABORATION / SYSTEM.
 | AC-01 | UI | Otter logo replaces "OW" blocks + favicon | BDD-01, BDD-02, BDD-03 | Mapped |
 | AC-02a | UI | Navy/steel palette, square corners, no gradients, system sans | BDD-04 | Mapped |
 | AC-02b | UI | Dense top bar + grouped ALL-CAPS sidebar + breadcrumbs | BDD-05 | Mapped |
-| AC-02c | UI | Footer "© OtterWorks, Inc. · v0.1.0 · Terms · Privacy" on all pages | BDD-06 | Mapped |
+| AC-02c | UI | Footer "© OtterDrive, Inc. · v0.1.0 · Terms · Privacy" on all pages | BDD-06 | Mapped |
 | AC-03 | FUNC | Landing shows full fictional corporate identity | BDD-07 | Mapped |
 | AC-04 | UI | Admin login + sidebar: otter logo, navy theme, amber accent | BDD-08 | Mapped |
 | AC-05 | NAV | All existing routes/flows unchanged (additive /terms, /privacy) | BDD-09 | Mapped |
 | AC-06a | ERR | Lint/test pass; no planted bug; diff confined to frontend | BDD-10 | Mapped |
-| AC-06b | ERR | Admin "OtterWorks" assertions intact; e2e updated intentionally | BDD-10 | Mapped |
+| AC-06b | ERR | Admin "OtterDrive" assertions intact; e2e updated intentionally | BDD-10 | Mapped |
 
 ### Coverage Summary
 - Total AC: 9 · Total BDD: 10 · Categories: FUNC(1) UI(6) NAV(1) ERR(1)

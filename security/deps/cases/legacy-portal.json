@@ -51,7 +51,7 @@
       "id": "url-lookup-stays-unresolved",
       "policy": "contract",
       "kind": "configured",
-      "template": "${url:UTF-8:http://127.0.0.1:1/otterworks}"
+      "template": "${url:UTF-8:http://127.0.0.1:1/otterdrive}"
     }
   ]
 }

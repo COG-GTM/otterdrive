@@ -2,11 +2,11 @@
 # ------------------------------------------------------------------------------
 # Safety tests for the orphan-database sweep.
 #
-# The sweep drops any otterworks_* database it cannot account for, so the only
+# The sweep drops any otterdrive_* database it cannot account for, so the only
 # thing standing between a live tenant and an irreversible DROP DATABASE is the
 # mapping between a database name and a control-table id. That mapping is lossy
 # in one direction -- tenant_db_name turns every non-alphanumeric character into
-# '_', so otterworks_a_b is what an id of "a-b" produces -- which is why the
+# '_', so otterdrive_a_b is what an id of "a-b" produces -- which is why the
 # comparison has to run id -> database and never the reverse.
 #
 # aws / list_tenant_dbs / gc_tenant are stubbed; this runs anywhere.
@@ -62,46 +62,46 @@ run() { REAPED=""; sweep_orphan_dbs >/dev/null 2>&1; }
 echo "orphan-database sweep"
 
 # The regression this suite exists for. Hyphens are legal in a tenant id and the
-# fork prefix makes them common, but the database is otterworks_gtm_derek: read
+# fork prefix makes them common, but the database is otterdrive_gtm_derek: read
 # database -> id, the sweep looks up "gtm_derek", finds nothing, and drops the
 # database of a tenant that was checked out minutes ago.
 IDS="gtm-derek"
-DBS="otterworks_gtm_derek"
+DBS="otterdrive_gtm_derek"
 run
 check "keeps the database of a live tenant whose id contains a hyphen" "${REAPED# }" ""
 
 IDS="derek"
-DBS="otterworks_derek"
+DBS="otterdrive_derek"
 run
 check "keeps the database of a live tenant with a plain id" "${REAPED# }" ""
 
 IDS="derek"
-DBS="otterworks_ghost"
+DBS="otterdrive_ghost"
 run
 check "reaps a database with no tenant behind it" "${REAPED# }" "ghost"
 
 IDS="gtm-derek"
-DBS="otterworks_gtm_derek otterworks_ghost"
+DBS="otterdrive_gtm_derek otterdrive_ghost"
 run
 check "  and still reaps one beside a live hyphenated tenant" "${REAPED# }" "ghost"
 
 # The shared application database is not a tenant and has no control-table item.
 IDS="derek"
-DBS="otterworks otterworks_derek"
+DBS="otterdrive otterdrive_derek"
 run
-check "never reaps the shared otterworks database" "${REAPED# }" ""
+check "never reaps the shared otterdrive database" "${REAPED# }" ""
 
 # Both of these read as "every database is an orphan" if taken at face value,
 # which is the shape of a mass wipe. Neither may delete anything.
 SCAN_RC=1
 IDS="derek"
-DBS="otterworks_derek otterworks_ghost"
+DBS="otterdrive_derek otterdrive_ghost"
 run
 check "deletes nothing when the control-table scan fails" "${REAPED# }" ""
 SCAN_RC=0
 
 IDS=""
-DBS="otterworks_derek otterworks_ghost"
+DBS="otterdrive_derek otterdrive_ghost"
 run
 check "deletes nothing when the control table reads empty" "${REAPED# }" ""
 
@@ -109,7 +109,7 @@ check "deletes nothing when the control table reads empty" "${REAPED# }" ""
 # the first 1MB of results would delete everyone past the page boundary.
 IDS="derek"
 IDS_PAGE2="vedant"
-DBS="otterworks_derek otterworks_vedant otterworks_ghost"
+DBS="otterdrive_derek otterdrive_vedant otterdrive_ghost"
 run
 check "keeps tenants found beyond the first scan page" "${REAPED# }" "ghost"
 IDS_PAGE2=""

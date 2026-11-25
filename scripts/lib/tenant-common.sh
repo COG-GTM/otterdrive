@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks multi-tenant demo — shared library
+# OtterDrive multi-tenant demo — shared library
 #
 # Sourced by deploy-tenant.sh / teardown-tenant.sh / tenant-platform-baseline.sh.
 # Holds the naming rules, Terraform-output loading and per-service Helm wiring
 # that turn the golden app (see scripts/deploy-dev.sh) into a per-tenant deploy
-# in namespace otterworks-<ATTENDEE_ID>.
+# in namespace otterdrive-<ATTENDEE_ID>.
 #
 # Design (see docs/MULTI-TENANT-DEMO-PLAN.md):
 #   - namespace-per-tenant is the isolation boundary
@@ -25,9 +25,9 @@ err()  { echo -e "${RED}[tenant]${NC} $*" >&2; }
 
 # Shared constants ------------------------------------------------------------
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
-ECR_PREFIX="otterworks/"
-SYSTEM_NAMESPACE="otterworks-system"   # holds the reaper CronJob + RBAC
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
+ECR_PREFIX="otterdrive/"
+SYSTEM_NAMESPACE="otterdrive-system"   # holds the reaper CronJob + RBAC
 INGRESS_NAMESPACE="ingress-nginx"
 
 BACKEND_SERVICES=(
@@ -79,7 +79,7 @@ sanitize_id() {
     sed 's/[^a-z0-9-]/-/g; s/-\{2,\}/-/g; s/^-*//; s/-*$//' |
     cut -c1-40 | sed 's/-*$//'
 }
-tenant_namespace() { printf 'otterworks-%s' "$(sanitize_id "$1")"; }
+tenant_namespace() { printf 'otterdrive-%s' "$(sanitize_id "$1")"; }
 
 # Git branch -> the Docker tag CI publishes that branch's images under. Docker
 # tags allow [a-zA-Z0-9._-] only, so `feature/x` cannot be used verbatim.
@@ -110,7 +110,7 @@ branch_tenant_id() {
   id="$(printf '%s' "$1" | sed -E 's#^(workshop|demo)[-/]##')"
   sanitize_id "${TENANT_PREFIX:+${TENANT_PREFIX}-}${id}"
 }
-tenant_db_name()   { printf 'otterworks_%s' "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g; s/^_*//; s/_*$//')"; }
+tenant_db_name()   { printf 'otterdrive_%s' "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g; s/^_*//; s/_*$//')"; }
 
 require_bins() {
   for bin in "$@"; do
@@ -135,7 +135,7 @@ load_infra_outputs() {
   DDB_VERSIONS="$(terraform -chdir="$d" output -raw dynamodb_file_versions_table 2>/dev/null || echo "")"
   DDB_SHARES="$(terraform -chdir="$d" output -raw dynamodb_file_shares_table 2>/dev/null || echo "")"
   IRSA_JSON="$(terraform -chdir="$d" output -json irsa_role_arns 2>/dev/null || echo "{}")"
-  DB_USER="${DB_USER:-otterworks_admin}"
+  DB_USER="${DB_USER:-otterdrive_admin}"
   if [ -z "${RDS_HOST}" ]; then
     warn "Terraform outputs unavailable; services will deploy without wired config."
   fi
@@ -165,20 +165,20 @@ resolve_db_endpoint() {
   DB_SESSION_PORT="${RDS_PORT}"
 
   [ "${DB_VIA_PGBOUNCER:-true}" = "true" ] || return 0
-  kubectl -n "${PGBOUNCER_NAMESPACE:-otterworks-platform}" get svc pgbouncer >/dev/null 2>&1 || {
+  kubectl -n "${PGBOUNCER_NAMESPACE:-otterdrive-platform}" get svc pgbouncer >/dev/null 2>&1 || {
     warn "pgbouncer not found; wiring services straight to RDS (install with demo-platform/scripts/install-pgbouncer.sh)"
     return 0
   }
 
-  DB_ENDPOINT_HOST="pgbouncer.${PGBOUNCER_NAMESPACE:-otterworks-platform}.svc.cluster.local"
+  DB_ENDPOINT_HOST="pgbouncer.${PGBOUNCER_NAMESPACE:-otterdrive-platform}.svc.cluster.local"
   DB_ENDPOINT_PORT=6432
   DB_SESSION_PORT=6433
 }
 
 irsa_arn() { echo "${IRSA_JSON:-{}}" | jq -r --arg s "$1" '.[$s] // empty' 2>/dev/null; }
 
-# Turn a per-tenant DB name (otterworks_a01) into an RFC-1123 fragment usable in
-# Kubernetes resource names (otterworks-a01) so per-tenant Jobs/Secrets are named
+# Turn a per-tenant DB name (otterdrive_a01) into an RFC-1123 fragment usable in
+# Kubernetes resource names (otterdrive-a01) so per-tenant Jobs/Secrets are named
 # uniquely and concurrent teardowns don't collide on a shared resource name.
 k8s_name_fragment() { printf '%s' "$1" | tr '[:upper:]_' '[:lower:]-'; }
 
@@ -233,7 +233,7 @@ spec:
           command: ["/bin/sh","-c"]
           args:
             - |
-              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterworks user=${DB_USER} sslmode=prefer connect_timeout=10"
+              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterdrive user=${DB_USER} sslmode=prefer connect_timeout=10"
               psql "\$CONN" -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS \"${db}\" WITH (FORCE)"
           resources:
             requests: { cpu: 50m, memory: 64Mi }

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
-using OtterWorks.AuditService.Config;
-using OtterWorks.AuditService.Models;
+using OtterDrive.AuditService.Config;
+using OtterDrive.AuditService.Models;
 
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public class AuditService : IAuditService
 {

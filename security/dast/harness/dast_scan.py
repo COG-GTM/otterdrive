@@ -3,9 +3,9 @@
 # dependencies = ["httpx", "pyyaml", "tabulate"]
 # ///
 """
-OtterWorks DAST harness.
+OtterDrive DAST harness.
 
-Runs authenticated attack probes against a *running* OtterWorks deployment
+Runs authenticated attack probes against a *running* OtterDrive deployment
 (through the API gateway), optionally merges an OWASP ZAP report, compares the
 result against an accepted-findings baseline, and gates on the difference.
 
@@ -20,7 +20,7 @@ Usage:
     uv run security/dast/harness/dast_scan.py --update-baseline
 
 Environment overrides:
-    OTTERWORKS_DAST_TARGET   default target base URL
+    OTTERDRIVE_DAST_TARGET   default target base URL
 
 Exit codes:
     0 = no findings outside the baseline
@@ -53,7 +53,7 @@ from route_inventory import may_sweep_unsafely
 DAST_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_BASELINE = DAST_DIR / "baseline.json"
 DEFAULT_REPORT_DIR = DAST_DIR / "reports"
-DEFAULT_TARGET = os.getenv("OTTERWORKS_DAST_TARGET", "http://localhost:8080")
+DEFAULT_TARGET = os.getenv("OTTERDRIVE_DAST_TARGET", "http://localhost:8080")
 
 VERDICT_MARK = {
     Verdict.VULNERABLE: "FAIL",
@@ -287,7 +287,7 @@ def to_report(
 def to_markdown(report: dict[str, Any], baseline: dict[str, Any]) -> str:
     summary = report["summary"]
     lines = [
-        "# OtterWorks DAST report",
+        "# OtterDrive DAST report",
         "",
         f"- Target: `{report['target']}`",
         f"- Scanned: {report['scanned_at']}",
@@ -357,7 +357,7 @@ def print_table(results: list[Result], baseline: dict[str, Any], threshold: int)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the OtterWorks DAST probe suite.")
+    parser = argparse.ArgumentParser(description="Run the OtterDrive DAST probe suite.")
     parser.add_argument("--target", default=DEFAULT_TARGET, help="API gateway base URL")
     parser.add_argument(
         "--only",

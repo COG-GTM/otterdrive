@@ -23,7 +23,7 @@ Trading Economics pulls.
 **When** analytics-service boots
 **Then** analytics migrations apply into schema `analytics` with history table `flyway_schema_history_analytics`; no checksum-mismatch fallback; log contains "durable PostgreSQL metrics store"; existing event endpoints keep working
 ### Testing Flow
-1. `docker logs otterworks-analytics-service` → assert durable-store log, no fallback warning
+1. `docker logs otterdrive-analytics-service` → assert durable-store log, no fallback warning
 2. `GET /api/v1/analytics/dashboard` with JWT → 200
 
 ## BDD-03: GET margins returns KPIs and per-SKU rows through the gateway

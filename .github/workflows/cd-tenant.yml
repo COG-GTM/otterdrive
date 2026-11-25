@@ -232,7 +232,7 @@ jobs:
           # Same media types as the pointer step: the defaults exclude manifest
           # lists and OCI indexes, so a multi-platform or attestation-carrying
           # image would read as absent and the build would run and fail again.
-          if out="$(aws ecr batch-get-image --repository-name "otterworks/${SERVICE}" \
+          if out="$(aws ecr batch-get-image --repository-name "otterdrive/${SERVICE}" \
                       --image-ids imageTag="${IMAGE_TAG}" \
                       --accepted-media-types \
                         application/vnd.docker.distribution.manifest.v2+json \
@@ -248,12 +248,12 @@ jobs:
             err="$(cat "${RUNNER_TEMP}/probe.err")"
             case "${err}" in
               *RepositoryNotFoundException*) ;;
-              *) echo "::warning::could not check for ${IMAGE_TAG} in otterworks/${SERVICE}: ${err}" ;;
+              *) echo "::warning::could not check for ${IMAGE_TAG} in otterdrive/${SERVICE}: ${err}" ;;
             esac
             found=0
           fi
           if [ "${found:-0}" -gt 0 ]; then
-            echo "::notice::otterworks/${SERVICE}:${IMAGE_TAG} already exists; skipping build"
+            echo "::notice::otterdrive/${SERVICE}:${IMAGE_TAG} already exists; skipping build"
             echo "built=true" >> "$GITHUB_OUTPUT"
           else
             echo "built=false" >> "$GITHUB_OUTPUT"
@@ -278,7 +278,7 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
-          tags: ${{ steps.ecr.outputs.registry }}/otterworks/${{ matrix.service }}:${{ needs.plan.outputs.image_tag }}
+          tags: ${{ steps.ecr.outputs.registry }}/otterdrive/${{ matrix.service }}:${{ needs.plan.outputs.image_tag }}
 
       # Deleting a pointer tag only untags: the manifest stays as long as
       # another tag (normally its immutable <slug>-<sha> tag) still holds it.
@@ -291,7 +291,7 @@ jobs:
           PIN: ${{ needs.plan.outputs.pin }}
         run: |
           set -euo pipefail
-          repo="otterworks/${SERVICE}"
+          repo="otterdrive/${SERVICE}"
           # Accept single manifests and lists/indexes, so the step survives a
           # future multi-platform or attestation-enabled build.
           media_types=(

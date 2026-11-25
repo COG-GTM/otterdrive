@@ -1,7 +1,7 @@
 # DAST — dynamic application security testing
 
 Static analysis reads the code. **DAST attacks the running application.** This
-directory holds the runtime security controls for OtterWorks: a suite of
+directory holds the runtime security controls for OtterDrive: a suite of
 authenticated attack probes plus an OWASP ZAP sweep, both aimed at a deployed
 API gateway, and a gate that turns their output into a pass/fail signal.
 
@@ -92,7 +92,7 @@ make up
 make dast-scan
 
 # against a tenant or preview environment
-make dast-scan DAST_TARGET=https://api-t-<id>.demo.otterworks.app
+make dast-scan DAST_TARGET=https://api-t-<id>.demo.otterdrive.app
 
 # list the attack cases
 make dast-list
@@ -152,15 +152,15 @@ must not exit clean.
 - Identities and seeded objects are namespaced by a per-run id, so concurrent
   scans (CI, several sessions, several tenants) do not collide.
 - `DAST-RATE-LIMIT-BYPASS` is a load generator: two bursts of
-  `OTTERWORKS_DAST_RATE_LIMIT_BURST` (default 1500) requests at
-  `OTTERWORKS_DAST_RATE_LIMIT_WORKERS` (default 64) concurrency. A tenant's data
+  `OTTERDRIVE_DAST_RATE_LIMIT_BURST` (default 1500) requests at
+  `OTTERDRIVE_DAST_RATE_LIMIT_WORKERS` (default 64) concurrency. A tenant's data
   is its own, but the ingress controller and the node group are shared with
   every other tenant, so turn the burst down (or scan locally) while someone
   else is presenting:
 
   ```bash
-  OTTERWORKS_DAST_RATE_LIMIT_BURST=300 OTTERWORKS_DAST_RATE_LIMIT_WORKERS=16 \
-    make dast-scan DAST_TARGET=https://api-t-<id>.demo.otterworks.app
+  OTTERDRIVE_DAST_RATE_LIMIT_BURST=300 OTTERDRIVE_DAST_RATE_LIMIT_WORKERS=16 \
+    make dast-scan DAST_TARGET=https://api-t-<id>.demo.otterdrive.app
   ```
 
   A smaller burst may no longer separate a bypass from a generous allowance, in

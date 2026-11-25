@@ -2,11 +2,11 @@ version: '3.9'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: otterworks-postgres
+    container_name: otterdrive-postgres
     environment:
-      POSTGRES_USER: otterworks
-      POSTGRES_PASSWORD: otterworks_dev
-      POSTGRES_DB: otterworks
+      POSTGRES_USER: otterdrive
+      POSTGRES_PASSWORD: otterdrive_dev
+      POSTGRES_DB: otterdrive
     ports:
     - 5432:5432
     volumes:
@@ -15,7 +15,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - pg_isready -U otterworks
+      - pg_isready -U otterdrive
       interval: 5s
       timeout: 5s
       retries: 5
@@ -27,7 +27,7 @@ services:
     - /var/run/postgresql
   redis:
     image: redis:7-alpine
-    container_name: otterworks-redis
+    container_name: otterdrive-redis
     ports:
     - 6379:6379
     command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
@@ -46,7 +46,7 @@ services:
     - /tmp
   localstack: # nosemgrep: yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service
     image: localstack/localstack:3.8
-    container_name: otterworks-localstack
+    container_name: otterdrive-localstack
     environment:
       SERVICES: s3,sqs,sns,dynamodb,ses,cognito-idp,secretsmanager
       DEFAULT_REGION: us-east-1
@@ -75,7 +75,7 @@ services:
     - no-new-privileges:true
   meilisearch:
     image: getmeili/meilisearch:v1.6
-    container_name: otterworks-meilisearch
+    container_name: otterdrive-meilisearch
     environment:
       MEILI_ENV: development
       MEILI_NO_ANALYTICS: 'true'
@@ -96,7 +96,7 @@ services:
     - no-new-privileges:true
   prometheus:
     image: prom/prometheus:v2.51.0
-    container_name: otterworks-prometheus
+    container_name: otterdrive-prometheus
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     - --storage.tsdb.path=/prometheus
@@ -128,10 +128,10 @@ services:
     - /tmp
   grafana:
     image: grafana/grafana:10.4.0
-    container_name: otterworks-grafana
+    container_name: otterdrive-grafana
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: otterworks
+      GF_SECURITY_ADMIN_PASSWORD: otterdrive
       GF_USERS_ALLOW_SIGN_UP: 'false'
       GF_SERVER_ROOT_URL: http://localhost:3001
       # Unified alerting (Grafana 8+ default; explicit for clarity)
@@ -166,7 +166,7 @@ services:
     - /tmp
   jaeger:
     image: jaegertracing/all-in-one:1.55
-    container_name: otterworks-jaeger
+    container_name: otterdrive-jaeger
     environment:
       COLLECTOR_OTLP_ENABLED: 'true'
       SPAN_STORAGE_TYPE: memory
@@ -195,7 +195,7 @@ services:
     - /tmp
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.96.0
-    container_name: otterworks-otel-collector
+    container_name: otterdrive-otel-collector
     command:
     - --config=/etc/otelcol/config.yml
     ports:
@@ -228,7 +228,7 @@ services:
     - /tmp
   fluent-bit:
     image: fluent/fluent-bit:3.0
-    container_name: otterworks-fluent-bit
+    container_name: otterdrive-fluent-bit
     ports:
     - 2020:2020
     volumes:
@@ -256,7 +256,7 @@ services:
     - /tmp
 networks:
   default:
-    name: otterworks-network
+    name: otterdrive-network
 volumes:
   postgres_data: null
   localstack_data: null

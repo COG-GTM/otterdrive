@@ -9,16 +9,16 @@ export const env = {
     return process.env.SESSION_SECRET;
   },
   get controlTable(): string {
-    return process.env.CONTROL_TABLE || "otterworks-demo-control";
+    return process.env.CONTROL_TABLE || "otterdrive-demo-control";
   },
   get awsRegion(): string {
     return process.env.AWS_REGION || "us-east-1";
   },
   get eksCluster(): string {
-    return process.env.EKS_CLUSTER || "otterworks-dev";
+    return process.env.EKS_CLUSTER || "otterdrive-dev";
   },
   get platformNamespace(): string {
-    return process.env.PLATFORM_NAMESPACE || "otterworks-platform";
+    return process.env.PLATFORM_NAMESPACE || "otterdrive-platform";
   },
   get runnerImage(): string | undefined {
     return process.env.RUNNER_IMAGE;
@@ -32,7 +32,7 @@ export const env = {
     return process.env.RUNNER_SECRET_NAME || "demo-ops-dashboard";
   },
   get hostSuffix(): string {
-    return process.env.HOST_SUFFIX || "demo.otterworks.app";
+    return process.env.HOST_SUFFIX || "demo.otterdrive.app";
   },
   // Tenant ids allowed to be perpetual. A perpetual tenant never expires and is
   // never idle-suspended, so it bills continuously and no reaper pass will ever
@@ -51,10 +51,10 @@ export const env = {
     );
   },
   // The perpetual tenant is the shared reference environment and gets a shorter
-  // URL than the per-attendee ones (t-main.otterworks.app, not
-  // t-main.demo.otterworks.app). Both are covered by the wildcard certificate.
+  // URL than the per-attendee ones (t-main.otterdrive.app, not
+  // t-main.demo.otterdrive.app). Both are covered by the wildcard certificate.
   get perpetualHostSuffix(): string {
-    return process.env.PERPETUAL_HOST_SUFFIX || "otterworks.app";
+    return process.env.PERPETUAL_HOST_SUFFIX || "otterdrive.app";
   },
   // HTTPS clone URL passed to runner Jobs so they can fetch participant branches
   // (workshop-<id>) with GITHUB_TOKEN. Empty -> runner uses the image's bundled

@@ -16,9 +16,9 @@ variable "environment" {
 }
 
 variable "namespace" {
-  description = "Kubernetes namespace for OtterWorks services"
+  description = "Kubernetes namespace for OtterDrive services"
   type        = string
-  default     = "otterworks"
+  default     = "otterdrive"
 }
 
 variable "db_password" {

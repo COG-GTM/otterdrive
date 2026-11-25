@@ -1,8 +1,8 @@
-# OtterWorks ETL Migration Guide: Legacy Cron Scripts to Apache Airflow
+# OtterDrive ETL Migration Guide: Legacy Cron Scripts to Apache Airflow
 
 ## Current State (Legacy)
 
-The OtterWorks ETL pipeline consists of five Python scripts executed via system cron on a single EC2 instance. The scripts share a `config.ini` file that contains hardcoded AWS credentials, database passwords, and service URLs in plaintext.
+The OtterDrive ETL pipeline consists of five Python scripts executed via system cron on a single EC2 instance. The scripts share a `config.ini` file that contains hardcoded AWS credentials, database passwords, and service URLs in plaintext.
 
 ### Problems with the Current Implementation
 
@@ -99,7 +99,7 @@ The OtterWorks ETL pipeline consists of five Python scripts executed via system 
 
 **Target:**
 - AWS credentials managed via Airflow Connections (`aws_default`) backed by IAM roles or a secrets backend (AWS Secrets Manager)
-- Database credentials in an Airflow Connection (`otterworks_postgres`)
+- Database credentials in an Airflow Connection (`otterdrive_postgres`)
 - Non-sensitive configuration (bucket names, queue URLs, service URLs) in Airflow Variables
 - No credentials in version control
 
@@ -118,7 +118,7 @@ The OtterWorks ETL pipeline consists of five Python scripts executed via system 
 **Current:** Manual `psycopg2.connect()` / `cursor()` / `close()` with no connection pooling, no context managers, and error-prone manual cleanup.
 
 **Target:**
-- `PostgresHook(postgres_conn_id="otterworks_postgres")` with built-in connection pooling
+- `PostgresHook(postgres_conn_id="otterdrive_postgres")` with built-in connection pooling
 - Use `pg_hook.get_records()` for SELECT queries
 - Use `pg_hook.run()` for INSERT/UPDATE/DELETE
 - Automatic connection lifecycle management
@@ -180,11 +180,11 @@ The OtterWorks ETL pipeline consists of five Python scripts executed via system 
 
 | Legacy Script | Target DAG | Schedule | Tasks |
 |---------------|-----------|----------|-------|
-| `analytics_daily.py` | `otterworks_analytics_etl` | `@daily` | `extract_from_sqs` -> `extract_from_dynamodb` -> `transform_events` -> `[load_to_data_lake, update_postgres_aggregates]` -> `generate_report` |
-| `audit_archive_weekly.py` | `otterworks_audit_archive` | `@weekly` | `scan_audit_events` -> `compress_and_upload` -> `cleanup_dynamodb` -> `generate_compliance_report` |
-| `search_reindex_weekly.py` | `otterworks_search_reindex` | `@weekly` | `clear_indices` -> `[fetch_and_index_documents, fetch_and_index_files]` -> `validate_indices` |
-| `storage_cleanup_daily.py` | `otterworks_storage_cleanup` | `@daily` | `[list_s3_objects, list_metadata_references]` -> `find_orphaned_objects` -> `move_to_quarantine` -> `generate_storage_report` |
-| `user_activity_daily.py` | `otterworks_user_activity_report` | `@daily` | `[query_analytics_aggregates, query_per_user_activity]` -> `generate_user_reports` -> `store_reports_to_s3` |
+| `analytics_daily.py` | `otterdrive_analytics_etl` | `@daily` | `extract_from_sqs` -> `extract_from_dynamodb` -> `transform_events` -> `[load_to_data_lake, update_postgres_aggregates]` -> `generate_report` |
+| `audit_archive_weekly.py` | `otterdrive_audit_archive` | `@weekly` | `scan_audit_events` -> `compress_and_upload` -> `cleanup_dynamodb` -> `generate_compliance_report` |
+| `search_reindex_weekly.py` | `otterdrive_search_reindex` | `@weekly` | `clear_indices` -> `[fetch_and_index_documents, fetch_and_index_files]` -> `validate_indices` |
+| `storage_cleanup_daily.py` | `otterdrive_storage_cleanup` | `@daily` | `[list_s3_objects, list_metadata_references]` -> `find_orphaned_objects` -> `move_to_quarantine` -> `generate_storage_report` |
+| `user_activity_daily.py` | `otterdrive_user_activity_report` | `@daily` | `[query_analytics_aggregates, query_per_user_activity]` -> `generate_user_reports` -> `store_reports_to_s3` |
 
 ---
 
@@ -192,7 +192,7 @@ The OtterWorks ETL pipeline consists of five Python scripts executed via system 
 
 1. **Set up Airflow infrastructure** -- Deploy Airflow 2.8+ with CeleryExecutor or KubernetesExecutor. Configure the webserver, scheduler, and worker(s).
 
-2. **Configure Connections and Variables** -- Create Airflow Connections for AWS (`aws_default`) and PostgreSQL (`otterworks_postgres`). Migrate all `config.ini` values to Airflow Variables.
+2. **Configure Connections and Variables** -- Create Airflow Connections for AWS (`aws_default`) and PostgreSQL (`otterdrive_postgres`). Migrate all `config.ini` values to Airflow Variables.
 
 3. **Migrate `analytics_daily.py` first** -- This is the most complex script and touches the most systems. Successful migration validates the patterns for all other scripts.
 

@@ -1,10 +1,10 @@
 {
   "id": null,
-  "uid": "otterworks-infrastructure",
-  "title": "OtterWorks Infrastructure",
+  "uid": "otterdrive-infrastructure",
+  "title": "OtterDrive Infrastructure",
   "description": "Infrastructure monitoring: pod status, node utilization, network traffic, database connections, and queue depths.",
   "tags": [
-    "otterworks",
+    "otterdrive",
     "infrastructure"
   ],
   "timezone": "utc",
@@ -74,7 +74,7 @@
       },
       "targets": [
         {
-          "expr": "kube_pod_status_ready{namespace=\"otterworks\", condition=\"true\"}",
+          "expr": "kube_pod_status_ready{namespace=\"otterdrive\", condition=\"true\"}",
           "legendFormat": "{{ pod }}"
         }
       ]
@@ -110,7 +110,7 @@
       },
       "targets": [
         {
-          "expr": "count(kube_pod_status_phase{namespace=\"otterworks\", phase=\"Running\"} == 1)",
+          "expr": "count(kube_pod_status_phase{namespace=\"otterdrive\", phase=\"Running\"} == 1)",
           "legendFormat": "running"
         }
       ]
@@ -150,7 +150,7 @@
       },
       "targets": [
         {
-          "expr": "count(kube_pod_status_phase{namespace=\"otterworks\", phase=\"Pending\"} == 1) OR on() vector(0)",
+          "expr": "count(kube_pod_status_phase{namespace=\"otterdrive\", phase=\"Pending\"} == 1) OR on() vector(0)",
           "legendFormat": "pending"
         }
       ]
@@ -190,7 +190,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"otterworks\"}[1h]))",
+          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"otterdrive\"}[1h]))",
           "legendFormat": "restarts"
         }
       ]
@@ -226,7 +226,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(kube_pod_container_status_last_terminated_reason{namespace=\"otterworks\", reason=\"OOMKilled\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(kube_pod_container_status_last_terminated_reason{namespace=\"otterdrive\", reason=\"OOMKilled\"}[24h])) OR on() vector(0)",
           "legendFormat": "OOMKilled"
         }
       ]
@@ -375,7 +375,7 @@
       },
       "targets": [
         {
-          "expr": "pg_stat_activity_count{datname=\"otterworks\"}",
+          "expr": "pg_stat_activity_count{datname=\"otterdrive\"}",
           "legendFormat": "{{ state }}"
         }
       ]

@@ -1,7 +1,7 @@
-using OtterWorks.AuditService.Models;
-using OtterWorks.AuditService.Services;
+using OtterDrive.AuditService.Models;
+using OtterDrive.AuditService.Services;
 
-namespace OtterWorks.AuditService.Controllers;
+namespace OtterDrive.AuditService.Controllers;
 
 public static class AuditController
 {

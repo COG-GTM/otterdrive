@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — idle tenant suspend (scale to zero)
+# OtterDrive Demo Platform — idle tenant suspend (scale to zero)
 #
 # The economics of 100 tenants only work if a provisioned tenant that nobody is
 # using costs nothing. A full tenant reserves ~1.5 vCPU / 3.5GiB; 100 of those
@@ -37,7 +37,7 @@
 # ------------------------------------------------------------------------------
 set -uo pipefail
 
-CONTROL_TABLE="${CONTROL_TABLE:-otterworks-demo-control}"
+CONTROL_TABLE="${CONTROL_TABLE:-otterdrive-demo-control}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 INGRESS_NAMESPACE="${INGRESS_NAMESPACE:-ingress-nginx}"
 # Metrics endpoint of the shared ingress controller. Exposed by the controller
@@ -71,7 +71,7 @@ ingress_request_counts() {
   fi
   [ -n "${raw}" ] || return 1
 
-  # nginx_ingress_controller_requests{...,namespace="otterworks-x",...} 12345
+  # nginx_ingress_controller_requests{...,namespace="otterdrive-x",...} 12345
   #
   # `|| true` because grep exits 1 when the body carries no request series at
   # all, and under `pipefail` that would surface as a scrape failure and skip
@@ -160,8 +160,8 @@ tenant_namespaces() {
     | while read -r ns; do
         [ -n "${ns}" ] || continue
         case "${ns}" in
-          otterworks-platform|otterworks-system) continue ;;
-          otterworks-*) printf '%s %s\n' "${ns#otterworks-}" "${ns}" ;;
+          otterdrive-platform|otterdrive-system) continue ;;
+          otterdrive-*) printf '%s %s\n' "${ns#otterdrive-}" "${ns}" ;;
         esac
       done
 }

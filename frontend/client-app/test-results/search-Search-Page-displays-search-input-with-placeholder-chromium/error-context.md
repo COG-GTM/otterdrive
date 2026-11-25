@@ -30,10 +30,10 @@ Call log:
 ```yaml
 - generic [ref=e4]:
   - generic [ref=e5]:
-    - link "OtterWorks logo OtterWorks" [ref=e6] [cursor=pointer]:
+    - link "OtterDrive logo OtterDrive" [ref=e6] [cursor=pointer]:
       - /url: /
-      - img "OtterWorks logo" [ref=e7]
-      - generic [ref=e8]: OtterWorks
+      - img "OtterDrive logo" [ref=e7]
+      - generic [ref=e8]: OtterDrive
     - paragraph [ref=e9]: Sign in to your account
   - generic [ref=e11]:
     - generic [ref=e12]:
@@ -81,7 +81,7 @@ Call log:
   19 |   });
   20 | 
   21 |   test("shows empty state before searching", async ({ page }) => {
-  22 |     await expect(page.getByText("Search OtterWorks")).toBeVisible({
+  22 |     await expect(page.getByText("Search OtterDrive")).toBeVisible({
   23 |       timeout: 10_000,
   24 |     });
   25 |     await expect(

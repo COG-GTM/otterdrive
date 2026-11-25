@@ -41,7 +41,7 @@ address it:
 
 The cluster was replaced on 2026-07-09; the previous incarnation's load
 balancers were stranded exactly this way. They still carried
-`kubernetes.io/cluster/otterworks-dev = owned` tags pointing at a cluster that
+`kubernetes.io/cluster/otterdrive-dev = owned` tags pointing at a cluster that
 no longer existed, which is precisely the signal the new sweep keys on.
 
 The golden app made this worse by exposing `web-app`, `api-gateway` and
@@ -212,7 +212,7 @@ connections, not databases.
 
 **IAM trust-policy churn.** Editing shared role trust policies on every
 deploy/teardown races and throttles under concurrent tenant operations. The
-`otterworks-*` wildcard trust rule already covers every tenant namespace, so
+`otterdrive-*` wildcard trust rule already covers every tenant namespace, so
 per-tenant trust edits are unnecessary and are skipped.
 
 **Control-plane state.** Tenant state lives in a DynamoDB table that is
@@ -224,9 +224,9 @@ exist in order to spot what should not.
 
 | Layer | Shared (platform plane) | Per tenant |
 |---|---|---|
-| Compute | EKS cluster, Karpenter node pools | namespace `otterworks-<id>`, `ResourceQuota`, `LimitRange`, `NetworkPolicy` |
+| Compute | EKS cluster, Karpenter node pools | namespace `otterdrive-<id>`, `ResourceQuota`, `LimitRange`, `NetworkPolicy` |
 | Ingress | ingress-nginx + **one** NLB, wildcard TLS cert, external-dns | `Ingress` for `t-<id>` / `api-t-<id>` |
-| Database | one RDS instance, PgBouncer | database `otterworks_<id>` |
+| Database | one RDS instance, PgBouncer | database `otterdrive_<id>` |
 | Object/NoSQL | S3 buckets, DynamoDB tables | key prefix `tenants/<id>/`, hash-key partition `<id>#…` |
 | Search/cache | — | in-cluster Redis + MeiliSearch (asleep when the tenant is) |
 | Control plane | DynamoDB control table, ops dashboard, reaper | `TENANT#<id>` item, branch mapping, TTL |
@@ -238,8 +238,8 @@ total, and orphans impossible by construction rather than by cleanup.
 
 ## 6. Guardrails
 
-- Every Terraform-managed resource carries `otterworks:managed-by`,
-  `otterworks:component` and `Environment` via provider `default_tags`, so
+- Every Terraform-managed resource carries `otterdrive:managed-by`,
+  `otterdrive:component` and `Environment` via provider `default_tags`, so
   anything untagged in this account is by definition not ours.
 - The reaper's infrastructure sweep defaults to `DRY_RUN=true` and is armed
   separately from the tenant sweep, in two stages: `CONFIG#reaper.sweep_infra` runs it

@@ -26,7 +26,7 @@ wrong and must be fixed before the PR ships.
 - **The namespace** — the isolated schema suffix for this run (e.g., `dev`,
   `qa1`, `loadtest`). Defaults to `dev` if not specified.
 - **The target repo** — the application repo with the database schema and the
-  validation harness (e.g., `otterworks`).
+  validation harness (e.g., `otterdrive`).
 
 ## Procedure
 
@@ -148,7 +148,7 @@ week" returns nothing because the user didn't exist yet). The harness caught it.
 ## Forbidden actions
 
 - Do **not** write to the `public` schema or any schema not prefixed with
-  `otterworks_<ns>`.
+  `otterdrive_<ns>`.
 - Do **not** hardcode credentials in scripts — read from environment variables.
 - Do **not** generate real PII (use synthetic/fake data generators only).
 - Do **not** skip the validation step — a PR without a green validation report

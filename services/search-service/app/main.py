@@ -1,4 +1,4 @@
-"""OtterWorks Search Service - Full-text search via MeiliSearch."""
+"""OtterDrive Search Service - Full-text search via MeiliSearch."""
 
 from __future__ import annotations
 

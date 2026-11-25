@@ -3,8 +3,8 @@ using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using OtterWorks.AuditService.Config;
-using OtterWorks.AuditService.Services;
+using OtterDrive.AuditService.Config;
+using OtterDrive.AuditService.Services;
 
 namespace AuditService.Tests;
 

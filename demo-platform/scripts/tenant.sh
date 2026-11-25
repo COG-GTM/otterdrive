@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # Provision demo tenants from the command line, through the dashboard.
 #
-# This is the scripted equivalent of clicking around ops.otterworks.app, and it
+# This is the scripted equivalent of clicking around ops.otterdrive.app, and it
 # is deliberately the *only* path a provisioner needs: the dashboard runs the
 # actual work as a runner Job under the control plane's IRSA role, so the caller
 # needs no cluster access and no AWS permissions beyond reading the passcode.
@@ -37,9 +37,9 @@
 # ------------------------------------------------------------------------------
 set -euo pipefail
 
-OPS_HOST="${OPS_HOST:-https://ops.otterworks.app}"
+OPS_HOST="${OPS_HOST:-https://ops.otterdrive.app}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
-PASSCODE_SECRET_ID="${PASSCODE_SECRET_ID:-otterworks/dev/dashboard/passcode}"
+PASSCODE_SECRET_ID="${PASSCODE_SECRET_ID:-otterdrive/dev/dashboard/passcode}"
 DEFAULT_TTL="${DEFAULT_TTL:-8h}"
 # What CD gives a tenant it creates for a branch nobody checked out by hand.
 # Long enough to span a few days' work, short enough that an abandoned branch

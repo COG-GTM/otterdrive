@@ -28,7 +28,7 @@ class ChaosProbeService
     # /health does nothing — we need to push a malformed message into the SQS
     # queue so the consumer increments its error counter.
     'notification-service' => {
-      url: 'http://localstack:4566/000000000000/otterworks-notifications',
+      url: 'http://localstack:4566/000000000000/otterdrive-notifications',
       method: :sqs,
       headers: {},
     },

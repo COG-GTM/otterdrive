@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks/web-app
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive/web-app
   tag: ""  # Set at deploy time (ECR uses IMMUTABLE tags)
   pullPolicy: IfNotPresent
 
@@ -20,14 +20,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: web-app.otterworks.workshop.example.com
+    - host: web-app.otterdrive.workshop.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: web-app-tls
       hosts:
-        - web-app.otterworks.workshop.example.com
+        - web-app.otterdrive.workshop.example.com
 
 resources:
   limits:

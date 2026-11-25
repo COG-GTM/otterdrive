@@ -1,12 +1,12 @@
 Feature: Landing Page
   As a prospective enterprise customer
-  I want to see the OtterWorks corporate landing page
+  I want to see the OtterDrive corporate landing page
   So that I can learn about the company and sign up
 
   # AC-01 / BDD-01
   Scenario: Visitor sees the corporate hero with the otter logo
     Given I am on the landing page
-    Then I should see the heading "OtterWorks"
+    Then I should see the heading "OtterDrive"
     And I should see the otter logo
     And I should see the text "Enterprise retail products for otters"
 
@@ -38,7 +38,7 @@ Feature: Landing Page
   # AC-02c / BDD-06
   Scenario: Corporate footer is visible with legal links
     Given I am on the landing page
-    Then I should see the text "© OtterWorks, Inc."
+    Then I should see the text "© OtterDrive, Inc."
     And I should see a link "Terms"
     And I should see a link "Privacy"
 

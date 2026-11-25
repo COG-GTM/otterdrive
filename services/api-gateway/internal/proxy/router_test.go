@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/middleware"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/middleware"
 )
 
 const routerTestSecret = "test-secret-key-for-jwt-signing"
@@ -48,7 +48,7 @@ func TestProxyForwardsUserIdentityHeaders(t *testing.T) {
 
 	claims := middleware.JWTClaims{
 		UserID: "user-123",
-		Email:  "test@otterworks.dev",
+		Email:  "test@otterdrive.dev",
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 			Subject:   "user-123",
@@ -65,7 +65,7 @@ func TestProxyForwardsUserIdentityHeaders(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.Equal(t, "user-123", gotUserID)
-	assert.Equal(t, "test@otterworks.dev", gotEmail)
+	assert.Equal(t, "test@otterdrive.dev", gotEmail)
 }
 
 func TestProxyStripsSpoofedIdentityHeaders(t *testing.T) {

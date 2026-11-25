@@ -89,15 +89,15 @@ impl AwsConfig {
         Self {
             region: env::var("AWS_REGION").unwrap_or_else(|_| "us-east-1".into()),
             endpoint_url: env::var("AWS_ENDPOINT_URL").ok(),
-            s3_bucket: env::var("S3_BUCKET").unwrap_or_else(|_| "otterworks-files".into()),
+            s3_bucket: env::var("S3_BUCKET").unwrap_or_else(|_| "otterdrive-files".into()),
             dynamodb_table: env::var("DYNAMODB_TABLE")
-                .unwrap_or_else(|_| "otterworks-file-metadata".into()),
+                .unwrap_or_else(|_| "otterdrive-file-metadata".into()),
             dynamodb_folders_table: env::var("DYNAMODB_FOLDERS_TABLE")
-                .unwrap_or_else(|_| "otterworks-folders".into()),
+                .unwrap_or_else(|_| "otterdrive-folders".into()),
             dynamodb_versions_table: env::var("DYNAMODB_VERSIONS_TABLE")
-                .unwrap_or_else(|_| "otterworks-file-versions".into()),
+                .unwrap_or_else(|_| "otterdrive-file-versions".into()),
             dynamodb_shares_table: env::var("DYNAMODB_SHARES_TABLE")
-                .unwrap_or_else(|_| "otterworks-file-shares".into()),
+                .unwrap_or_else(|_| "otterdrive-file-shares".into()),
         }
     }
 }
@@ -142,10 +142,10 @@ mod tests {
     #[test]
     fn parse_bool_env_defaults_when_unset() {
         assert!(!parse_bool_env(
-            "OTTERWORKS_DEFINITELY_UNSET_ENV_VAR",
+            "OTTERDRIVE_DEFINITELY_UNSET_ENV_VAR",
             false
         ));
-        assert!(parse_bool_env("OTTERWORKS_DEFINITELY_UNSET_ENV_VAR", true));
+        assert!(parse_bool_env("OTTERDRIVE_DEFINITELY_UNSET_ENV_VAR", true));
     }
 
     #[test]

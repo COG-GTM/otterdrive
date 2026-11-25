@@ -8,7 +8,7 @@
 
 ## Symptoms
 
-- Spike in 5xx responses visible on the OtterWorks Overview or Chaos Scenarios dashboard.
+- Spike in 5xx responses visible on the OtterDrive Overview or Chaos Scenarios dashboard.
 - Users report failures when performing actions (uploads, searches, document edits).
 - On-call receives a PagerDuty / Grafana alert notification.
 
@@ -17,7 +17,7 @@
 1. Open the **Incident Overview** dashboard and identify which service(s) show elevated error rates.
 2. Check the service's application logs for stack traces or error messages:
    ```
-   kubectl logs -l app=<service> --tail=200 -n otterworks
+   kubectl logs -l app=<service> --tail=200 -n otterdrive
    ```
 
 <!-- TODO: Complete investigation steps -->

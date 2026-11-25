@@ -97,11 +97,11 @@ def seed(cur, ns: str) -> int:
     for i in range(NUM_ADMIN_USERS):
         user_id = ADMIN_USER_IDS[i]
         first, last = names[i]
-        email = f"{first.lower()}.{last.lower()}@otterworks.io"
+        email = f"{first.lower()}.{last.lower()}@otterdrive.io"
         display_name = f"{first} {last}"
         role = roles[i]
         status = statuses[i]
-        avatar_url = f"https://avatars.otterworks.io/admin/{user_id}.png"
+        avatar_url = f"https://avatars.otterdrive.io/admin/{user_id}.png"
 
         department = rng.choice(DEPARTMENTS)
         team = rng.choice(TEAMS)

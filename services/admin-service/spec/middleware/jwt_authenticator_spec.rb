@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe JwtAuthenticator do
   let(:secret) { Rails.application.secrets.jwt_secret }
   let(:app) { ->(env) { [200, {}, [env['jwt.user_email'].to_s]] } }
-  let(:payload) { { sub: SecureRandom.uuid, email: 'admin@otterworks.com', role: 'super_admin' } }
+  let(:payload) { { sub: SecureRandom.uuid, email: 'admin@otterdrive.com', role: 'super_admin' } }
 
   def call(token)
     env = Rack::MockRequest.env_for('/api/v1/admin/incidents',
@@ -15,7 +15,7 @@ RSpec.describe JwtAuthenticator do
     it "accepts a token signed with #{algorithm}" do
       status, _headers, body = call(JWT.encode(payload, secret, algorithm))
       expect(status).to eq(200)
-      expect(body.first).to eq('admin@otterworks.com')
+      expect(body.first).to eq('admin@otterdrive.com')
     end
   end
 

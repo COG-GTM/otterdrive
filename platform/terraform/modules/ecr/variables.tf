@@ -11,7 +11,7 @@ variable "environment" {
 variable "ecr_prefix" {
   description = "Prefix for ECR repository names"
   type        = string
-  default     = "otterworks/"
+  default     = "otterdrive/"
 }
 
 variable "service_names" {

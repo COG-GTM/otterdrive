@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Messaging Module
+# OtterDrive Messaging Module
 # SQS queues and SNS topics for event-driven architecture
 # ------------------------------------------------------------------------------
 

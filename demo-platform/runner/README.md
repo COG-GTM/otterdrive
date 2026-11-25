@@ -12,8 +12,8 @@ copied in:
 
 ```bash
 docker build -f demo-platform/runner/Dockerfile \
-  -t <registry>/otterworks/demo-runner:<tag> .
-docker push <registry>/otterworks/demo-runner:<tag>
+  -t <registry>/otterdrive/demo-runner:<tag> .
+docker push <registry>/otterdrive/demo-runner:<tag>
 ```
 
 ## Operations (env `OP`)
@@ -29,9 +29,9 @@ docker push <registry>/otterworks/demo-runner:<tag>
 ## Environment
 
 Non-secret (control-plane metadata): `OP`, `TENANT_ID`, `TIER`, `TTL`,
-`IMAGE_TAG`, `HOST_SUFFIX` (default `demo.otterworks.app`), `SCENARIO`,
-`TENANT_BRANCH`, `CONTROL_TABLE` (default `otterworks-demo-control`),
-`AWS_REGION`, `EKS_CLUSTER` (default `otterworks-dev`), `ACTOR`.
+`IMAGE_TAG`, `HOST_SUFFIX` (default `demo.otterdrive.app`), `SCENARIO`,
+`TENANT_BRANCH`, `CONTROL_TABLE` (default `otterdrive-demo-control`),
+`AWS_REGION`, `EKS_CLUSTER` (default `otterdrive-dev`), `ACTOR`.
 
 Secrets (from Kubernetes Secret refs — **env only, never argv**): `DB_PASSWORD`,
 `JWT_SECRET`, `SECRET_KEY_BASE`. AWS creds come from the pod's IRSA role.
@@ -43,7 +43,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: deploy-a01-1720000000
-  namespace: otterworks-platform
+  namespace: otterdrive-platform
 spec:
   backoffLimit: 1
   ttlSecondsAfterFinished: 600
@@ -53,7 +53,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: runner
-          image: <registry>/otterworks/demo-runner:<tag>
+          image: <registry>/otterdrive/demo-runner:<tag>
           env:
             - { name: OP, value: deploy }
             - { name: TENANT_ID, value: a01 }

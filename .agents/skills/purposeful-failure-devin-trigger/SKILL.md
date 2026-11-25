@@ -1,12 +1,12 @@
 ---
 name: purposeful-failure-devin-trigger
-description: How to build a deliberate ("purposeful") failure point in an OtterWorks demo tenant and wire it so every occurrence of the failure creates an incident and triggers a Devin session via admin-service. Use when creating demo variants that break a service on purpose, when connecting service failures to Devin auto-triage, or when a change doesn't seem to reach a live tenant.
+description: How to build a deliberate ("purposeful") failure point in an OtterDrive demo tenant and wire it so every occurrence of the failure creates an incident and triggers a Devin session via admin-service. Use when creating demo variants that break a service on purpose, when connecting service failures to Devin auto-triage, or when a change doesn't seem to reach a live tenant.
 ---
 
 # Purposeful failure points + Devin session triggering on a tenant
 
 This is the end-to-end recipe used for the `coggtm` demo (branch `demo-coggtm`,
-tenant `https://t-coggtm.demo.otterworks.app`). Reference PRs: #78/#80 (failure
+tenant `https://t-coggtm.demo.otterdrive.app`). Reference PRs: #78/#80 (failure
 switch + banner), #82 (Dockerfile bake), #90 (alert route, dedup bypass),
 #91 (CD tag fix), #92 (runtime Devin credentials).
 
@@ -29,7 +29,7 @@ config-level env switch that reuses the same failure mechanism:
 
 - In file-service, `FILE_UPLOAD_ALWAYS_FAIL` (parsed in `src/config.rs`, default
   off) forces `effective_bucket` in `handlers.rs::upload_file` to the nonexistent
-  bucket `otterworks-files-chaos-nonexistent`, so S3 returns `NoSuchBucket` and the
+  bucket `otterdrive-files-chaos-nonexistent`, so S3 returns `NoSuchBucket` and the
   upload 500s. The existing Redis chaos check stays intact for other scenarios.
 - The switch must default off everywhere (code, docker-compose, chart values) so
   `main` and other tenants are unaffected.
@@ -87,7 +87,7 @@ so out of the box `DevinSessionService` no-ops on tenants. Options:
   (JWT-authenticated via api-gateway) stores the credentials in the tenant's Redis;
   `DevinSessionService` falls back to it when env vars are absent (env vars take
   precedence). Load once after each fresh deploy; no infra access needed.
-- One-off with cluster access: `kubectl -n otterworks-<id> set env deploy/admin-service DEVIN_API_KEY=... DEVIN_ORG_ID=...`
+- One-off with cluster access: `kubectl -n otterdrive-<id> set env deploy/admin-service DEVIN_API_KEY=... DEVIN_ORG_ID=...`
   (overwritten by the next redeploy).
 - Durable CD wiring needs `add_secret` entries in the admin-service case of
   `scripts/lib/tenant-common.sh` + secrets in the deploy workflow — an **upstream**
@@ -103,7 +103,7 @@ so out of the box `DevinSessionService` no-ops on tenants. Options:
 1. Merge to the demo branch; CD rebuilds the touched services and redeploys the
    tenant (~3–4 min). Known pitfall: ECR tags are immutable and the CI role lacks
    `ecr:BatchDeleteImage`; #91/#92 pin deploys to the immutable `<slug>-<sha>` tag.
-2. Register a throwaway user on `https://api-t-<id>.demo.otterworks.app`
+2. Register a throwaway user on `https://api-t-<id>.demo.otterdrive.app`
    (`email`, `password`, `displayName`).
 3. Trigger the failure: `POST /api/v1/files/upload` (NOT `/api/v1/files`) → expect 5xx,
    and confirm no metadata row appears while listing/downloading existing files works.

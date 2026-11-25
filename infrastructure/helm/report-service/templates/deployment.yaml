@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     platform/environment: {{ .Values.global.environment | default "dev" }}
-    platform/team: otterworks
+    platform/team: otterdrive
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

@@ -67,7 +67,7 @@ three identical daily rollups (55 events/day, 8 active users, 6 MiB allocated /
 The job ships as a `CronJob` in the `analytics-service` Helm chart
 (`cronjob.enabled: true`), reusing the service image, ServiceAccount (IRSA), and
 `envFrom` config/secret wiring. It overrides the container entrypoint to run
-`com.otterworks.analytics.batch.UsageRollupJob`.
+`com.otterdrive.analytics.batch.UsageRollupJob`.
 
 ```bash
 helm template analytics-service infrastructure/helm/analytics-service \

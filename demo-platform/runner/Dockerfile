@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — runner image (otterworks/demo-runner)
+# OtterDrive Demo Platform — runner image (otterdrive/demo-runner)
 #
 # Launched as a Kubernetes Job by the ops dashboard to run ONE tenant op
 # (deploy / teardown / inject / reset / reap). Carries the repo + a full CLI
@@ -8,7 +8,7 @@
 # Build from the REPO ROOT so the whole repo (scripts/ + demo-platform/) is in
 # the build context:
 #   docker build -f demo-platform/runner/Dockerfile \
-#     -t <registry>/otterworks/demo-runner:<tag> .
+#     -t <registry>/otterdrive/demo-runner:<tag> .
 # ------------------------------------------------------------------------------
 FROM alpine:3.20
 
@@ -79,9 +79,9 @@ USER runner
 
 ENV HOME=/home/runner \
     REPO_DIR=/workspace \
-    CONTROL_TABLE=otterworks-demo-control \
+    CONTROL_TABLE=otterdrive-demo-control \
     AWS_REGION=us-east-1 \
-    EKS_CLUSTER=otterworks-dev \
-    HOST_SUFFIX=demo.otterworks.app
+    EKS_CLUSTER=otterdrive-dev \
+    HOST_SUFFIX=demo.otterdrive.app
 
 ENTRYPOINT ["/workspace/demo-platform/runner/entrypoint.sh"]

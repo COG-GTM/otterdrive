@@ -1,4 +1,4 @@
-"""Shared OtterWorks product catalog + market-series price model.
+"""Shared OtterDrive product catalog + market-series price model.
 
 Single source of truth for every financial figure in the seeded drive. Loads
 the committed OTD-15 contract CSVs from ``testdata/market-series/`` (series

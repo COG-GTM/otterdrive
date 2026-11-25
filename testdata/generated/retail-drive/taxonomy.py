@@ -1,6 +1,6 @@
-"""OtterWorks enterprise-drive taxonomy.
+"""OtterDrive enterprise-drive taxonomy.
 
-A data-driven description of the OtterWorks company shared drive — an
+A data-driven description of the OtterDrive company shared drive — an
 enterprise retailer of products for otters (SalmonSnax, shrimp treats,
 fish-oil supplements, kelp snacks, otter apparel and grooming textiles).
 Departments are top-level folders with a deep nested subfolder structure, and

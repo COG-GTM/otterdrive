@@ -1,14 +1,14 @@
 ---
 name: secure-refactor-equivalence
 description: >
-  Repo-specific mechanics for closing a source-level security finding in OtterWorks
+  Repo-specific mechanics for closing a source-level security finding in OtterDrive
   by refactoring the affected class and proving functional equivalence. Covers the
   registered findings and their subject classes, the Makefile targets that drive the
   record → grade → suite → runtime-probe loop, how the fixture is seeded, which
   behaviors are under contract, the runtime probes that must flip, and how to revert.
 ---
 
-# Secure Refactor with Functional Equivalence — OtterWorks
+# Secure Refactor with Functional Equivalence — OtterDrive
 
 Repo-specific mechanics behind the `!secure-refactor-equivalence` Playbook.
 Auto-loaded when Devin works in this repository.
@@ -140,7 +140,7 @@ for a finding it already covers. Rebuild the changed service before re-probing
 (`docker compose up -d --build document-service`), or the probe re-tests the old
 image and a "closed" verdict is meaningless. See
 `.agents/skills/dast-remediation/SKILL.md` for the DAST loop in detail. Never
-point a scan at `t-main.otterworks.app`.
+point a scan at `t-main.otterdrive.app`.
 
 If the full stack will not build in your environment (e.g. `auth-service`'s
 Maven resolution is rate-limited), a loopback-bound shim that imports the

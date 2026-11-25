@@ -1,4 +1,4 @@
-namespace OtterWorks.AuditService.Models;
+namespace OtterDrive.AuditService.Models;
 
 public sealed class AuditEventRequest
 {

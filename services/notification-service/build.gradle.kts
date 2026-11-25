@@ -5,11 +5,11 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "com.otterworks"
+group = "com.otterdrive"
 version = "0.1.0"
 
 application {
-    mainClass.set("com.otterworks.notification.ApplicationKt")
+    mainClass.set("com.otterdrive.notification.ApplicationKt")
 }
 
 repositories {

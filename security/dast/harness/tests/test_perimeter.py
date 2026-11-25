@@ -93,7 +93,7 @@ def test_compose_origins_come_from_published_ports(tmp_path: Path) -> None:
 def test_compose_origins_are_irrelevant_to_a_deployed_target(tmp_path: Path) -> None:
     compose = tmp_path / "docker-compose.yml"
     compose.write_text('services:\n  file-service:\n    ports: ["8082:8082"]\n')
-    assert compose_origins("https://api-t-example.otterworks.app", compose) == []
+    assert compose_origins("https://api-t-example.otterdrive.app", compose) == []
 
 
 def test_ingress_origins_come_from_a_chart_that_publishes_its_own_host(tmp_path: Path) -> None:

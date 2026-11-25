@@ -4,8 +4,8 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
   port: <%= ENV.fetch("DATABASE_PORT", 5432) %>
-  username: <%= ENV.fetch("DATABASE_USER", "otterworks") %>
-  password: <%= ENV.fetch("DATABASE_PASSWORD", "otterworks") %>
+  username: <%= ENV.fetch("DATABASE_USER", "otterdrive") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "otterdrive") %>
 
 development:
   <<: *default
@@ -17,7 +17,7 @@ test:
 
 production:
   <<: *default
-  # Tenant deploys provision one shared per-tenant database (otterworks_<id>)
+  # Tenant deploys provision one shared per-tenant database (otterdrive_<id>)
   # rather than a per-service one; this branch is only ever deployed to the
   # coggtm tenant, hence the default.
-  database: <%= ENV.fetch("DATABASE_NAME", "otterworks_coggtm") %>
+  database: <%= ENV.fetch("DATABASE_NAME", "otterdrive_coggtm") %>

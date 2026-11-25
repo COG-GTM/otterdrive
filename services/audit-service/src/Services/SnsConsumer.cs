@@ -5,9 +5,9 @@ using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Options;
-using OtterWorks.AuditService.Config;
+using OtterDrive.AuditService.Config;
 
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public class SnsConsumer : BackgroundService
 {
@@ -77,7 +77,7 @@ public class SnsConsumer : BackgroundService
 
     private async Task<string> GetOrCreateQueueUrlAsync(CancellationToken ct)
     {
-        const string queueName = "otterworks-audit-events-queue";
+        const string queueName = "otterdrive-audit-events-queue";
         try
         {
             var response = await _sqsClient.GetQueueUrlAsync(queueName, ct);

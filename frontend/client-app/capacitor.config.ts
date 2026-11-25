@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.otterworks.app",
-  appName: "OtterWorks",
+  appId: "com.otterdrive.app",
+  appName: "OtterDrive",
   webDir: "dist",
   android: {
     path: "mobile/android",

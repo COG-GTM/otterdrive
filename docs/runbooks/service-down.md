@@ -8,7 +8,7 @@
 
 ## Symptoms
 
-- The affected service tile turns red on the OtterWorks Overview dashboard.
+- The affected service tile turns red on the OtterDrive Overview dashboard.
 - Dependent services return 502/503 errors when routing requests to the downed service.
 - Health check endpoint returns non-200 or times out.
 
@@ -16,11 +16,11 @@
 
 1. Check pod status for the affected service:
    ```
-   kubectl get pods -l app=<service> -n otterworks
+   kubectl get pods -l app=<service> -n otterdrive
    ```
 2. Review pod events and recent restarts:
    ```
-   kubectl describe pod <pod-name> -n otterworks
+   kubectl describe pod <pod-name> -n otterdrive
    ```
 
 <!-- TODO: Complete investigation steps -->

@@ -3,7 +3,7 @@
 # Originally Python 2.7, minimally ported to Python 3 in 2021
 # Pulls events from SQS + DynamoDB, aggregates, loads to S3 and PostgreSQL
 #
-# Owner: Jake (data-team@otterworks.dev) -- Jake left mid-2020
+# Owner: Jake (data-team@otterdrive.dev) -- Jake left mid-2020
 # TODO ETL-078: Refactor this into proper modules (deferred Q4 2019)
 # TODO ETL-142: Move credentials to secrets manager (deferred Q3 2020)
 # TODO ETL-201: Add unit tests (never prioritized)
@@ -49,7 +49,7 @@ def main():
 
     # ---- Extract from SQS ----
     # TODO ETL-089: Make queue URL configurable per environment (2019-11-15)
-    sqs_queue_url = "https://sqs.us-east-1.amazonaws.com/123456789012/otterworks-analytics"
+    sqs_queue_url = "https://sqs.us-east-1.amazonaws.com/123456789012/otterdrive-analytics"
     sqs_client = boto3.client(
         "sqs",
         aws_access_key_id=aws_access_key,
@@ -109,7 +109,7 @@ def main():
     print("[%s] Extracted %d events from SQS" % (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), len(all_sqs_events)))
 
     # ---- Extract from DynamoDB ----
-    dynamodb_table_name = "otterworks-analytics-events"
+    dynamodb_table_name = "otterdrive-analytics-events"
     dynamodb = boto3.resource(
         "dynamodb",
         aws_access_key_id=aws_access_key,

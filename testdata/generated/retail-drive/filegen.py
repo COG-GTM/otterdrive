@@ -1,4 +1,4 @@
-"""Realistic file-content generators for the OtterWorks enterprise drive.
+"""Realistic file-content generators for the OtterDrive enterprise drive.
 
 Each function returns ``(bytes, mime_type)`` for a given logical file so the
 uploaded objects are real, openable files of the correct type rather than empty
@@ -79,7 +79,7 @@ MIME = {
     "mp4": "video/mp4",
 }
 
-COMPANY = "OtterWorks"
+COMPANY = "OtterDrive"
 _REGIONS = ["Northeast", "Southeast", "Midwest", "Southwest", "West", "Pacific Northwest"]
 _STORES = [f"Store #{1000 + i}" for i in range(60)]
 

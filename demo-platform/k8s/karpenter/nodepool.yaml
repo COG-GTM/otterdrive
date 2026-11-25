@@ -33,7 +33,7 @@ spec:
         encrypted: true
         deleteOnTermination: true
   tags:
-    Project: otterworks
+    Project: otterdrive
     ManagedBy: karpenter
     Layer: platform
 ---
@@ -45,7 +45,7 @@ spec:
   template:
     metadata:
       labels:
-        otterworks.io/pool: tenants
+        otterdrive.io/pool: tenants
     spec:
       nodeClassRef:
         group: karpenter.k8s.aws

@@ -1,4 +1,4 @@
-"""OtterWorks DAST probe suite."""
+"""OtterDrive DAST probe suite."""
 
 from . import access_control, injection, perimeter, transport  # noqa: F401  (registers probes)
 from .base import REGISTRY, Evidence, Probe, Result, Severity, Verdict, probe

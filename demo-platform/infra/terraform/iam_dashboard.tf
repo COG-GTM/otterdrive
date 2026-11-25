@@ -1,6 +1,6 @@
 # IRSA role assumed by the dashboard web pod + runner Jobs (SA
-# otterworks-platform:demo-ops-dashboard). Deliberately scoped — this is NOT the
-# broad otterworks-* tenant wildcard; it grants only what the control plane needs.
+# otterdrive-platform:demo-ops-dashboard). Deliberately scoped — this is NOT the
+# broad otterdrive-* tenant wildcard; it grants only what the control plane needs.
 data "aws_iam_policy_document" "dashboard_trust" {
   statement {
     effect  = "Allow"
@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "dashboard_trust" {
 }
 
 resource "aws_iam_role" "dashboard" {
-  name               = "otterworks-demo-ops-dashboard-${var.environment}"
+  name               = "otterdrive-demo-ops-dashboard-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.dashboard_trust.json
 }
 
@@ -202,12 +202,12 @@ data "aws_iam_policy_document" "dashboard" {
   }
 
   # Teardown maintains IRSA trust on the shared per-service roles (add/remove the
-  # tenant namespace SA). Scoped to the otterworks-* service roles only.
+  # tenant namespace SA). Scoped to the otterdrive-* service roles only.
   statement {
     sid       = "TenantIrsaTrust"
     effect    = "Allow"
     actions   = ["iam:GetRole", "iam:UpdateAssumeRolePolicy"]
-    resources = ["arn:aws:iam::${local.account_id}:role/otterworks-*"]
+    resources = ["arn:aws:iam::${local.account_id}:role/otterdrive-*"]
   }
 
   # deploy/teardown resolve shared RDS/S3/DynamoDB coordinates by reading the

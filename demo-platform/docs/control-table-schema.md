@@ -1,4 +1,4 @@
-# Control-plane state store — `otterworks-demo-control` (DynamoDB)
+# Control-plane state store — `otterdrive-demo-control` (DynamoDB)
 
 The **single source of truth** for the demo platform. It is durable and **independent of any
 ephemeral tenant** — tearing a tenant down, cycling nodes, or losing the cluster never loses
@@ -13,13 +13,13 @@ Single-table design. `PK` (partition key) + `SK` (sort key), both strings.
 id            string   # sanitized attendee id (RFC-1123), e.g. "a01"
 status        string   # free | reserved | deploying | active | draining | error
 owner         string   # who checked it out (free-form facilitator label)
-branch        string   # otterworks git branch mapped to this tenant (workshop-<id>)
+branch        string   # otterdrive git branch mapped to this tenant (workshop-<id>)
 tier          string   # A | B
 image_tag     string?  # optional pinned image tag
-url           string?  # https://t-<id>.demo.otterworks.app
-api_url       string?  # https://api-t-<id>.demo.otterworks.app
-db_name       string   # otterworks_<id>
-namespace     string   # otterworks-<id>
+url           string?  # https://t-<id>.demo.otterdrive.app
+api_url       string?  # https://api-t-<id>.demo.otterdrive.app
+db_name       string   # otterdrive_<id>
+namespace     string   # otterdrive-<id>
 created_at    number    # epoch seconds
 checked_out_at number?
 expires_at    number    # epoch seconds (TTL) — reaper compares against now

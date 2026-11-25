@@ -16,7 +16,7 @@ def test_search_index_query_suggest_advanced_and_delete_flow(api_client):
         json={
             "id": document_id,
             "title": title,
-            "content": "otterworks unique searchable content",
+            "content": "otterdrive unique searchable content",
             "owner_id": user.id,
             "type": "document",
             "created_at": api_client.iso_time(),
@@ -46,7 +46,7 @@ def test_search_index_query_suggest_advanced_and_delete_flow(api_client):
     advanced_response = api_client.client.post(
         "/api/v1/search/advanced",
         headers=user.auth_headers,
-        json={"q": "otterworks", "owner_id": user.id, "page": 1, "size": 10},
+        json={"q": "otterdrive", "owner_id": user.id, "page": 1, "size": 10},
     )
     assert advanced_response.status_code == 200, advanced_response.text
 

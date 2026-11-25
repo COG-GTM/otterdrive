@@ -1,9 +1,9 @@
-# OtterWorks Multi-Tenant Demo — Operator Runbook
+# OtterDrive Multi-Tenant Demo — Operator Runbook
 
 Execution of `docs/MULTI-TENANT-DEMO-PLAN.md`. Stands up many **isolated,
-ephemeral** copies of the golden app on the **shared** `otterworks-dev` EKS
+ephemeral** copies of the golden app on the **shared** `otterdrive-dev` EKS
 cluster, one per attendee/demo run (`ATTENDEE_ID` → namespace
-`otterworks-<ATTENDEE_ID>`).
+`otterdrive-<ATTENDEE_ID>`).
 
 > The golden app is `main`. Tenants are derived from it; variants/bugs are
 > injected per tenant and **never** flow back into `main`
@@ -45,13 +45,13 @@ re-export within each command or combine into one.
 ```bash
 ./scripts/deploy-tenant.sh a01 --ttl 8h
 ./scripts/deploy-tenant.sh a02 --ttl 8h
-kubectl get ns -l app.kubernetes.io/managed-by=otterworks-tenant
+kubectl get ns -l app.kubernetes.io/managed-by=otterdrive-tenant
 ```
 
 Reach a tenant's API without DNS:
 
 ```bash
-kubectl -n otterworks-a01 port-forward svc/api-gateway 8080:8080
+kubectl -n otterdrive-a01 port-forward svc/api-gateway 8080:8080
 curl -s localhost:8080/api/v1/... 
 ```
 
@@ -66,8 +66,8 @@ through the one shared ingress/NLB.
 | Compute | namespace + `ResourceQuota` + `LimitRange` + `NetworkPolicy`, `replicas=1` |
 | Chaos flags / sessions / collab | **per-tenant in-cluster Redis** (`redis.<ns>`) — chaos keys are un-prefixed, so a shared Redis would leak bug injection across tenants; a dedicated Redis fully isolates it |
 | Search | **per-tenant in-cluster MeiliSearch** |
-| Relational data | **per-tenant RDS database** `otterworks_<ID>` on the shared instance (auth-service Flyway + document-service `create_all` self-provision the schema on boot) |
-| Object storage | shared `otterworks-files-dev` bucket (objects keyed by UUID); listing is driven by the per-tenant DB / DynamoDB, so no cross-tenant listing |
+| Relational data | **per-tenant RDS database** `otterdrive_<ID>` on the shared instance (auth-service Flyway + document-service `create_all` self-provision the schema on boot) |
+| Object storage | shared `otterdrive-files-dev` bucket (objects keyed by UUID); listing is driven by the per-tenant DB / DynamoDB, so no cross-tenant listing |
 | DynamoDB / S3 access | shared per-service **IRSA roles**; `deploy-tenant.sh` extends each role's trust policy to the tenant namespace's service accounts (dev-reuse model; the Terraform `modules/irsa` change makes this the reproducible default) |
 
 **Tier A (default, implemented):** shared physical stores, isolated logically as
@@ -78,7 +78,7 @@ UUID keys). Redis, MeiliSearch and the relational DB are fully per-tenant.
 **Tier B (data-isolated):** additionally provision per-tenant DynamoDB tables and
 scoped IRSA. **Not enabled by default** because the shared file-service IAM
 policy is pinned to the `*-dev` table ARNs; enabling Tier B requires broadening
-that policy resource to `otterworks-*` (or minting per-tenant roles) — see
+that policy resource to `otterdrive-*` (or minting per-tenant roles) — see
 "Known limitations". The per-tenant RDS database already gives Tier-B-grade
 isolation for all Postgres-backed services today.
 
@@ -111,7 +111,7 @@ mid-demo is the same lever scoped to the one namespace (seconds).
 ./scripts/teardown-tenant.sh a01     # drops ns + per-tenant DB + IRSA trust subs
 ```
 
-## Verified live (2026-07-13, cluster `otterworks-dev`)
+## Verified live (2026-07-13, cluster `otterdrive-dev`)
 
 Stood up `a01` + `a02` concurrently on the shared cluster and confirmed:
 

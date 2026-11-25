@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# OtterWorks IRSA Module
+# OtterDrive IRSA Module
 # IAM Roles for Service Accounts (IRSA) on EKS
 # Enables fine-grained AWS permissions per Kubernetes service account
 # ------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "assume_role" {
     }
 
     # Trust the golden namespace AND every per-tenant demo namespace
-    # (otterworks-<ATTENDEE_ID>) so multi-tenant demos can reuse the shared
+    # (otterdrive-<ATTENDEE_ID>) so multi-tenant demos can reuse the shared
     # per-service role in dev. StringLike is required for the wildcard; the
     # exact golden value is matched literally. See docs/MULTI-TENANT-DEMO-PLAN.md
     # §2 (IRSA: shared per-service role in dev) and scripts/deploy-tenant.sh.

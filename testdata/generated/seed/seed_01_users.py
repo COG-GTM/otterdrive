@@ -115,13 +115,13 @@ def seed(cur, ns: str) -> int:
         while True:
             first = rng.choice(FIRST_NAMES)
             last = rng.choice(LAST_NAMES)
-            email = f"{first.lower()}.{last.lower()}@otterworks.io"
+            email = f"{first.lower()}.{last.lower()}@otterdrive.io"
             if email not in used_emails:
                 used_emails.add(email)
                 break
 
         display_name = f"{first} {last}"
-        avatar_url = f"https://avatars.otterworks.io/{user_id}.png"
+        avatar_url = f"https://avatars.otterdrive.io/{user_id}.png"
 
         email_verified = rng.random() < 0.80
         mfa_enabled = rng.random() < 0.15

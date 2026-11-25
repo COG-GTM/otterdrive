@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks Demo Platform — control-table (DynamoDB) helper library
+# OtterDrive Demo Platform — control-table (DynamoDB) helper library
 #
 # Sourced by:
 #   - runner/entrypoint.sh  (deploy/teardown/inject/reset status + audit writes)
@@ -15,7 +15,7 @@
 # ------------------------------------------------------------------------------
 
 # Defaults (overridable by the environment).
-CONTROL_TABLE="${CONTROL_TABLE:-otterworks-demo-control}"
+CONTROL_TABLE="${CONTROL_TABLE:-otterdrive-demo-control}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 
 # Epoch helpers. epoch_ms is best-effort unique (ms + small jitter) so appended

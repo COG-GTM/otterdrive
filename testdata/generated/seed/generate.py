@@ -3,7 +3,7 @@
 # dependencies = ["psycopg2-binary", "bcrypt"]
 # ///
 """
-OtterWorks bulk seed data generator — master orchestrator.
+OtterDrive bulk seed data generator — master orchestrator.
 
 Runs all 10 data modules in dependency order to populate a namespaced schema
 with representative seed data for an engineering organization.
@@ -36,15 +36,15 @@ MODULES = [
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="OtterWorks bulk seed data generator")
+    parser = argparse.ArgumentParser(description="OtterDrive bulk seed data generator")
     parser.add_argument("--ns", required=True, help="Namespace, e.g. 'seed'")
     args = parser.parse_args()
 
     ns = args.ns
-    schema = f"otterworks_{ns}"
+    schema = f"otterdrive_{ns}"
 
     print(f"\n{'=' * 60}")
-    print(f"  OtterWorks Bulk Seed Data Generator")
+    print(f"  OtterDrive Bulk Seed Data Generator")
     print(f"  Namespace: {ns}  |  Schema: {schema}")
     print(f"{'=' * 60}\n")
 

@@ -6,7 +6,7 @@ module Api
       #
       # Grafana POST body shape:
       #   {
-      #     "receiver": "otterworks-webhook",
+      #     "receiver": "otterdrive-webhook",
       #     "status": "firing" | "resolved",
       #     "alerts": [
       #       {

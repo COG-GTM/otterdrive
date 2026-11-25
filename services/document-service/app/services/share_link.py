@@ -20,7 +20,7 @@ class ShareLinkService:
     """Mints and validates read-only share tokens for documents."""
 
     def __init__(self, salt: str | None = None):
-        self.salt = salt or os.environ.get("SHARE_LINK_SALT", "otterworks-share")
+        self.salt = salt or os.environ.get("SHARE_LINK_SALT", "otterdrive-share")
 
     def mint_token(self, document_id: str) -> str:
         """Return the share token for a document."""

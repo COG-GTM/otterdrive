@@ -9,13 +9,13 @@ Reduce the shared data plane to exactly **one S3 bucket** and **one DynamoDB tab
 tenant + data-domain separation expressed as *keys inside* those single resources.
 
 ## Current (Scope A) — multiple shared resources, tenant-prefixed
-- S3 buckets: `otterworks-files-dev`, `otterworks-audit-archive-dev`, `otterworks-data-lake-dev`, `otterworks-analytics-dev-*`
-- DynamoDB tables: `otterworks-file-metadata-dev`, `-file-shares-dev`, `-file-versions-dev`, `-folders-dev`, `-notifications-dev`, `-audit-events-dev`
+- S3 buckets: `otterdrive-files-dev`, `otterdrive-audit-archive-dev`, `otterdrive-data-lake-dev`, `otterdrive-analytics-dev-*`
+- DynamoDB tables: `otterdrive-file-metadata-dev`, `-file-shares-dev`, `-file-versions-dev`, `-folders-dev`, `-notifications-dev`, `-audit-events-dev`
 - Each is shared across tenants; isolation is by key prefix / owner partition.
 
 ## Target (Scope B)
-- **1 bucket** `otterworks-shared-dev`, key layout `t/<tenant>/<domain>/<...>` (domain = files|audit|datalake|analytics).
-- **1 table** `otterworks-shared-dev`, single-table design:
+- **1 bucket** `otterdrive-shared-dev`, key layout `t/<tenant>/<domain>/<...>` (domain = files|audit|datalake|analytics).
+- **1 table** `otterdrive-shared-dev`, single-table design:
   - `PK = T#<tenant>#<domain>#<entity>` , `SK = <id>` (+ GSIs per access pattern currently served by the separate tables).
 
 ## Why it's a large refactor (not free)

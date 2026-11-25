@@ -19,10 +19,10 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
 
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/config"
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/health"
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/middleware"
-	"github.com/Cognition-Partner-Workshops/otterworks/services/api-gateway/internal/proxy"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/config"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/health"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/middleware"
+	"github.com/COG-GTM/otterdrive/services/api-gateway/internal/proxy"
 )
 
 func main() {

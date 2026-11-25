@@ -1,6 +1,6 @@
-using OtterWorks.AuditService.Models;
+using OtterDrive.AuditService.Models;
 
-namespace OtterWorks.AuditService.Services;
+namespace OtterDrive.AuditService.Services;
 
 public interface IAuditService
 {

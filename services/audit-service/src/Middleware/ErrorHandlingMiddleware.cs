@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace OtterWorks.AuditService.Middleware;
+namespace OtterDrive.AuditService.Middleware;
 
 public class ErrorHandlingMiddleware
 {

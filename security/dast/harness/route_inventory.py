@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = ["pyyaml", "tabulate"]
 # ///
-"""Derive the edge-reachable route inventory from OtterWorks source.
+"""Derive the edge-reachable route inventory from OtterDrive source.
 
 A black-box scanner only finds what it can crawl, so an endpoint nothing links
 to is an endpoint nothing tests. Reading the code instead gives the *intended*

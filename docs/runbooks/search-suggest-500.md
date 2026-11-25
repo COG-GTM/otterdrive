@@ -16,7 +16,7 @@
 
 1. Confirm the error in search-service logs:
    ```
-   kubectl logs -l app=search-service --tail=100 -n otterworks | grep -i "KeyError\|rankingScore\|500"
+   kubectl logs -l app=search-service --tail=100 -n otterdrive | grep -i "KeyError\|rankingScore\|500"
    ```
 2. Check whether the chaos flag `chaos:search-service:suggest_500` is set in Redis:
    ```

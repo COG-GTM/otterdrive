@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace OtterWorks.AuditService.Middleware;
+namespace OtterDrive.AuditService.Middleware;
 
 public class RequestLoggingMiddleware
 {

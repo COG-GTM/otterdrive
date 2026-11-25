@@ -1,17 +1,17 @@
-# OTD-14 — OtterWorks Multimodal Seed Drive: BDD Requirements
+# OTD-14 — OtterDrive Multimodal Seed Drive: BDD Requirements
 
 Feature: upgrade the pre-seeded enterprise drive (`testdata/generated/retail-drive/`)
-to OtterWorks-themed multimodal content driven by the shared ~40-SKU catalog in
+to OtterDrive-themed multimodal content driven by the shared ~40-SKU catalog in
 `testdata/market-series/` (owned by OTD-15).
 
-## BDD-01: OtterWorks theme end-to-end, zero RetailCo remnants
+## BDD-01: OtterDrive theme end-to-end, zero RetailCo remnants
 **Traces to:** AC-01   **Category:** FUNC
 **Given** a fresh stack reseeded with the new generator
 **When** the drive is browsed and the seed sources are grepped
-**Then** all folder names, suppliers, campaigns, doc/file text are OtterWorks (otter-retail) themed and `grep -ri retailco` over seed sources and generated content (excluding the login email value) yields 0 hits
+**Then** all folder names, suppliers, campaigns, doc/file text are OtterDrive (otter-retail) themed and `grep -ri retailco` over seed sources and generated content (excluding the login email value) yields 0 hits
 ### Testing Flow
 1. `grep -riI retailco testdata/generated/retail-drive --exclude-dir=__pycache__` → only the login-email fallback (none expected in content strings)
-2. Browser: log in at :3000, open department folders, open a docx/doc → text says OtterWorks
+2. Browser: log in at :3000, open department folders, open a docx/doc → text says OtterDrive
 
 ## BDD-02: Shared catalog drives all figures consistently
 **Traces to:** AC-02   **Category:** FUNC
@@ -79,7 +79,7 @@ to OtterWorks-themed multimodal content driven by the shared ~40-SKU catalog in
 **Then** it completes without errors, ~2.5k files, each file <5 MB, corpus ≤ a few hundred MB
 ### Testing Flow
 1. Run generator against local gateway; capture per-department counts
-2. `awslocal s3 ls s3://otterworks-files --recursive --summarize` → size check
+2. `awslocal s3 ls s3://otterdrive-files --recursive --summarize` → size check
 
 ## BDD-10: Idempotent re-run
 **Traces to:** AC-05b   **Category:** FUNC
@@ -118,7 +118,7 @@ to OtterWorks-themed multimodal content driven by the shared ~40-SKU catalog in
 
 | AC-ID | Category | AC Title | BDD Scenario(s) | Status |
 |-------|----------|----------|-----------------|--------|
-| AC-01 | FUNC | OtterWorks theme end-to-end | BDD-01 | Mapped |
+| AC-01 | FUNC | OtterDrive theme end-to-end | BDD-01 | Mapped |
 | AC-02 | FUNC | Shared catalog drives all figures | BDD-02 | Mapped |
 | AC-03a | FUNC | Chart PNGs seeded | BDD-03 | Mapped |
 | AC-03b | FUNC | Rich PDFs seeded | BDD-04 | Mapped |

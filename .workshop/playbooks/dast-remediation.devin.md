@@ -160,7 +160,7 @@ The work is done when all of these hold:
 
 ### Worked example: a real finding this loop caught
 
-Scanning an OtterWorks tenant produced a `secure` verdict for cross-tenant
+Scanning an OtterDrive tenant produced a `secure` verdict for cross-tenant
 document reads — the attacker's token got `401` on the victim's document. Read
 alone, that looks like working authorization.
 

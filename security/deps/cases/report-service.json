@@ -12,7 +12,7 @@
       "id": "banner-title",
       "policy": "contract",
       "kind": "banner",
-      "template": "# OtterWorks Report: ${reportName}",
+      "template": "# OtterDrive Report: ${reportName}",
       "vars": { "reportName": "Quarterly Usage" }
     },
     {
@@ -40,7 +40,7 @@
       "id": "footer-base64-and-const",
       "policy": "contract",
       "kind": "configured",
-      "template": "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyV29ya3MgUmVwb3J0aW5n} | ${const:com.otterworks.report.service.ReportHeaderRenderer.CLASSIFICATION}"
+      "template": "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyV29ya3MgUmVwb3J0aW5n} | ${const:com.otterdrive.report.service.ReportHeaderRenderer.CLASSIFICATION}"
     },
     {
       "id": "configured-sys-property",
@@ -79,8 +79,8 @@
       "id": "attack-url-lookup",
       "policy": "attack",
       "kind": "configured",
-      "template": "${url:UTF-8:http://127.0.0.1:1/otterworks}",
-      "attack_marker": "${url:UTF-8:http://127.0.0.1:1/otterworks}"
+      "template": "${url:UTF-8:http://127.0.0.1:1/otterdrive}",
+      "attack_marker": "${url:UTF-8:http://127.0.0.1:1/otterdrive}"
     }
   ]
 }

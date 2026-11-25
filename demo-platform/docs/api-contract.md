@@ -1,7 +1,7 @@
 # Demo Ops Dashboard — API contract
 
 The dashboard is a **Next.js** app (server + UI in one deployable) in namespace
-`otterworks-platform`, served at `https://ops.otterworks.app`. All routes below are Next.js
+`otterdrive-platform`, served at `https://ops.otterdrive.app`. All routes below are Next.js
 **server** route handlers (`app/api/...`) — enforcement is server-side, never trust the client.
 
 ## Auth (passcode, server-side)
@@ -64,10 +64,10 @@ interface Tenant {
 ```
 
 ## How actions execute (runner Jobs)
-The web pod stays light: mutating actions create a Kubernetes **Job** (`otterworks-platform`
-ns) from the `otterworks-demo-runner` image, which carries the repo + `aws/kubectl/helm/
+The web pod stays light: mutating actions create a Kubernetes **Job** (`otterdrive-platform`
+ns) from the `otterdrive-demo-runner` image, which carries the repo + `aws/kubectl/helm/
 terraform/jq` and runs `scripts/deploy-tenant.sh` / `teardown-tenant.sh` / `inject-bug.sh`.
-The Job uses the dashboard's IRSA role + a ClusterRole that can manage `otterworks-*`
+The Job uses the dashboard's IRSA role + a ClusterRole that can manage `otterdrive-*`
 namespaces. Job name = `deploy-<id>-<epoch>` / `teardown-<id>-<epoch>`; logs stream back via
 `GET /api/tenants/:id` (reads Job pod logs). The runner reads/writes the control table so
 status transitions survive even if the web pod restarts.

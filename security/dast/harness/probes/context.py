@@ -55,16 +55,16 @@ class ScanContext:
     #: majority of it: 200 concurrent requests draw no 429 from a deployed tenant,
     #: 600 leave ~94% served (too generous to tell a bypass from the allowance),
     #: 1500 leaves ~40%. Deployed tenants share one ingress controller and node group,
-    #: so OTTERWORKS_DAST_RATE_LIMIT_BURST/_WORKERS turn the load down when other
+    #: so OTTERDRIVE_DAST_RATE_LIMIT_BURST/_WORKERS turn the load down when other
     #: tenants are live — at the cost of the probe reporting `inconclusive` if the
     #: burst no longer separates a bypass from the limiter's allowance.
     rate_limit_burst: int = field(
-        default_factory=lambda: int(os.getenv("OTTERWORKS_DAST_RATE_LIMIT_BURST", "1500"))
+        default_factory=lambda: int(os.getenv("OTTERDRIVE_DAST_RATE_LIMIT_BURST", "1500"))
     )
     #: The burst is issued concurrently: a token bucket is never drained by a
     #: sequential client once a round trip costs more than the refill interval.
     rate_limit_workers: int = field(
-        default_factory=lambda: int(os.getenv("OTTERWORKS_DAST_RATE_LIMIT_WORKERS", "64"))
+        default_factory=lambda: int(os.getenv("OTTERDRIVE_DAST_RATE_LIMIT_WORKERS", "64"))
     )
     brute_force_attempts: int = 12
     attacker: Identity = field(init=False)
@@ -100,12 +100,12 @@ class ScanContext:
         Any probe that plants content elsewhere must use `plant_marker`, or the
         search probe will read its own plant back as a cross-tenant leak.
         """
-        return f"otterworks-dast-marker-{self.run_id}"
+        return f"otterdrive-dast-marker-{self.run_id}"
 
     @property
     def plant_marker(self) -> str:
         """A string for content probes write themselves, distinct from the victim's."""
-        return f"otterworks-dast-plant-{self.run_id}"
+        return f"otterdrive-dast-plant-{self.run_id}"
 
     def wait_for_target(self, timeout: float = 60.0) -> None:
         deadline = time.monotonic() + timeout

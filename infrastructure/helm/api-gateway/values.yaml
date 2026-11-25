@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterworks-api-gateway
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/workshop/otterdrive-api-gateway
   tag: ""  # Set at deploy time (ECR uses IMMUTABLE tags)
   pullPolicy: IfNotPresent
 
@@ -21,14 +21,14 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
   hosts:
-    - host: otterworks.workshop.example.com
+    - host: otterdrive.workshop.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: otterworks-tls
+    - secretName: otterdrive-tls
       hosts:
-        - otterworks.workshop.example.com
+        - otterdrive.workshop.example.com
 
 resources:
   limits:

@@ -4,7 +4,7 @@
 # Queries PostgreSQL aggregates, reads per-user S3 data, generates
 # activity reports, stores to S3 for admin-service consumption
 #
-# Owner: Jake (data-team@otterworks.dev) -- Jake left mid-2020
+# Owner: Jake (data-team@otterdrive.dev) -- Jake left mid-2020
 # TODO ETL-098: Optimize S3 reads with range requests (2019-12-01)
 # TODO ETL-160: Cache PostgreSQL connection across runs (deferred Q2 2020)
 # TODO ETL-210: Add email notification for report generation (never done)

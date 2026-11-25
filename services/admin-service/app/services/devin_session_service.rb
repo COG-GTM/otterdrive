@@ -80,7 +80,7 @@ class DevinSessionService
 
     def build_prompt(incident)
       <<~PROMPT
-        You are the on-call engineer for OtterWorks, a collaborative file storage and document editing platform (think Google Drive + Docs) built as polyglot microservices. A production alert just fired. Triage it, fix it, and ship the fix in one pass.
+        You are the on-call engineer for OtterDrive, a collaborative file storage and document editing platform (think Google Drive + Docs) built as polyglot microservices. A production alert just fired. Triage it, fix it, and ship the fix in one pass.
 
         ## Incident
         - **Title**: #{incident.title}
@@ -89,7 +89,7 @@ class DevinSessionService
         - **Description**: #{incident.description}
 
         ## Repository
-        Work in `COG-GTM/otterworks` on `main` — investigate `main` and base your fix on it.
+        Work in `COG-GTM/otterdrive` on `main` — investigate `main` and base your fix on it.
 
         ## Service map (`services/<dir>`, all reachable through the API Gateway)
         - `api-gateway` — Go/Chi, :8080 — routing, rate limiting, JWT validation
@@ -109,12 +109,12 @@ class DevinSessionService
         ## How to work
         Move like an engineer paged at 2am: fastest correct path to a verified fix, no exhaustive codebase tours.
 
-        1. **Reproduce and observe.** Bring the stack up locally (`make infra-up && make up`, which includes LocalStack for S3, Postgres, Redis, MeiliSearch) and trigger the failing operation. Read the affected service's logs (`docker logs -f otterworks-<service>`) before reading broad swaths of code.
+        1. **Reproduce and observe.** Bring the stack up locally (`make infra-up && make up`, which includes LocalStack for S3, Postgres, Redis, MeiliSearch) and trigger the failing operation. Read the affected service's logs (`docker logs -f otterdrive-<service>`) before reading broad swaths of code.
         2. **Localize.** Grep for the exact error string from the description, follow the call path from the request handler to the failing dependency, and check `git log -p -- services/<service>` for recent regressions.
         3. **State the root cause** in one sentence, and classify it: code defect, config/env, or upstream dependency.
         4. **Fix minimally.** Smallest change that restores correct behavior — no drive-by refactors, no unrelated files. Match the service's existing style, error handling, and logging. Add or extend a test that fails before the fix and passes after, when the service has a suite.
         5. **Verify end to end.** Confirm the operation that was failing now succeeds against the local stack, in the browser (http://localhost:3000) for anything user-facing, and record a screen capture as evidence. Run the service's tests and lint (`make test`, `make lint`, or the service-local equivalent).
-        6. **Ship.** Open a PR against `main` in `COG-GTM/otterworks`, titled `fix(<service>): <what changed>`. The description should cover: symptom and blast radius, root cause, the fix, and how it was verified (link the recording). Attach the recording to your final report too.
+        6. **Ship.** Open a PR against `main` in `COG-GTM/otterdrive`, titled `fix(<service>): <what changed>`. The description should cover: symptom and blast radius, root cause, the fix, and how it was verified (link the recording). Attach the recording to your final report too.
 
         Work autonomously — do not stop at a diagnosis and do not ask for permission between steps. Escalate only if genuinely blocked (missing credentials, a real product decision). Post a short progress note when you have the root cause, then again when the PR is up; keep everything else terse.
 

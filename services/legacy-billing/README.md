@@ -5,7 +5,7 @@ is the durable before-state for the stored-procedure extraction flow: the
 running application has server-rendered pages and a small JSON API, while the
 business behavior is implemented in PostgreSQL under the `billing` schema.
 
-This component is part of the OtterWorks golden app as a durable before-state.
+This component is part of the OtterDrive golden app as a durable before-state.
 The extraction target and the modern client are separate components and are
 not part of this service.
 

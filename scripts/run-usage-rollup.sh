@@ -26,4 +26,4 @@ fi
 
 echo "Running usage-rollup batch job (input=${ROLLUP_INPUT:-/seed/usage-events.ndjson}, output=${ROLLUP_OUTPUT:-rollup-output.json})"
 cd "${SERVICE_DIR}"
-exec sbt "runMain com.otterworks.analytics.batch.UsageRollupJob"
+exec sbt "runMain com.otterdrive.analytics.batch.UsageRollupJob"

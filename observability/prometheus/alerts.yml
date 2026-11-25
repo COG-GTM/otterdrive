@@ -2,7 +2,7 @@ groups:
   # -----------------------------------------------------------
   # Service Availability Alerts
   # -----------------------------------------------------------
-  - name: otterworks.service.availability
+  - name: otterdrive.service.availability
     rules:
       - alert: ServiceDown
         expr: up == 0
@@ -14,7 +14,7 @@ groups:
           description: >-
             {{ $labels.job }} on instance {{ $labels.instance }} has been
             unreachable for more than 1 minute.
-          runbook_url: https://docs.otterworks.dev/runbooks/service-down
+          runbook_url: https://docs.otterdrive.dev/runbooks/service-down
 
       - alert: ServiceHighRestartRate
         expr: changes(process_start_time_seconds[15m]) > 2
@@ -30,7 +30,7 @@ groups:
   # -----------------------------------------------------------
   # HTTP Error Rate Alerts
   # -----------------------------------------------------------
-  - name: otterworks.http.errors
+  - name: otterdrive.http.errors
     rules:
       - alert: HighErrorRate
         expr: >-
@@ -47,7 +47,7 @@ groups:
           description: >-
             {{ $labels.job }} is returning more than 5% server errors
             (current value: {{ $value | humanizePercentage }}).
-          runbook_url: https://docs.otterworks.dev/runbooks/high-error-rate
+          runbook_url: https://docs.otterdrive.dev/runbooks/high-error-rate
 
       - alert: HighClientErrorRate
         expr: >-
@@ -68,7 +68,7 @@ groups:
   # -----------------------------------------------------------
   # Latency Alerts
   # -----------------------------------------------------------
-  - name: otterworks.http.latency
+  - name: otterdrive.http.latency
     rules:
       - alert: HighLatencyP99
         expr: >-
@@ -84,7 +84,7 @@ groups:
             The 99th percentile latency for {{ $labels.job }} has exceeded
             2 seconds for the last 5 minutes
             (current value: {{ $value | humanizeDuration }}).
-          runbook_url: https://docs.otterworks.dev/runbooks/high-latency
+          runbook_url: https://docs.otterdrive.dev/runbooks/high-latency
 
       - alert: HighLatencyP95
         expr: >-
@@ -103,7 +103,7 @@ groups:
   # -----------------------------------------------------------
   # Resource Usage Alerts
   # -----------------------------------------------------------
-  - name: otterworks.resources
+  - name: otterdrive.resources
     rules:
       - alert: HighMemoryUsage
         expr: >-
@@ -121,7 +121,7 @@ groups:
             {{ $labels.job }} on {{ $labels.instance }} is using more than
             80% of available memory
             (current: {{ $value | humanizePercentage }}).
-          runbook_url: https://docs.otterworks.dev/runbooks/high-memory
+          runbook_url: https://docs.otterdrive.dev/runbooks/high-memory
 
       - alert: HighMemoryUsageCritical
         expr: >-
@@ -168,7 +168,7 @@ groups:
             Less than 15% disk space remaining on {{ $labels.instance }}
             mountpoint {{ $labels.mountpoint }}
             (available: {{ $value | humanizePercentage }}).
-          runbook_url: https://docs.otterworks.dev/runbooks/low-disk-space
+          runbook_url: https://docs.otterdrive.dev/runbooks/low-disk-space
 
       - alert: CriticalDiskSpace
         expr: >-
@@ -188,7 +188,7 @@ groups:
   # -----------------------------------------------------------
   # AWS / SQS Alerts
   # -----------------------------------------------------------
-  - name: otterworks.aws.sqs
+  - name: otterdrive.aws.sqs
     rules:
       - alert: SQSQueueDepthHigh
         expr: aws_sqs_approximate_number_of_messages_visible > 1000
@@ -201,7 +201,7 @@ groups:
             The SQS queue {{ $labels.queue_name }} has more than 1000
             messages visible (current: {{ $value }}). Messages may not be
             processing fast enough.
-          runbook_url: https://docs.otterworks.dev/runbooks/sqs-queue-depth
+          runbook_url: https://docs.otterdrive.dev/runbooks/sqs-queue-depth
 
       - alert: SQSQueueDepthCritical
         expr: aws_sqs_approximate_number_of_messages_visible > 5000
@@ -229,7 +229,7 @@ groups:
   # -----------------------------------------------------------
   # AWS / DynamoDB Alerts
   # -----------------------------------------------------------
-  - name: otterworks.aws.dynamodb
+  - name: otterdrive.aws.dynamodb
     rules:
       - alert: DynamoDBThrottling
         expr: >-
@@ -245,7 +245,7 @@ groups:
             DynamoDB table {{ $labels.table_name }} is experiencing throttled
             requests. Consider increasing provisioned capacity or switching
             to on-demand mode.
-          runbook_url: https://docs.otterworks.dev/runbooks/dynamodb-throttling
+          runbook_url: https://docs.otterdrive.dev/runbooks/dynamodb-throttling
 
       - alert: DynamoDBHighLatency
         expr: >-
@@ -276,7 +276,7 @@ groups:
   # -----------------------------------------------------------
   # Collaboration Service Alerts
   # -----------------------------------------------------------
-  - name: otterworks.collaboration
+  - name: otterdrive.collaboration
     rules:
       - alert: WebSocketConnectionsHigh
         expr: collab_active_connections > 5000

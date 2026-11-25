@@ -4,7 +4,7 @@ global:
   scrape_timeout: 10s
 
   external_labels:
-    cluster: otterworks-dev
+    cluster: otterdrive-dev
     environment: development
 
 rule_files:

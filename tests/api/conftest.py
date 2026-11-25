@@ -42,7 +42,7 @@ class ApiClient:
         return f"{prefix}-{self.run_id}-{uuid.uuid4().hex[:8]}@example.test"
 
     def register_user(self, prefix: str = "api-flow-user") -> RegisteredUser:
-        password = "OtterworksTest123!"
+        password = "OtterdriveTest123!"
         payload = {
             "email": self.unique_email(prefix),
             "password": password,
@@ -70,7 +70,7 @@ class ApiClient:
         return response.json()
 
     def wait_for_gateway(self) -> None:
-        deadline = time.monotonic() + float(os.getenv("OTTERWORKS_API_READY_TIMEOUT", "5"))
+        deadline = time.monotonic() + float(os.getenv("OTTERDRIVE_API_READY_TIMEOUT", "5"))
         last_error: Exception | None = None
         while time.monotonic() < deadline:
             try:
@@ -80,7 +80,7 @@ class ApiClient:
             except httpx.HTTPError as exc:
                 last_error = exc
             time.sleep(0.25)
-        pytest.skip(f"OtterWorks API gateway is not reachable: {last_error}")
+        pytest.skip(f"OtterDrive API gateway is not reachable: {last_error}")
 
     def iso_time(self, days_offset: int = 0) -> str:
         return (datetime.now(UTC) + timedelta(days=days_offset)).isoformat()
@@ -107,8 +107,8 @@ class ApiClient:
         interval_seconds: float | None = None,
         description: str = "condition",
     ) -> Any:
-        timeout = timeout_seconds or float(os.getenv("OTTERWORKS_API_POLL_TIMEOUT", "30"))
-        interval = interval_seconds or float(os.getenv("OTTERWORKS_API_POLL_INTERVAL", "0.5"))
+        timeout = timeout_seconds or float(os.getenv("OTTERDRIVE_API_POLL_TIMEOUT", "30"))
+        interval = interval_seconds or float(os.getenv("OTTERDRIVE_API_POLL_INTERVAL", "0.5"))
         deadline = time.monotonic() + timeout
         last_value: Any = None
         last_error: Exception | None = None
@@ -152,12 +152,12 @@ class ApiClient:
 
 @pytest.fixture(scope="session")
 def base_url() -> str:
-    return os.getenv("OTTERWORKS_API_BASE_URL", DEFAULT_GATEWAY_URL).rstrip("/")
+    return os.getenv("OTTERDRIVE_API_BASE_URL", DEFAULT_GATEWAY_URL).rstrip("/")
 
 
 @pytest.fixture(scope="session")
 def run_id() -> str:
-    return os.getenv("OTTERWORKS_API_TEST_RUN_ID", uuid.uuid4().hex[:10])
+    return os.getenv("OTTERDRIVE_API_TEST_RUN_ID", uuid.uuid4().hex[:10])
 
 
 @pytest.fixture

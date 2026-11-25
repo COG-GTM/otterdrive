@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# OtterWorks - Per-Tenant Ephemeral Demo Deploy
+# OtterDrive - Per-Tenant Ephemeral Demo Deploy
 #
 # Stands up an isolated copy of the golden app for one attendee/demo run in the
-# namespace  otterworks-<ATTENDEE_ID>  on the SHARED otterworks-dev EKS cluster.
+# namespace  otterdrive-<ATTENDEE_ID>  on the SHARED otterdrive-dev EKS cluster.
 # Wraps the config/secret wiring from scripts/deploy-dev.sh (via
 # scripts/lib/tenant-common.sh) and layers on tenant isolation + cost controls.
 #
 # Per tenant this creates:
-#   - namespace otterworks-<ID> (TTL-labeled for the reaper)
+#   - namespace otterdrive-<ID> (TTL-labeled for the reaper)
 #   - ResourceQuota + LimitRange + a namespace NetworkPolicy
 #   - per-tenant in-cluster Redis + MeiliSearch (chaos/session/search isolation)
-#   - a per-tenant RDS database otterworks_<ID> (Postgres data isolation)
+#   - a per-tenant RDS database otterdrive_<ID> (Postgres data isolation)
 #   - all 11 backends + 2 frontends via Helm (replicas=1), frontends on the
 #     SHARED ingress (ClusterIP + one Ingress), NOT one LoadBalancer per tenant
 #
@@ -122,9 +122,9 @@ kind: Namespace
 metadata:
   name: ${NS}
   labels:
-    app.kubernetes.io/managed-by: otterworks-tenant
+    app.kubernetes.io/managed-by: otterdrive-tenant
     platform/environment: dev
-    platform/team: otterworks
+    platform/team: otterdrive
     demo/tenant: "$(sanitize_id "${ATTENDEE_ID}")"
     demo/tier: "${TIER}"
     demo/profile: "${PROFILE}"
@@ -209,12 +209,12 @@ ensure_irsa_trust() {
   [ -n "${oidc_url}" ] || { warn "OIDC provider URL unavailable; skipping IRSA trust update (IRSA may fail for ${NS})"; return 0; }
   local svc role sub
   for svc in $(echo "${IRSA_JSON}" | jq -r 'keys[]'); do
-    role="otterworks-${svc}-dev"
+    role="otterdrive-${svc}-dev"
     sub="system:serviceaccount:${NS}:${svc}"
     local doc; doc="$(aws iam get-role --role-name "${role}" --query 'Role.AssumeRolePolicyDocument' --output json 2>/dev/null || echo "")"
     [ -n "${doc}" ] || { warn "role ${role} not found; skipping"; continue; }
     # Skip if the sub is already trusted — either an exact StringEquals entry or
-    # a StringLike wildcard (e.g. the Terraform-managed "otterworks-*" pattern)
+    # a StringLike wildcard (e.g. the Terraform-managed "otterdrive-*" pattern)
     # that already matches this namespace. Checking only StringEquals would make
     # us append a redundant statement on every deploy and bloat the trust policy
     # (IAM trust docs cap at 2048/4096 chars) until deploys start failing.
@@ -275,7 +275,7 @@ spec:
           args:
             - |
               set -e
-              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterworks user=${DB_USER} sslmode=prefer connect_timeout=10"
+              CONN="host=${RDS_HOST} port=${RDS_PORT} dbname=otterdrive user=${DB_USER} sslmode=prefer connect_timeout=10"
               if psql "\$CONN" -tAc "SELECT 1 FROM pg_database WHERE datname='${T_DB_NAME}'" | grep -q 1; then
                 echo "database ${T_DB_NAME} already exists"
               else
@@ -305,7 +305,7 @@ YAML
 }
 if [ "${SKIP_DB}" = true ]; then
   warn "--skip-db set: using the shared default database (no Postgres data isolation)."
-  T_DB_NAME="otterworks"
+  T_DB_NAME="otterdrive"
 else
   create_tenant_database
 fi

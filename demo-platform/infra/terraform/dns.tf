@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "dns_trust" {
 
 resource "aws_iam_role" "dns" {
   count              = var.enable_dns ? 1 : 0
-  name               = "otterworks-demo-dns-${var.environment}"
+  name               = "otterdrive-demo-dns-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.dns_trust[0].json
 }
 

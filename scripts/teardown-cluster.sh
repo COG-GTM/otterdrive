@@ -22,7 +22,7 @@
 set -euo pipefail
 
 AWS_REGION="${AWS_REGION:-us-east-1}"
-EKS_CLUSTER="${EKS_CLUSTER:-otterworks-dev}"
+EKS_CLUSTER="${EKS_CLUSTER:-otterdrive-dev}"
 DRAIN_TIMEOUT="${DRAIN_TIMEOUT:-300}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

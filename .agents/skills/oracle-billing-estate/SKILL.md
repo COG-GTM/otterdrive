@@ -12,11 +12,11 @@ these steps. The `oracle-billing-*` / `seed-legacy*` make targets and
 
 - `make oracle-billing-up` starts Oracle Free on host port 52521. First boot pulls a
   multi-GB image (10–20 min) — never tear it down mid-session just to restart; reuse the
-  container (`otterworks-oracle-billing-oracle-billing-1`). `make oracle-billing-seed NS=<ns>`
+  container (`otterdrive-oracle-billing-oracle-billing-1`). `make oracle-billing-seed NS=<ns>`
   is deterministic (seed derived from NS) and safe to re-run; ~2–4 min.
 - No sqlplus client on the host. Run queries inside the container, using the container's
   internal port 1521 (NOT 52521, which is only the host mapping):
-  `docker exec -i otterworks-oracle-billing-oracle-billing-1 bash -c "sqlplus -s ow_billing/ow_billing@localhost:1521/FREEPDB1" <<'EOF' ... EOF`
+  `docker exec -i otterdrive-oracle-billing-oracle-billing-1 bash -c "sqlplus -s ow_billing/ow_billing@localhost:1521/FREEPDB1" <<'EOF' ... EOF`
   The runbooks' literal `sqlplus ...@localhost:52521/FREEPDB1` only works if a host sqlplus
   client is installed.
 - Expected NS=demo (SCALE=demo, seed 714559852): CUSTOMER_MASTER 25000 (155 columns),
@@ -26,5 +26,5 @@ these steps. The `oracle-billing-*` / `seed-legacy*` make targets and
   one demo seed shows 69, not 60 — filter `WHERE name LIKE '<ns>::%'` for the per-ns count.
 - Companion stores (Postgres/DynamoDB/S3 via `make seed-legacy NS=<ns>`) validate with
   `make seed-legacy-validate NS=<ns>` (15/15 at demo scale). S3 bucket is
-  `otterworks-data-lake` (no env suffix), LocalStack :4566, dummy creds
+  `otterdrive-data-lake` (no env suffix), LocalStack :4566, dummy creds
   (`AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=us-east-1`).

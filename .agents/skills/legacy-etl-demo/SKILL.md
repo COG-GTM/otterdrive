@@ -8,7 +8,7 @@ description: How to run and verify the legacy polyglot batch estate under etl/le
 CLI-only demo estate; no web UI. The estate lives on the `tech-partnerships` branch (added by PR #842) — it does not exist on `main`; check out `tech-partnerships` (or a branch derived from it) before following these steps. Requires `ksh` (`sudo apt-get install -y ksh`) and, for the SFTP fixture, docker + `sshpass`.
 
 ## Run the chain
-- `export OTTERWORKS_LEGACY_ROOT=/tmp/otterworks-legacy-<something>` for an isolated run root (default /tmp/otterworks-legacy). Dirs: sftp-drop/upload, incoming, archive, parsed, reports.
+- `export OTTERDRIVE_LEGACY_ROOT=/tmp/otterdrive-legacy-<something>` for an isolated run root (default /tmp/otterdrive-legacy). Dirs: sftp-drop/upload, incoming, archive, parsed, reports.
 - `make legacy-etl-list` — list jobs.
 - `make legacy-etl-gen-data NS=dev` — deterministic generator (same NS ⇒ byte-identical files; case-insensitive: dev==DEV; anagram-safe: ved differs). Extra args via `perl etl/legacy-extra/tools/gen_sample_data.pl <NS> <NFILES> <ROWS>`.
 - `make legacy-etl-run JOB=sftp_ingest_poll|parse_custbill_fixedwidth|finance_excel_report|run_all` in that order. run_all uses `RUN_ALL_SLEEP` (Makefile defaults it to 0; the script alone defaults 600s).

@@ -40,8 +40,8 @@ export function loadConfig(): Config {
       keyPrefix: process.env.REDIS_KEY_PREFIX || 'collab:',
     },
     jwt: {
-      secret: process.env.JWT_SECRET || 'otterworks-dev-secret',
-      issuer: process.env.JWT_ISSUER || 'otterworks-auth-service',
+      secret: process.env.JWT_SECRET || 'otterdrive-dev-secret',
+      issuer: process.env.JWT_ISSUER || 'otterdrive-auth-service',
     },
     cors: {
       origins: (

@@ -9,12 +9,12 @@
     {
       "id": "settings-banner-resolves-keys",
       "outcome": "ok",
-      "value": "OtterWorks Portal (on-prem) - contact portal-support@otterworks.example"
+      "value": "OtterDrive Portal (on-prem) - contact portal-support@otterdrive.example"
     },
     {
       "id": "settings-support-contact",
       "outcome": "ok",
-      "value": "portal-support@otterworks.example"
+      "value": "portal-support@otterdrive.example"
     },
     {
       "id": "configured-base64",
@@ -39,7 +39,7 @@
     {
       "id": "url-lookup-stays-unresolved",
       "outcome": "ok",
-      "value": "${url:UTF-8:http://127.0.0.1:1/otterworks}"
+      "value": "${url:UTF-8:http://127.0.0.1:1/otterdrive}"
     }
   ]
 }

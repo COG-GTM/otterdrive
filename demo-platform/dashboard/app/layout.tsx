@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OtterWorks Demo Ops",
-  description: "Ops dashboard for OtterWorks ephemeral demo tenants",
+  title: "OtterDrive Demo Ops",
+  description: "Ops dashboard for OtterDrive ephemeral demo tenants",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -11,60 +11,60 @@ table_exists()  { awslocal dynamodb describe-table --table-name "$1" >/dev/null 
 make_bucket()   { bucket_exists "$1" || awslocal s3 mb "s3://$1"; }
 
 # S3 Buckets
-make_bucket otterworks-files
-make_bucket otterworks-data-lake
-make_bucket otterworks-audit-archive
+make_bucket otterdrive-files
+make_bucket otterdrive-data-lake
+make_bucket otterdrive-audit-archive
 
 # SQS Queue (create-queue is idempotent for an existing queue with the same name)
-awslocal sqs create-queue --queue-name otterworks-notifications
-awslocal sqs create-queue --queue-name otterworks-audit-events-queue
-awslocal sqs create-queue --queue-name otterworks-search-events
+awslocal sqs create-queue --queue-name otterdrive-notifications
+awslocal sqs create-queue --queue-name otterdrive-audit-events-queue
+awslocal sqs create-queue --queue-name otterdrive-search-events
 
 # SNS Topic (create-topic returns the existing ARN if it already exists)
-awslocal sns create-topic --name otterworks-events
+awslocal sns create-topic --name otterdrive-events
 NOTIFICATION_QUEUE_ARN=$(awslocal sqs get-queue-attributes \
-  --queue-url http://localhost:4566/000000000000/otterworks-notifications \
+  --queue-url http://localhost:4566/000000000000/otterdrive-notifications \
   --attribute-names QueueArn \
   --query 'Attributes.QueueArn' \
   --output text)
 awslocal sns subscribe \
-  --topic-arn arn:aws:sns:us-east-1:000000000000:otterworks-events \
+  --topic-arn arn:aws:sns:us-east-1:000000000000:otterdrive-events \
   --protocol sqs \
   --notification-endpoint "$NOTIFICATION_QUEUE_ARN"
 AUDIT_QUEUE_ARN=$(awslocal sqs get-queue-attributes \
-  --queue-url http://localhost:4566/000000000000/otterworks-audit-events-queue \
+  --queue-url http://localhost:4566/000000000000/otterdrive-audit-events-queue \
   --attribute-names QueueArn \
   --query 'Attributes.QueueArn' \
   --output text)
 awslocal sns subscribe \
-  --topic-arn arn:aws:sns:us-east-1:000000000000:otterworks-events \
+  --topic-arn arn:aws:sns:us-east-1:000000000000:otterdrive-events \
   --protocol sqs \
   --notification-endpoint "$AUDIT_QUEUE_ARN"
 SEARCH_QUEUE_ARN=$(awslocal sqs get-queue-attributes \
-  --queue-url http://localhost:4566/000000000000/otterworks-search-events \
+  --queue-url http://localhost:4566/000000000000/otterdrive-search-events \
   --attribute-names QueueArn \
   --query 'Attributes.QueueArn' \
   --output text)
 awslocal sns subscribe \
-  --topic-arn arn:aws:sns:us-east-1:000000000000:otterworks-events \
+  --topic-arn arn:aws:sns:us-east-1:000000000000:otterdrive-events \
   --protocol sqs \
   --notification-endpoint "$SEARCH_QUEUE_ARN"
 
 # DynamoDB Tables
-table_exists otterworks-file-metadata || awslocal dynamodb create-table \
-  --table-name otterworks-file-metadata \
+table_exists otterdrive-file-metadata || awslocal dynamodb create-table \
+  --table-name otterdrive-file-metadata \
   --attribute-definitions AttributeName=id,AttributeType=S \
   --key-schema AttributeName=id,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-audit-events || awslocal dynamodb create-table \
-  --table-name otterworks-audit-events \
+table_exists otterdrive-audit-events || awslocal dynamodb create-table \
+  --table-name otterdrive-audit-events \
   --attribute-definitions AttributeName=id,AttributeType=S \
   --key-schema AttributeName=id,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-notifications || awslocal dynamodb create-table \
-  --table-name otterworks-notifications \
+table_exists otterdrive-notifications || awslocal dynamodb create-table \
+  --table-name otterdrive-notifications \
   --attribute-definitions \
     AttributeName=id,AttributeType=S \
     AttributeName=userId,AttributeType=S \
@@ -75,20 +75,20 @@ table_exists otterworks-notifications || awslocal dynamodb create-table \
     '[{"IndexName":"userId-createdAt-index","KeySchema":[{"AttributeName":"userId","KeyType":"HASH"},{"AttributeName":"createdAt","KeyType":"RANGE"}],"Projection":{"ProjectionType":"ALL"}}]' \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-notification-preferences || awslocal dynamodb create-table \
-  --table-name otterworks-notification-preferences \
+table_exists otterdrive-notification-preferences || awslocal dynamodb create-table \
+  --table-name otterdrive-notification-preferences \
   --attribute-definitions AttributeName=userId,AttributeType=S \
   --key-schema AttributeName=userId,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-folders || awslocal dynamodb create-table \
-  --table-name otterworks-folders \
+table_exists otterdrive-folders || awslocal dynamodb create-table \
+  --table-name otterdrive-folders \
   --attribute-definitions AttributeName=id,AttributeType=S \
   --key-schema AttributeName=id,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-file-versions || awslocal dynamodb create-table \
-  --table-name otterworks-file-versions \
+table_exists otterdrive-file-versions || awslocal dynamodb create-table \
+  --table-name otterdrive-file-versions \
   --attribute-definitions \
     AttributeName=file_id,AttributeType=S \
     AttributeName=version,AttributeType=N \
@@ -97,8 +97,8 @@ table_exists otterworks-file-versions || awslocal dynamodb create-table \
     AttributeName=version,KeyType=RANGE \
   --billing-mode PAY_PER_REQUEST
 
-table_exists otterworks-file-shares || awslocal dynamodb create-table \
-  --table-name otterworks-file-shares \
+table_exists otterdrive-file-shares || awslocal dynamodb create-table \
+  --table-name otterdrive-file-shares \
   --attribute-definitions AttributeName=id,AttributeType=S \
   --key-schema AttributeName=id,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST

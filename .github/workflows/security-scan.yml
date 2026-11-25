@@ -44,10 +44,10 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: |
           base="$(git merge-base "origin/$BASE_REF" HEAD)"
-          git worktree add --detach ../otterworks-base "$base"
-          trap 'git worktree remove --force ../otterworks-base' EXIT
+          git worktree add --detach ../otterdrive-base "$base"
+          trap 'git worktree remove --force ../otterdrive-base' EXIT
           (
-            cd ../otterworks-base
+            cd ../otterdrive-base
             trivy fs . --severity CRITICAL,HIGH \
             --skip-dirs services/report-service \
             --ignorefile .trivyignore \

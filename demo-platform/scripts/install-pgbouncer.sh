@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------------------
-# Deploy PgBouncer in otterworks-platform so total RDS connections stay bounded
+# Deploy PgBouncer in otterdrive-platform so total RDS connections stay bounded
 # as tenants scale. See docs/scaling.md §3 and k8s/pgbouncer.yaml.
 #
-# The credential comes from Secrets Manager (otterworks/dev/rds/master) by
+# The credential comes from Secrets Manager (otterdrive/dev/rds/master) by
 # default, or from DB_PASSWORD if it is already in the environment. It is never
 # passed on a process argv and never echoed: the userlist Secret is applied as
 # YAML on stdin.
@@ -17,9 +17,9 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NS=otterworks-platform
+NS=otterdrive-platform
 AWS_REGION="${AWS_REGION:-us-east-1}"
-RDS_SECRET_ID="${RDS_SECRET_ID:-otterworks/dev/rds/master}"
+RDS_SECRET_ID="${RDS_SECRET_ID:-otterdrive/dev/rds/master}"
 
 log()  { echo "[pgbouncer] $*"; }
 fail() { echo "[pgbouncer] ERROR: $*" >&2; exit 1; }
@@ -46,7 +46,7 @@ if [ -z "${DB_PASSWORD:-}" ] || [ -z "${RDS_HOST:-}" ]; then
 fi
 
 RDS_PORT="${RDS_PORT:-5432}"
-DB_USER="${DB_USER:-otterworks_admin}"
+DB_USER="${DB_USER:-otterdrive_admin}"
 [ -n "${RDS_HOST:-}" ]     || fail "RDS_HOST is empty"
 [ -n "${DB_PASSWORD:-}" ]  || fail "DB_PASSWORD is empty"
 

@@ -1,7 +1,7 @@
 """Perimeter attack cases: reaching a backend service without the gateway.
 
 Every other probe attacks the API gateway, which is what a scanner pointed at
-the deployed URL can see. But identity in OtterWorks is a header: the gateway
+the deployed URL can see. But identity in OtterDrive is a header: the gateway
 validates the JWT and forwards ``X-User-ID``, and the backends behind it trust
 that header on its own. So the gateway is not merely the front door — it is the
 *only* thing authenticating anyone, and any origin that reaches a backend
@@ -51,7 +51,7 @@ LOCAL_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "host.docker.internal"}
 #: services that read X-User-ID are worth attacking this way.
 HEADER_TRUSTING: dict[str, tuple[str, str, dict[str, str]]] = {
     "file-service": ("GET", "/api/v1/files", {}),
-    "search-service": ("GET", "/api/v1/search/", {"q": "otterworks"}),
+    "search-service": ("GET", "/api/v1/search/", {"q": "otterdrive"}),
 }
 
 

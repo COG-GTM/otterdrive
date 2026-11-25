@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Populate the OtterWorks enterprise drive via the OtterWorks API gateway.
+"""Populate the OtterDrive enterprise drive via the OtterDrive API gateway.
 
 Creates a deep department/subfolder tree, uploads realistic multimodal files
 (xlsx/docx/pptx/pdf/csv/txt/md/json/png/jpg/svg + committed mp4 clips), and
@@ -61,7 +61,7 @@ class Client:
         self.token = None
         self.owner_id = None
 
-    def register(self, display_name="OtterWorks Enterprise Drive"):
+    def register(self, display_name="OtterDrive Enterprise Drive"):
         """Create the shared drive account (no-op if it already exists)."""
         self.s.post(f"{self.gw}/api/v1/auth/register", json={
             "displayName": display_name, "email": self.email,
@@ -297,7 +297,7 @@ def upload_assets(client: Client, cache: FolderCache, depts: list[str]) -> int:
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Populate the OtterWorks enterprise drive.")
+    ap = argparse.ArgumentParser(description="Populate the OtterDrive enterprise drive.")
     ap.add_argument("--gateway", required=True)
     ap.add_argument("--email", required=True)
     ap.add_argument("--password", required=True)

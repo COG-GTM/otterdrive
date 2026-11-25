@@ -1,6 +1,6 @@
-using OtterWorks.AuditService.Services;
+using OtterDrive.AuditService.Services;
 
-namespace OtterWorks.AuditService.Models;
+namespace OtterDrive.AuditService.Models;
 
 public sealed class AuditEventResponse
 {

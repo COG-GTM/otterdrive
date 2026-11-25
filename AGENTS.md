@@ -1,14 +1,14 @@
-# AGENTS.md — OtterWorks (COG-GTM fork)
+# AGENTS.md — OtterDrive (COG-GTM fork)
 
 Guidance for AI agents (and humans) working in this repo.
 
 ## This repo is a fork — its `main` is editable
 
-This repo (`COG-GTM/otterworks`) is a **fork** of the upstream/canonical
+This repo (`COG-GTM/otterdrive`) is a **fork** of the upstream/canonical
 `Cognition-Partner-Workshops/otterworks`. The two must not be confused:
 
 - **Upstream `main` is the golden app** — the canonical baseline behind partner workshops
-  and the perpetual `t-main.otterworks.app` tenant. Never mutate it, inject bugs into it,
+  and the perpetual `t-main.otterdrive.app` tenant. Never mutate it, inject bugs into it,
   or plant demo variants on it. Changes reach upstream only via an explicit upstream PR.
 - **This fork's `main` is a demo baseline, not the golden app.** It may be edited freely,
   including large or sweeping changes. Editing it has **no effect** on upstream or on
@@ -42,7 +42,7 @@ whether the change may interfere with other tenants:
    image, so a fork branch cannot ship them. If the task needs such a change, ask before
    opening an upstream PR or working around it (e.g. baking config into a service image).
 2. **The change could interfere with other tenants or shared AWS resources.** Both repos
-   deploy into one AWS account: one EKS cluster (`otterworks-dev`), one ECR registry, one
+   deploy into one AWS account: one EKS cluster (`otterdrive-dev`), one ECR registry, one
    shared RDS instance, shared S3 buckets/DynamoDB tables, and one ingress-nginx NLB.
    Anything touching those shared resources (Terraform, IAM/IRSA, the shared ingress,
    cluster-scoped objects, tenant ids that may collide — `TENANT_PREFIX` is unset on this
@@ -96,22 +96,22 @@ regardless of which branch or tenant it came from; the default target is `main`.
 
 ## Tenant isolation (for crafting bespoke demo branches)
 
-Each demo runs as an **ephemeral tenant** on the shared EKS cluster (`otterworks-dev`).
+Each demo runs as an **ephemeral tenant** on the shared EKS cluster (`otterdrive-dev`).
 `scripts/deploy-tenant.sh <ATTENDEE_ID>` stamps the golden app into a dedicated namespace so
-many attendees run "their own OtterWorks" side by side without touching each other.
+many attendees run "their own OtterDrive" side by side without touching each other.
 Full operator detail lives in `docs/MULTI-TENANT-DEMO-PLAN.md` (design) and
 `docs/MULTI-TENANT-RUNBOOK.md` (step-by-step); this section is the mental model you need
 before building a bespoke variant.
 
 ### What a tenant gets (isolated) vs. what it shares
 
-Deploying tenant `<ID>` (namespace `otterworks-<ID>`) creates, **per tenant**:
+Deploying tenant `<ID>` (namespace `otterdrive-<ID>`) creates, **per tenant**:
 
 - All 11 backend microservices + both frontends (`web-app`, `admin-dashboard`) via Helm,
   `replicas=1`, each with a per-tenant `ConfigMap`/`Secret`.
 - A dedicated in-cluster **Redis** and **MeiliSearch** (so chaos flags, sessions, collab
   state, and search indexes never leak across tenants).
-- A dedicated **PostgreSQL database** `otterworks_<ID>` on the shared RDS instance (all
+- A dedicated **PostgreSQL database** `otterdrive_<ID>` on the shared RDS instance (all
   SQL-backed service data is isolated at the database level).
 - Guardrails: `ResourceQuota`, `LimitRange`, and a `NetworkPolicy` that denies cross-tenant
   pod-to-pod traffic; ingress rules on the shared controller; a TTL label + reaper for
@@ -124,7 +124,7 @@ Deploying tenant `<ID>` (namespace `otterworks-<ID>`) creates, **per tenant**:
   concerns and must **not** be duplicated per tenant.
 - The RDS **instance** (isolated only logically, via the per-tenant database), and the
   physical **S3 buckets** / **DynamoDB tables** (Tier-A logical prefixing/partitioning only —
-  see below). IAM/IRSA service roles are shared across `otterworks-*` via a wildcard trust.
+  see below). IAM/IRSA service roles are shared across `otterdrive-*` via a wildcard trust.
 - SNS/SQS eventing is **disabled** for tenants to avoid cross-tenant queue consumers.
 
 ### Isolation tiers
@@ -156,7 +156,7 @@ On this fork, `main` itself may carry a demo variant (the mirror workflow keeps
    `scripts/bug-catalog.yaml` with `scripts/inject-bug.sh <ID> <scenario>` (clear with
    `... <ID> reset`). Mechanisms, lightest first: a **chaos** Redis flag in the tenant's own
    Redis (no redeploy, auto-expires), a **config** override (`helm upgrade` one release +
-   rollout restart), or an **image** swap. All are scoped to `otterworks-<ID>` and never
+   rollout restart), or an **image** swap. All are scoped to `otterdrive-<ID>` and never
    affect other tenants or `main`.
 
 2. **Code-level variant (bespoke branch):**
@@ -177,7 +177,7 @@ section of the runbook.
 
 - Tenants are TTL-labeled (`deploy-tenant.sh <ID> --ttl 8h`). The platform reaper
   (`demo-platform/reaper/reaper.sh`, scheduled from the ops dashboard) does the **full**
-  teardown of an expired tenant: namespace, the `otterworks_<ID>` database, its S3 prefix
+  teardown of an expired tenant: namespace, the `otterdrive_<ID>` database, its S3 prefix
   and DynamoDB partitions, IRSA trust and DNS records. `scripts/teardown-tenant.sh <ID>`
   does the same thing on demand for a single tenant.
 - Idle cost control: tenants that take no ingress traffic for an hour are scaled to zero
@@ -188,7 +188,7 @@ section of the runbook.
   `demo-platform/docs/cost-and-scale.md` for the capacity and cost model.
 - Pushing to `workshop-<id>` or `demo-<id>` ships that branch to its tenant automatically
   (`.github/workflows/cd-tenant.yml`), creating the tenant with a 72h TTL if it does not
-  exist. The one exception is `t-main.otterworks.app`, the perpetual tenant tracking
+  exist. The one exception is `t-main.otterdrive.app`, the perpetual tenant tracking
   **upstream** `main`: it is exempt from the reaper and idle-suspend and cannot be checked
   in or bug-injected. Never inject a scenario there — that is what a `workshop-<id>` tenant
   is for.
