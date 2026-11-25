@@ -72,5 +72,14 @@ RSpec.describe UserDirectorySync do
       expect(AdminUser.find(id)).to have_attributes(display_name: 'Renamed', role: 'editor', status: 'suspended')
       expect(AdminUser.find(id).last_login_at).to be_present
     end
+
+    it 'keeps the last valid name when auth-service has a blank one' do
+      id = insert_auth_user(email: 'user@example.com')
+      described_class.call
+      conn.execute("UPDATE users SET display_name = '  ' WHERE id = '#{id}'")
+      described_class.call
+
+      expect(AdminUser.find(id).display_name).to eq('Test User')
+    end
   end
 end

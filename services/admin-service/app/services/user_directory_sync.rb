@@ -10,12 +10,12 @@ class UserDirectorySync
     # Profile fields are owned by auth-service; role/status stay admin-managed.
     conn.exec_update(<<~SQL.squish)
       UPDATE admin_users a
-      SET display_name = u.display_name, avatar_url = u.avatar_url,
+      SET display_name = COALESCE(NULLIF(btrim(u.display_name), ''), a.display_name), avatar_url = u.avatar_url,
           last_login_at = u.last_login_at, updated_at = NOW()
       FROM users u
       WHERE a.id = u.id
         AND (a.display_name, a.avatar_url, a.last_login_at)
-            IS DISTINCT FROM (u.display_name, u.avatar_url, u.last_login_at)
+            IS DISTINCT FROM (COALESCE(NULLIF(btrim(u.display_name), ''), a.display_name), u.avatar_url, u.last_login_at)
     SQL
 
     inserted = conn.exec_update(<<~SQL.squish)
