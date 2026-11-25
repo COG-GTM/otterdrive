@@ -40,7 +40,7 @@ public class ReportHeaderRenderer {
     static final String DEFAULT_GENERATED = "# Generated: ${generated}";
     static final String DEFAULT_PERIOD = "# Period: ${periodFrom} to ${periodTo}";
     static final String DEFAULT_ROWS = "# Rows: ${rows}";
-    static final String DEFAULT_FOOTER = "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyV29ya3MgUmVwb3J0aW5n}"
+    static final String DEFAULT_FOOTER = "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyRHJpdmUgUmVwb3J0aW5n}"
             + " | ${const:com.otterdrive.report.service.ReportHeaderRenderer.CLASSIFICATION}";
 
     private final Properties templates;

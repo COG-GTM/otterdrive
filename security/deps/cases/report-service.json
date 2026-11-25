@@ -40,7 +40,7 @@
       "id": "footer-base64-and-const",
       "policy": "contract",
       "kind": "configured",
-      "template": "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyV29ya3MgUmVwb3J0aW5n} | ${const:com.otterdrive.report.service.ReportHeaderRenderer.CLASSIFICATION}"
+      "template": "# ${base64Decoder:R2VuZXJhdGVkIGJ5IE90dGVyRHJpdmUgUmVwb3J0aW5n} | ${const:com.otterdrive.report.service.ReportHeaderRenderer.CLASSIFICATION}"
     },
     {
       "id": "configured-sys-property",
