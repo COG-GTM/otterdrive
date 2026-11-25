@@ -131,7 +131,9 @@ const collabManager = setupCollaborationHandlers(
 const wss = new WebSocketServer({ noServer: true });
 wss.on('connection', (conn, req) => {
   setupWSConnection(conn, req);
-  logger.info({ url: req.url }, 'y-websocket_client_connected');
+  // The query string carries the JWT, so only log the document path.
+  const path = (req.url || '').split('?')[0];
+  logger.info({ path }, 'y-websocket_client_connected');
 });
 
 // Route WebSocket upgrades: Socket.IO paths go to Socket.IO, all others to y-websocket

@@ -1,9 +1,11 @@
 class MetricsAggregator
   def self.summary
+    UserDirectorySync.call
     {
       timestamp: Time.current.iso8601,
       users: user_metrics,
       storage: storage_metrics,
+      documents: document_metrics,
       features: feature_metrics,
       announcements: announcement_metrics,
       audit: audit_metrics
@@ -27,6 +29,16 @@ class MetricsAggregator
       average_usage_percent: calculate_average_usage,
       users_over_quota: StorageQuota.over_quota.count,
       by_tier: StorageQuota.group(:tier).count
+    }
+  end
+
+  def self.document_metrics
+    conn = ActiveRecord::Base.connection
+    return { total: 0, templates: 0 } unless conn.table_exists?('documents')
+
+    {
+      total: conn.select_value('SELECT COUNT(*) FROM documents WHERE NOT is_deleted AND NOT is_template').to_i,
+      templates: conn.select_value('SELECT COUNT(*) FROM documents WHERE NOT is_deleted AND is_template').to_i
     }
   end
 

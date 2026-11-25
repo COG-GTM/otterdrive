@@ -19,6 +19,7 @@ RSpec.describe Api::V1::Admin::MetricsController do
       expect(body).to have_key('features')
       expect(body).to have_key('announcements')
       expect(body).to have_key('audit')
+      expect(body).to have_key('documents')
       expect(body['users']['total']).to eq(2)
       expect(body['features']['enabled']).to eq(1)
     end

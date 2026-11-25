@@ -9,6 +9,7 @@ module Api
 
         # GET /api/v1/admin/users
         def index
+          UserDirectorySync.call
           scope = AdminUser.includes(:storage_quota)
           scope = scope.search(params[:q]) if params[:q].present?
           scope = scope.by_role(params[:role]) if params[:role].present?

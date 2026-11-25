@@ -388,7 +388,7 @@ export class AdminApiService {
     const usedBytes: number = storage.total_used_bytes ?? 0;
     return {
       totalUsers: users.total ?? 0,
-      activeDocuments: 0,  // not tracked by admin-service metrics
+      activeDocuments: res.documents?.total ?? 0,
       storageUsed: this.formatBytes(usedBytes),
       activeSessions: users.active ?? 0,
       usersGrowth: 0,
