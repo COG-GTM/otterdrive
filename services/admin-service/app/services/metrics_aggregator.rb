@@ -1,6 +1,5 @@
 class MetricsAggregator
   def self.summary
-    UserDirectorySync.call
     {
       timestamp: Time.current.iso8601,
       users: user_metrics,
