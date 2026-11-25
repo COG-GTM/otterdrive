@@ -506,7 +506,7 @@ def share_token_forgery(ctx: ScanContext) -> Result:
             [Evidence.from_response(served)],
         )
 
-    for salt in ("otterdrive-share",):
+    for salt in ("otterworks-share",):
         token = _forge_share_token(str(victim_doc["id"]), salt, 16)
         response = ctx.get(
             "/api/v1/documents/shared",

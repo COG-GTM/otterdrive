@@ -12,7 +12,7 @@
   "the before-state ignores it."
  ],
  "env": {
-  "SHARE_LINK_SALT": "otterdrive-share",
+  "SHARE_LINK_SALT": "otterworks-share",
   "SHARE_LINK_SECRET": "fixture-share-secret-2b7f4c"
  },
  "interface": [
@@ -60,7 +60,7 @@
    "probe": "offline_share_token_forgery",
    "args": {
     "document_id": "d0c00001-0000-4000-8000-000000000001",
-    "salt": "otterdrive-share",
+    "salt": "otterworks-share",
     "length": 16
    },
    "detect": {"kind": "json_field_true", "field": "forged_token_accepted"},
