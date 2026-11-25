@@ -1,0 +1,2 @@
+# Admin mock-login JWT fixture (local dev secret only), committed before the inline gitleaks:allow marker.
+776e0f4378cf05194bfda846db93524b1943445d:frontend/admin-dashboard/src/app/core/services/auth.service.ts:jwt:81
