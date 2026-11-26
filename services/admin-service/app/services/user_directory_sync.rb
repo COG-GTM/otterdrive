@@ -24,9 +24,8 @@ class UserDirectorySync
       SELECT u.id, u.email, u.display_name, #{role_sql(conn)}, 'active', u.avatar_url,
              u.last_login_at, u.created_at, NOW()
       FROM users u
-      WHERE NOT EXISTS (
-        SELECT 1 FROM admin_users a WHERE a.id = u.id OR a.email = u.email
-      )
+      WHERE NOT EXISTS (SELECT 1 FROM admin_users a WHERE a.id = u.id)
+        AND NOT EXISTS (SELECT 1 FROM admin_users a WHERE a.email = u.email)
       ON CONFLICT DO NOTHING
     SQL
 
